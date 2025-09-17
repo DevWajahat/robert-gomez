@@ -1,0 +1,3 @@
+Row,Column,Error
+2,claim_number| owner_phone,The claim_number field is required. | The owner_phone must be a valid 10-digit number.
+3,insurance| owner_name| owner_phone| owner_email| claim_number,The insurance field is required. | The owner_name field is required. | The owner_phone field is required. | The owner_email field is required. | The claim_number field is required.

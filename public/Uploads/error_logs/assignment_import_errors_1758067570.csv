@@ -1,0 +1,2 @@
+Row,insurance,owner_name,owner_phone,owner_email,claim_number,claim_type,loss_type,vehicle_location,appointment_date,Errors
+2,Test Insurance 1,Test Owner Name,61515115665,owneremail@yopmail.com,1025,Test Type,Test Loss,,12/02/2025 10:30:00 AM,The vehicle_location field is required.

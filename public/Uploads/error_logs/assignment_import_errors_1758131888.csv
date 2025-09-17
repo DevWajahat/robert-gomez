@@ -1,0 +1,4 @@
+Row,insurance,owner_name,owner_phone,owner_email,claim_number,claim_type,loss_type,vehicle_location,appointment_date,Errors
+3,XYZ Insurance,Jane Smith,,jane.smith@email.com,C-67890,Comprehensive,Hail Damage,456 Oak Ave,12/06/2025 02:00:00 PM,The owner_phone field is required.
+4,ABC Insurance,,5ds,invalid.email,C-33344,Theft,Stolen Vehicle,789 Pine Ln,11/21/2025 09:00:00 AM,The owner_name field is required.  The owner_phone is invalid  The owner_email must be a valid email.
+5,XYZ Insurance,Bob Johnson,555-333-4444,bob.johnson@email.com,C-55566,Collision,Auto Accident,321 Maple Dr,,The appointment_date field is required.

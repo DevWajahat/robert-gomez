@@ -1,0 +1,3 @@
+Row,insurance,owner_name,owner_phone,owner_email,claim_number,claim_type,loss_type,vehicle_location,appointment_date,Error1,Error2,Error3,Error4,Error5,Error6
+2,abc,Wajji,23424234234,asdlfjas@gmail.com,,asdfasdf,sdfasdf,asdfasdfasdf,45918.425694444,The claim_number field is required.,The owner_phone must be a valid 10-digit number.,The appointment_date must be a valid datetime (e.g.  2025-09-18T10:00).,,,
+3,,,,,,asdfasdf23IOH,LJL,SDFASD,45920.467361111,The insurance field is required.,The owner_name field is required.,The owner_phone field is required.,The owner_email field is required.,The claim_number field is required.,The appointment_date must be a valid datetime (e.g.  2025-09-18T10:00).

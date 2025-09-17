@@ -1,0 +1,2 @@
+Row,insurance,owner_name,owner_phone,owner_email,claim_number,claim_type,loss_type,vehicle_location,appointment_date,Errors
+2,f,gff,hg,fghffh,fghf,fgfh,hf,gffh,12/02/2025 10:30:00 AM,The owner_phone must contain 8 to 18 digits with no alphabetical characters  allowing +  -  ()  and spaces.  The owner_email must be a valid email.
