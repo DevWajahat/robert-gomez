@@ -11,7 +11,7 @@ class HomeController extends Controller
     {
         // dd(auth()->user()->assignments);
 
-        $assignments = auth()->user()->assignments;
+        $assignments = auth()->user()->assignments()->where('status','pending')->orderBy('id','desc')->get();
 
         return view('screens.web.index',get_defined_vars());
     }

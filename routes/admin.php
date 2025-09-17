@@ -14,4 +14,5 @@ Route::prefix('assignments')->controller(AssignmentController::class)->name('ass
     Route::post('assign-agent', 'assignAgent')->name('agent');
     Route::get('task', 'task')->name('task');
     Route::post('bulk-upload', 'upload')->name('upload');
+    Route::get('complete','completeAssign')->name('complete');
 });

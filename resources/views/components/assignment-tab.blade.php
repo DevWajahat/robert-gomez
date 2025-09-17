@@ -13,7 +13,7 @@
              <button class="link text-decoration-none" id="searchAssignment">
                  <li class="inner-list inner-list-1">Search Assignments</li>
              </button>
-             <a href="#" class="link text-decoration-none">
+             <a href="{{ route('admin.assign.complete') }}" class="link text-decoration-none">
                  <li class="inner-list inner-list-1">Complete Assignments</li>
              </a>
              <a href="assignment-map.html" class="link text-decoration-none">

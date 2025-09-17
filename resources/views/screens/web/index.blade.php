@@ -47,9 +47,13 @@
                                 <button>Quick Updates</button>
                                 @if ($assignment->status == 'pending')
                                     <button style="background:#d3c501 !important;">Pending</button>
+                                    <button class="btn btn-primary completeBtn" 
+                                        data-id="{{ $assignment->id }}">Complete</button>
                                 @else
                                     <button style="background:#00A84C !important;">Completed</button>
                                 @endif
+
+
                                 {{-- <button style="background:#00A84C !important;">Completed</button> --}}
                             </div>
                         </div>
@@ -507,50 +511,104 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
+        < script >
+            $(document).ready(function() {
+                // Function to calculate and update elapsed time
+                function updateElapsedTime() {
+                    // Select all elements with the data-created-at attribute
+                    $('.board-area .text-end').each(function() {
+                        const createdAt = $(this).data('created-at');
+                        if (createdAt) {
+                            // Parse the date as UTC and get its timestamp
+                            const createdDate = new Date(createdAt + 'Z');
+                            const now = new Date();
+
+                            // Calculate the difference in milliseconds
+                            let diffInMilliseconds = now.getTime() - createdDate.getTime();
+
+                            // Ensure the value is not negative
+                            diffInMilliseconds = Math.abs(diffInMilliseconds);
+
+                            // Convert milliseconds to a human-readable format
+                            const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+                            const diffInHours = Math.floor(diffInMinutes / 60);
+                            const diffInDays = Math.floor(diffInHours / 24);
+
+                            let timeAgo = '';
+                            if (diffInDays > 0) {
+                                timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}, `;
+                            }
+                            if (diffInHours > 0) {
+                                const remainingHours = diffInHours % 24;
+                                timeAgo += `${remainingHours} hour${remainingHours > 1 ? 's' : ''}, `;
+                            }
+                            const remainingMinutes = diffInMinutes % 60;
+                            timeAgo += `${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
+
+                            $(this).text(timeAgo.trim().replace(/,$/, '') + ' ago');
+                        }
+                    });
+                }
+
+                // Call the function initially to update all elements
+                updateElapsedTime();
+
+                // Set an interval to update the time every minute
+                setInterval(updateElapsedTime, 60000);
+            });
+    </script>
+
     <script>
         $(document).ready(function() {
-            // Function to calculate and update elapsed time
-            function updateElapsedTime() {
-                // Select all elements with the data-created-at attribute
-                $('.board-area .text-end').each(function() {
-                    const createdAt = $(this).data('created-at');
-                    if (createdAt) {
-                        // Parse the date as UTC and get its timestamp
-                        const createdDate = new Date(createdAt + 'Z');
-                        const now = new Date();
+            $('.completeBtn').on('click', function() {
 
-                        // Calculate the difference in milliseconds
-                        let diffInMilliseconds = now.getTime() - createdDate.getTime();
+                console.log($(this).attr('data-id'));
 
-                        // Ensure the value is not negative
-                        diffInMilliseconds = Math.abs(diffInMilliseconds);
+                var assignmnet = $(this);
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: " Once assignment will be complete it will be hidden from here!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#0d6efd",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Completed"
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                        // Convert milliseconds to a human-readable format
-                        const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
-                        const diffInHours = Math.floor(diffInMinutes / 60);
-                        const diffInDays = Math.floor(diffInHours / 24);
 
-                        let timeAgo = '';
-                        if (diffInDays > 0) {
-                            timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}, `;
-                        }
-                        if (diffInHours > 0) {
-                            const remainingHours = diffInHours % 24;
-                            timeAgo += `${remainingHours} hour${remainingHours > 1 ? 's' : ''}, `;
-                        }
-                        const remainingMinutes = diffInMinutes % 60;
-                        timeAgo += `${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('assign.status') }}',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "status": "completed",
+                                "assignment": $(this).attr('data-id')
+                            },
+                            success: function(response) {
+                                console.log(response);
 
-                        $(this).text(timeAgo.trim().replace(/,$/, '') + ' ago');
+                                Swal.fire({
+                                    title: "Completed",
+                                    text: response.message,
+                                    icon: "success"
+                                });
+
+                                assignmnet.closest('.assign-card').hide();
+                                // window.location.reload()
+                            }
+                        })
                     }
                 });
-            }
 
-            // Call the function initially to update all elements
-            updateElapsedTime();
+                // $.ajax({
+                //     type: 'GET',
+                //     url:''
+                // })
 
-            // Set an interval to update the time every minute
-            setInterval(updateElapsedTime, 60000);
+            })
         });
     </script>
 @endpush
