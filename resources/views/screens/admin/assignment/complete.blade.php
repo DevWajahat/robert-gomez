@@ -142,6 +142,40 @@
         .rotate-icon.rotated {
             transform: rotate(180deg);
         }
+
+
+
+        .search-suggestions--list.style {
+            height: 335px;
+        }
+
+        .search-suggestions--list {
+            list-style: none;
+            padding: 15px;
+            background: #f0f0f0;
+            overflow: auto;
+            position: absolute;
+            width: 100%;
+            z-index: 99999999;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .search-suggestions--list li {
+            padding-bottom: 15px;
+            font-size: 1.2rem;
+            color: black;
+            border-bottom: 1px solid black;
+            margin-bottom: 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .search-suggestions--list a {
+            text-decoration: none;
+        }
     </style>
 
     <div class="content-wrapper">
@@ -290,10 +324,17 @@
 
             <form id="searchForm" class="modal-form">
                 <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Search</label>
-                        <input type="text" name="search" placeholder="Enter Claim # or Owner Name">
+                    <div class="form-group full-width position-relative">
+                        <label style="color:#fff !important">Search</label>
+                        <input type="text" name="search" class="search-input" autocomplete="off"
+                            placeholder="Enter Claim # or Owner Name">
+                        <div class="search-suggestions">
+                            <ul class="search-suggestions--list style">
+                                <li>No Assignments found.</li>
+                            </ul>
+                        </div>
                     </div>
+
                 </div>
 
                 <button type="submit" class="submit-btn">Search</button>
@@ -604,6 +645,90 @@
                 });
             });
         </script>
-        <script></script>
+        <script>
+            $(document).ready(function() {
+
+
+                $('#searchForm').on("submit", function(e) {
+                    e.preventDefault();
+                })
+
+                const input = $(".search-input");
+                const select = $(".search-select");
+                const results = $(".search-suggestions--list");
+
+                function detectSearch() {
+                    let query = input.val().trim() ?? null;
+                    let category = select.val() ?? null;
+                    console.log(query, category);
+
+                    // Clear and hide results immediately if query is empty
+                    if (query === '' && category === '') {
+                        results.empty();
+                        results.addClass("hidden");
+                        return;
+                    }
+
+                    // Only proceed with AJAX if query is not empty
+                    if (query !== '') {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('admin.assign.search') }}",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                query: query,
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                let assignments = response; // Direct array of assignments from controller
+                                results.empty();
+                                if (assignments.length > 0) {
+                                    results.removeClass("hidden");
+                                    assignments.forEach(function(assignment) {
+                                        let html = `
+                                <li>
+                                    <a href="#">
+                                        <div class="searched-content" style="height:auto">
+                                            <div>
+                                               Claim: ${assignment.claim} (Owner: ${assignment.owner})
+                                                <p>Location: ${assignment.vehicle_location}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            `;
+                                        results.append(html);
+                                        results.addClass("style");
+                                    });
+                                } else {
+                                    let html = `
+                            <li>No assignments found.</li>
+                        `;
+                                    results.append(html);
+                                    results.removeClass("style");
+                                }
+                            },
+                            error: function(error) {
+                                console.error(error);
+                            }
+                        });
+                    } else {
+                        results.empty();
+                        results.addClass("hidden");
+                    }
+                }
+
+                input.on("keyup change", detectSearch);
+                select.on("change", detectSearch);
+
+                let body = document.body;
+
+                $("body").on("click", () => {
+                    results.addClass("hidden");
+                    input.val("");
+                    results.empty();
+                });
+            });
+        </script>
     @endpush
 @endsection

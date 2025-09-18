@@ -15,4 +15,6 @@ Route::prefix('assignments')->controller(AssignmentController::class)->name('ass
     Route::get('task', 'task')->name('task');
     Route::post('bulk-upload', 'upload')->name('upload');
     Route::get('complete','completeAssign')->name('complete');
+
+    Route::post('search','searchAssign')->name('search');
 });

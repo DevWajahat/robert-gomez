@@ -26,6 +26,7 @@ Route::middleware(['prevent-back-history','CheckAgent'])->group(function () {
 
     Route::post('assignment-status',[AssignmentController::class,'updateStatus'])->name('assign.status');
 
+
     // end main pages routes
 
     // start Auth pages routes

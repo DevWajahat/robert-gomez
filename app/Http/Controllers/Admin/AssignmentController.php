@@ -209,4 +209,15 @@ class AssignmentController extends Controller
 
         return view('screens.admin.assignment.complete',get_defined_vars());
     }
+
+  public function searchAssign(Request $request)
+    {
+        $searchQuery = $request->input('query');
+
+        $assignments = Assignment::where('claim', 'like', "%{$searchQuery}%")
+            ->orWhere('owner', 'like', "%{$searchQuery}%")
+            ->get();
+
+        return response()->json($assignments);
+    }
 }

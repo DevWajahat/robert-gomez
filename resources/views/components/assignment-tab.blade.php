@@ -11,7 +11,7 @@
                  <li class="inner-list inner-list-1">Task Assigned</li>
              </a>
              <button class="link text-decoration-none" id="searchAssignment">
-                 <li class="inner-list inner-list-1">Search Assignments</li>
+                 <li class="inner-list inner-list-1 text-light">Search Assignments</li>
              </button>
              <a href="{{ route('admin.assign.complete') }}" class="link text-decoration-none">
                  <li class="inner-list inner-list-1">Complete Assignments</li>
