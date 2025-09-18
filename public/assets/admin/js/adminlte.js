@@ -3867,14 +3867,14 @@ document.querySelectorAll(".assign-card").forEach(function (card, index) {
     });
   });
 
-  card.addEventListener("click", function () {
-    if (isExpanded) {
-      const url = cardUrls[index];
-      if (url) {
-        window.location.href = url;
-      }
-    }
-  });
+//   card.addEventListener("click", function () {
+//     if (isExpanded) {
+//       const url = cardUrls[index];
+//       if (url) {
+//         window.location.href = url;
+//       }
+//     }
+//   });
 });
 
 
@@ -3937,12 +3937,12 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    card.addEventListener("click", function () {
-      if (isExpanded) {
-        const url = cardUrls[index] || "assignment.html";
-        window.location.href = url;
-      }
-    });
+    // card.addEventListener("click", function () {
+    //   if (isExpanded) {
+    //     const url = cardUrls[index] || "assignment.html";
+    //     window.location.href = url;
+    //   }
+    // });
   }
 
   document.querySelectorAll(".assign-card").forEach((card, i) => {

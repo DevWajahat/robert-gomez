@@ -381,7 +381,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Import Assignment</h2>
-                <span class="close-import">&times;</span>
+                <span class="close-import" style="cursor: pointer">&times;</span>
             </div>
 
             <form id="importForm" action="{{ route('admin.assign.upload') }}" method="post" class="modal-form">
@@ -446,7 +446,7 @@
 
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "Once an agent is assigned, the assignment will be hidden from the admin panel.",
+                        text: "Once an agent is assigned, your assignment will be moved to the Tasks Assigned tab.",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -471,7 +471,7 @@
 
                                     Swal.fire(
                                         'Assigned!',
-                                        'The assignment has been successfully hidden.',
+                                        'The assignment has been successfully moved to Task Assigned tab.',
                                         'success'
                                     );
                                 },

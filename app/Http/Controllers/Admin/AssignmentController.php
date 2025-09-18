@@ -46,13 +46,16 @@ class AssignmentController extends Controller
     {
         $assignment = Assignment::find($request->assignment);
 
-        $assignment->update([
-            'user_id' => $request->agent
-        ]);
+            $assignment->update([
+                'user_id' => $request->agent,
+                'status' => 'pending'
+            ]);
 
         return response()->json([
             'status' => true,
             'message' => 'assign agent successfully.',
+            'assign_status' => $assignment->status,
+            
         ]);
     }
 
@@ -62,7 +65,7 @@ class AssignmentController extends Controller
 
     public function task()
     {
-        $assignments = Assignment::where('status', 'pending')->whereNotNull('user_id')->orderBy('id','desc')->get();
+        $assignments = Assignment::whereNotNull('user_id')->orderBy('id','desc')->get();
         $users = User::where('role', 'agent')->get();
 
         return view('screens.admin.assignment.task', get_defined_vars());
@@ -215,7 +218,7 @@ class AssignmentController extends Controller
         $searchQuery = $request->input('query');
 
         $assignments = Assignment::where('claim', 'like', "%{$searchQuery}%")
-            ->orWhere('owner', 'like', "%{$searchQuery}%")
+            ->orWhere('owner', 'like', "%{$searchQuery}%")->take(20)
             ->get();
 
         return response()->json($assignments);

@@ -222,9 +222,9 @@
                                     <div class="pending-btn-wrapper hidden-class">
                                         <button>Quick Updates</button>
                                         @if ($assignment->status == 'pending')
-                                            <button style="background:#d3c501 !important;">Pending</button>
+                                            <button style="background:#d3c501 !important;" class="assign-status">Pending</button>
                                         @else
-                                            <button style="background:#00A84C !important;">Completed</button>
+                                            <button style="background:#00A84C !important;" class="assign-status">Completed</button>
                                         @endif
                                     </div>
                                 </div>
@@ -345,7 +345,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Import Assignment</h2>
-                <span class="close-import">&times;</span>
+                <span class="close-import" style="cursor: pointer">&times;</span>
             </div>
 
             <form id="importForm" action="{{ route('admin.assign.upload') }}" method="post" class="modal-form">
@@ -368,6 +368,80 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                $('#assignmentForm').on("submit", function(event) {
+                    event.preventDefault(); // This is the key line to prevent page reload
+
+                    console.log($('#insurance').val());
+                    console.log($('#owner').val());
+                    console.log($('#ownerPhone').val());
+                    console.log($('#ownerEmail').val());
+                    console.log($('#claim').val());
+                    console.log($('#claimType').val());
+                    console.log($('#lossType').val());
+                    console.log($('#vehicleLocation').val());
+                    console.log($('#appointment').val());
+
+                    $.LoadingOverlay("show")
+                    $.ajax({
+                        type: 'POST',
+                        url: " {{ route('admin.assign.store') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            insurance: $('#insurance').val(),
+                            owner: $('#owner').val(),
+                            owner_phone: $('#ownerPhone').val(),
+                            owner_email: $('#ownerEmail').val(),
+                            claim: $('#claim').val(),
+                            claim_type: $('#claimType').val(),
+                            loss_type: $('#lossType').val(),
+                            vehicle_location: $('#vehicleLocation').val(),
+                            appointment: $('#appointment').val()
+                        },
+                        success: function(response) {
+                            $.LoadingOverlay("hide");
+                            $('#assignmentModal').css('display', 'none')
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Assignment added successfully.',
+                                showConfirmButton: false,
+                                timer: 1000 // Hide after 0.8 seconds
+                            }).then(() => {
+
+                                window.location
+                                    .reload();
+                                // Reload the page after the alert closes
+                            });
+                        },
+                        error: function(xhr) {
+                            $.LoadingOverlay("hide")
+
+                            if (xhr.status === 422) {
+
+                                const errors = xhr.responseJSON.errors;
+                                $('.error-msg').html(' ');
+                                window.l
+                                $.each(errors, function(key, value) {
+
+                                    $(`#${key}-error`).html(
+                                        `${value[0]}`
+                                    );
+                                });
+                            }
+
+                            let errorMessage = 'An error occurred.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+
+                        }
+                    })
+                })
+            })
         </script>
 
         <script>
@@ -399,60 +473,73 @@
                 });
             });
 
-            $(document).ready(function() {
-                $('.agent').on("change", function() {
-                    const selectedAgent = $(this);
-                    const agentId = selectedAgent.val();
-                    const assignmentId = selectedAgent.attr('data-id');
+      $(document).ready(function() {
+    $('.agent').on("change", function() {
+        const selectedAgent = $(this);
+        const agentId = selectedAgent.val();
+        const assignmentId = selectedAgent.attr('data-id');
 
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You want to change agent",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, change it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.LoadingOverlay("show");
-                            $.ajax({
-                                type: 'POST',
-                                url: '{{ route('admin.assign.agent') }}',
-                                data: {
-                                    _token: "{{ csrf_token() }}",
-                                    agent: agentId,
-                                    assignment: assignmentId,
-                                },
-                                success: function(response) {
-                                    $.LoadingOverlay("hide");
-                                    Swal.fire(
-                                        'Assigned!',
-                                        'The agent has been changed successfully.',
-                                        'success'
-                                    );
-                                },
-                                error: function(xhr) {
-                                    $.LoadingOverlay("hide");
-                                    let errorMessage =
-                                        'An error occurred. Please try again.';
-                                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                                        errorMessage = xhr.responseJSON.message;
-                                    }
-                                    Swal.fire(
-                                        'Error!',
-                                        errorMessage,
-                                        'error'
-                                    );
-                                    selectedAgent.val('');
-                                }
-                            });
-                        } else {
-                            selectedAgent.val('');
+        // Store reference to the current element
+        const currentAgentSelect = $(this);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to change agent",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, change it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('admin.assign.agent') }}',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        agent: agentId,
+                        assignment: assignmentId,
+                    },
+                    success: function(response) {
+                        $.LoadingOverlay("hide");
+                        Swal.fire(
+                            'Assigned!',
+                            'The agent has been changed successfully.',
+                            'success'
+                        );
+
+
+                        const assignStatusBtn = currentAgentSelect
+                            .closest('.assign-card')
+                            .find('.assign-status'); 
+
+
+                        assignStatusBtn.html('Pending');
+                        assignStatusBtn.css('background', '#d3c501');
+
+
+                    },
+                    error: function(xhr) {
+                        $.LoadingOverlay("hide");
+                        let errorMessage = 'An error occurred. Please try again.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
                         }
-                    });
+                        Swal.fire(
+                            'Error!',
+                            errorMessage,
+                            'error'
+                        );
+                        selectedAgent.val('');
+                    }
                 });
-            });
+            } else {
+                selectedAgent.val('');
+            }
+        });
+    });
+});
         </script>
         <script>
             $(document).ready(function() {
