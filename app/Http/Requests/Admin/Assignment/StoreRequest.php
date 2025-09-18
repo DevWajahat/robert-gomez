@@ -26,7 +26,7 @@ class StoreRequest extends FormRequest
             'owner' => 'required|string|max:255',
             'owner_phone' => 'required|string|max:20',
             'owner_email' => 'required|email|max:255',
-            'claim' => 'required|string|max:255',
+            'claim' => 'required|string|max:255|unique:assignments,claim',
             'claim_type' => 'required|string|max:255',
             'loss_type' => 'required|string|max:255',
             'vehicle_location' => 'required|string|max:255',

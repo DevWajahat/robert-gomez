@@ -55,7 +55,7 @@ class AssignmentController extends Controller
             'status' => true,
             'message' => 'assign agent successfully.',
             'assign_status' => $assignment->status,
-            
+
         ]);
     }
 

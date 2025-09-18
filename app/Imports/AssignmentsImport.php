@@ -81,15 +81,29 @@ class AssignmentsImport implements ToCollection, WithHeadingRow
 
         foreach ($rows as $key => $row) {
             try {
-                // Skip empty rows
-                if ($row->filter(fn ($value) => !is_null($value) && trim((string) $value) !== '')->isEmpty()) {
+                // Skip empty rows (only process if any of the 9 required columns have non-empty trimmed value)
+                $hasData = false;
+                foreach ($required as $field) {
+                    $value = $row[$field] ?? '';
+                    if (!is_null($value) && trim((string) $value) !== '') {
+                        $hasData = true;
+                        break;
+                    }
+                }
+                if (!$hasData) {
                     continue;
+                }
+
+                // Fix owner_phone reading issue: force numeric values to integer then string to preserve exact digits
+                if (isset($row['owner_phone']) && is_numeric($row['owner_phone'])) {
+                    $row['owner_phone'] = (string) (int) $row['owner_phone'];
+                    \Log::debug('Fixed owner_phone from numeric: ' . $row['owner_phone']);
                 }
 
                 $rowErrors = [];
                 $rowValues = [];
 
-                // Collect values for CSV
+                // Collect values for CSV (only from the 9 required columns; ignore extras)
                 foreach ($required as $field) {
                     $value = $row[$field] ?? '';
                     if ($field === 'appointment_date' && $value) {
@@ -100,7 +114,7 @@ class AssignmentsImport implements ToCollection, WithHeadingRow
                     }
                 }
 
-                // Validate in serial order
+                // Validate required fields (only the 9 columns)
                 foreach ($required as $field) {
                     if (!isset($row[$field]) || trim((string) $row[$field]) === '') {
                         $rowErrors[] = "The {$field} field is required.";
@@ -138,7 +152,7 @@ class AssignmentsImport implements ToCollection, WithHeadingRow
                     }
                 }
 
-                // Formula detection
+                // Formula detection (only on the 9 required columns)
                 foreach ($required as $column) {
                     $value = $row[$column] ?? '';
                     if (is_string($value) && str_starts_with(trim($value), '=')) {
@@ -146,7 +160,16 @@ class AssignmentsImport implements ToCollection, WithHeadingRow
                     }
                 }
 
-                // If errors, collect them
+                // Check claim_number uniqueness against the 'claim' column in database
+                if (empty($rowErrors) && isset($row['claim_number']) && trim((string) $row['claim_number']) !== '') {
+                    $claimValue = trim($row['claim_number']);
+                    $existingClaim = Assignment::where('claim', $claimValue)->exists();
+                    if ($existingClaim) {
+                        $rowErrors[] = "The claim_number '{$claimValue}' already exists in the database and must be unique.";
+                    }
+                }
+
+                // If errors, collect them (skip creation)
                 if (!empty($rowErrors)) {
                     $this->errors[] = [
                         'row' => $key + 2,
@@ -169,16 +192,16 @@ class AssignmentsImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
-                // Create assignment
+                // Create assignment (only using the 9 columns)
                 Assignment::create([
-                    'company' => $row['insurance'],
-                    'owner' => $row['owner_name'],
-                    'owner_phone' => $row['owner_phone'],
-                    'owner_email' => $row['owner_email'],
-                    'claim' => $row['claim_number'],
-                    'claim_type' => $row['claim_type'],
-                    'loss_type' => $row['loss_type'],
-                    'vehicle_location' => $row['vehicle_location'],
+                    'company' => trim($row['insurance']),
+                    'owner' => trim($row['owner_name']),
+                    'owner_phone' => trim($row['owner_phone']),
+                    'owner_email' => trim($row['owner_email']),
+                    'claim' => trim($row['claim_number']),
+                    'claim_type' => trim($row['claim_type']),
+                    'loss_type' => trim($row['loss_type']),
+                    'vehicle_location' => trim($row['vehicle_location']),
                     'appointment_date' => $appointmentDate['date'],
                 ]);
 
