@@ -187,8 +187,8 @@
                             <div class="card-id-wrapper">
                                 <h3>{{ $assignment->id }}</h3>
                                 <div class="toggler-btn-wrapper">
-                                    <select name="" data-id="{{ $assignment->id }}" class="selectpicker agent">
-                                        <option value="" selected disabled>Select agent </option>
+                                    <select name="" data-id="{{ $assignment->id }}" data-value="{{ $assignment->user->first_name . ' ' . $assignment->user->last_name }}" class="selectpicker agent">
+                                        <option value=""  disabled>Select agent </option>
                                         @forelse ($users as $user)
                                             <option value="{{ $user->id }}"
                                                 {{ $user->id == $assignment->user_id ? 'selected' : '' }}>
@@ -469,9 +469,23 @@
                     pendingBtnWrapper.toggleClass('hidden-class smooth-toggle');
                     caretIcon.toggleClass('rotated');
                 });
+
+                 $(document).on('click','.toggler-btn', function() {
+                    var parentCard = $(this).closest('.assign-card');
+                    var otherDescArea = parentCard.find('.other-desc-area');
+                    var pendingBtnWrapper = parentCard.find('.pending-btn-wrapper');
+                    var caretIcon = $(this).find('.rotate-icon');
+                    var eyeBtn = parentCard.find('.eye-btn');
+
+                    eyeBtn.toggleClass('hidden-class smooth-toggle');
+                    otherDescArea.toggleClass('hidden-class smooth-toggle');
+                    pendingBtnWrapper.toggleClass('hidden-class smooth-toggle');
+                    caretIcon.toggleClass('rotated');
+                });
             });
 
       $(document).ready(function() {
+
     $('.agent').on("change", function() {
         const selectedAgent = $(this);
         const agentId = selectedAgent.val();
@@ -533,7 +547,79 @@
                     }
                 });
             } else {
-                selectedAgent.val('');
+                // selectedAgent.val();
+
+            }
+        });
+    });
+
+      $(document).on("change",'.agent', function() {
+        const selectedAgent = $(this);
+        const agentId = selectedAgent.val();
+        const assignmentId = selectedAgent.attr('data-id');
+
+        // Store reference to the current element
+        const currentAgentSelect = $(this);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to change agent",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, change it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('admin.assign.agent') }}',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        agent: agentId,
+                        assignment: assignmentId,
+                    },
+                    success: function(response) {
+                        $.LoadingOverlay("hide");
+
+
+
+
+                        Swal.fire(
+                            'Assigned!',
+                            'The agent has been changed successfully.',
+                            'success'
+                        );
+
+
+
+
+                        const assignStatusBtn = currentAgentSelect
+                            .closest('.assign-card')
+                            .find('.assign-status');
+
+                        assignStatusBtn.html('Pending');
+                        assignStatusBtn.css('background', '#d3c501');
+
+
+                    },
+                    error: function(xhr) {
+                        $.LoadingOverlay("hide");
+                        let errorMessage = 'An error occurred. Please try again.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        Swal.fire(
+                            'Error!',
+                            errorMessage,
+                            'error'
+                        );
+                        selectedAgent.val('');
+                    }
+                });
+            } else {
+                // selectedAgent.val('');
             }
         });
     });
@@ -565,6 +651,7 @@
                             $(this).text(timeAgo.trim().replace(/,$/, '') + ' ago');
                         }
                     });
+
                 }
                 updateElapsedTime();
                 setInterval(updateElapsedTime, 60000);
@@ -616,22 +703,27 @@
                             importForm.reset();
 
                             if (response.success) {
+                                // Full success - green swal
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success!',
                                     text: response.message,
                                     showConfirmButton: false,
                                     timer: 1500
+                                }).then(() => {
+                                    window.location.reload(
+                                    true); // Force reload to show new assignments
                                 });
-                            } else if (response.csv_errors && response.error_csv) {
+                            } else if (response.success_count > 0 && response.error_count > 0) {
+                                // Partial import - 1 row imported but 7 rows failed - show as warning
                                 Swal.fire({
                                     title: 'Partial Import',
-                                    text: response.csv_errors +
-                                        ` (${response.success_count} successfully imported)`,
+                                    text: response
+                                    .message, // "Imported 1 assignments successfully, but 7 rows had errors..."
                                     icon: 'warning',
                                     showCancelButton: true,
                                     confirmButtonText: 'Download Error CSV',
-                                    cancelButtonText: 'Close'
+                                    cancelButtonText: 'Close & Reload'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         const link = document.createElement('a');
@@ -640,9 +732,14 @@
                                         document.body.appendChild(link);
                                         link.click();
                                         document.body.removeChild(link);
+                                        setTimeout(() => window.location.reload(true),
+                                        1000);
+                                    } else {
+                                        window.location.reload(true);
                                     }
                                 });
                             } else {
+                                // Complete failure - red swal
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Import Failed',
@@ -652,7 +749,8 @@
                                     cancelButtonText: 'Close',
                                     confirmButtonText: response.error_csv ?
                                         'Download Error CSV' : null,
-                                    showConfirmButton: !!response.error_csv
+                                    showConfirmButton: !!response
+                                        .error_csv // Only show confirm if error_csv exists
                                 }).then((result) => {
                                     if (result.isConfirmed && response.error_csv) {
                                         const link = document.createElement('a');
@@ -661,8 +759,8 @@
                                         document.body.appendChild(link);
                                         link.click();
                                         document.body.removeChild(link);
-
                                     }
+                                    // No reload for full error case (empty CSV or zero rows)
                                 });
                             }
                         },
@@ -730,7 +828,71 @@
         </script>
         <script>
             $(document).ready(function() {
+function formatTimeAgo(createdAt) {
+        if (!createdAt) return 'Just now';
 
+        // Handle different date formats
+        let createdDate;
+
+        try {
+            // Try parsing with 'Z' first (ISO format)
+            createdDate = new Date(createdAt + 'Z');
+
+            // If that doesn't work, try without 'Z'
+            if (isNaN(createdDate.getTime())) {
+                createdDate = new Date(createdAt);
+            }
+
+            // If still invalid, try parsing different formats
+            if (isNaN(createdDate.getTime())) {
+                // Handle MySQL datetime format (YYYY-MM-DD HH:MM:SS)
+                const mysqlRegex = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})$/;
+                if (mysqlRegex.test(createdAt)) {
+                    createdDate = new Date(createdAt + '.000Z');
+                }
+            }
+
+            // Final check - if still invalid, return current time
+            if (isNaN(createdDate.getTime())) {
+                console.warn('Invalid date format:', createdAt);
+                return 'Just now';
+            }
+        } catch (error) {
+            console.warn('Date parsing error:', error, 'for date:', createdAt);
+            return 'Just now';
+        }
+
+        const now = new Date();
+        let diffInMilliseconds = Math.abs(now.getTime() - createdDate.getTime());
+
+        // If the difference is very small, it might be a future date or invalid
+        if (diffInMilliseconds < 0) {
+            diffInMilliseconds = 0;
+        }
+
+        const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        const diffInDays = Math.floor(diffInHours / 24);
+        let timeAgo = '';
+
+        if (diffInDays > 0) {
+            timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}, `;
+        }
+        if (diffInHours > 0) {
+            const remainingHours = diffInHours % 24;
+            if (remainingHours > 0 || diffInDays === 0) {
+                timeAgo += `${remainingHours} hour${remainingHours > 1 ? 's' : ''}, `;
+            }
+        }
+        const remainingMinutes = diffInMinutes % 60;
+        if (remainingMinutes > 0 || (diffInHours === 0 && diffInDays === 0)) {
+            timeAgo += `${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
+        } else if (timeAgo === '') {
+            timeAgo = 'Just now';
+        }
+
+        return timeAgo.trim().replace(/,$/, '') + ' ago';
+    }
 
                 $('#searchForm').on("submit", function(e) {
                     e.preventDefault();
@@ -756,11 +918,16 @@
 
                             if (response.assignments != 'No Results Found') {
 
+
+
                                 $.each(response.assignments, function(index, item) {
                                     console.log(item);
                                     var status = item.status;
-                                    var statusColor = item.status == 'completed' ?
-                                        '#00A84C' : '#d3c501'
+                                    var statusColor = item.status == 'completed' ? '#00A84C' : '#d3c501';
+
+                                    const formattedTime = formatTimeAgo(item.created_at);
+
+
                                     assignment +=
                                         `<div class="assign-card" >
                     <div class="card-id-wrapper">
@@ -794,7 +961,7 @@
                             </div>
                         </div>
                         <div>
-                            <p class="text-end m-0" data-created-at="${item.created_at}"></p>
+                            <p class="text-end m-0" data-created-at="${item.created_at}">${formattedTime}</p>
                             <div class="pending-btn-wrapper hidden-class">
                                 <button>Quick Updates</button>
                                 <button style="background:${item.statusColor} !important;">${item.status}</button>

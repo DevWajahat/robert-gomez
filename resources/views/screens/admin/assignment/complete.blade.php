@@ -618,22 +618,27 @@
                             importForm.reset();
 
                             if (response.success) {
+                                // Full success - green swal
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success!',
                                     text: response.message,
                                     showConfirmButton: false,
                                     timer: 1500
+                                }).then(() => {
+                                    window.location.reload(
+                                    true); // Force reload to show new assignments
                                 });
-                            } else if (response.csv_errors && response.error_csv) {
+                            } else if (response.success_count > 0 && response.error_count > 0) {
+                                // Partial import - 1 row imported but 7 rows failed - show as warning
                                 Swal.fire({
                                     title: 'Partial Import',
-                                    text: response.csv_errors +
-                                        ` (${response.success_count} successfully imported)`,
+                                    text: response
+                                    .message, // "Imported 1 assignments successfully, but 7 rows had errors..."
                                     icon: 'warning',
                                     showCancelButton: true,
                                     confirmButtonText: 'Download Error CSV',
-                                    cancelButtonText: 'Close'
+                                    cancelButtonText: 'Close & Reload'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         const link = document.createElement('a');
@@ -642,9 +647,14 @@
                                         document.body.appendChild(link);
                                         link.click();
                                         document.body.removeChild(link);
+                                        setTimeout(() => window.location.reload(true),
+                                        1000);
+                                    } else {
+                                        window.location.reload(true);
                                     }
                                 });
                             } else {
+                                // Complete failure - red swal
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Import Failed',
@@ -654,7 +664,8 @@
                                     cancelButtonText: 'Close',
                                     confirmButtonText: response.error_csv ?
                                         'Download Error CSV' : null,
-                                    showConfirmButton: !!response.error_csv
+                                    showConfirmButton: !!response
+                                        .error_csv // Only show confirm if error_csv exists
                                 }).then((result) => {
                                     if (result.isConfirmed && response.error_csv) {
                                         const link = document.createElement('a');
@@ -663,8 +674,8 @@
                                         document.body.appendChild(link);
                                         link.click();
                                         document.body.removeChild(link);
-
                                     }
+                                    // No reload for full error case (empty CSV or zero rows)
                                 });
                             }
                         },

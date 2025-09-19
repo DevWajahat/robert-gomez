@@ -216,7 +216,7 @@
                             </div>
                         </div>
                     @empty
-                    <div class="container">No Results Found</div>
+                        <div class="container">No Results Found</div>
                     @endforelse
                 </div>
             </div>
@@ -421,7 +421,6 @@
 
             $(document).ready(function() {
                 $('.agent').on("change", function() {
-                    // Store the selected element and its values for use inside the SweetAlert function
                     const selectedAgent = $(this);
                     const agentId = selectedAgent.val();
                     const assignmentId = selectedAgent.attr('data-id');
@@ -436,7 +435,6 @@
                         confirmButtonText: 'Yes, assign it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // User confirmed, now perform the AJAX request to assign the agent and hide the card
                             $.LoadingOverlay("show");
                             $.ajax({
                                 type: 'POST',
@@ -448,7 +446,6 @@
                                 },
                                 success: function(response) {
                                     $.LoadingOverlay("hide");
-                                    // Find the parent card and hide it from the DOM
                                     selectedAgent.closest('.assign-card').hide();
 
                                     Swal.fire(
@@ -465,143 +462,135 @@
                                         errorMessage = xhr.responseJSON.message;
                                     }
 
-                                    // On error, revert the select box and show an error message
 
                                 }
                             });
                         } else {
-                            // User cancelled, revert the select box to the default
                             selectedAgent.val('');
                         }
                     });
 
-                     $(document).on("change",'.agent', function() {
-                    // Store the selected element and its values for use inside the SweetAlert function
-                    const selectedAgent = $(this);
-                    const agentId = selectedAgent.val();
-                    const assignmentId = selectedAgent.attr('data-id');
+                    $(document).on("change", '.agent', function() {
+                        const selectedAgent = $(this);
+                        const agentId = selectedAgent.val();
+                        const assignmentId = selectedAgent.attr('data-id');
 
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "Once an agent is assigned, your assignment will be moved to the Tasks Assigned tab.",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, assign it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // User confirmed, now perform the AJAX request to assign the agent and hide the card
-                            $.LoadingOverlay("show");
-                            $.ajax({
-                                type: 'POST',
-                                url: '{{ route('admin.assign.agent') }}',
-                                data: {
-                                    _token: "{{ csrf_token() }}",
-                                    agent: agentId,
-                                    assignment: assignmentId,
-                                },
-                                success: function(response) {
-                                    $.LoadingOverlay("hide");
-                                    // Find the parent card and hide it from the DOM
-                                    selectedAgent.closest('.assign-card').hide();
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "Once an agent is assigned, your assignment will be moved to the Tasks Assigned tab.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, assign it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.LoadingOverlay("show");
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ route('admin.assign.agent') }}',
+                                    data: {
+                                        _token: "{{ csrf_token() }}",
+                                        agent: agentId,
+                                        assignment: assignmentId,
+                                    },
+                                    success: function(response) {
+                                        $.LoadingOverlay("hide");
+                                        selectedAgent.closest('.assign-card')
+                                            .hide();
 
-                                    Swal.fire(
-                                        'Assigned!',
-                                        'The assignment has been successfully moved to Task Assigned tab.',
-                                        'success'
-                                    );
-                                },
-                                error: function(xhr) {
-                                    $.LoadingOverlay("hide");
-                                    let errorMessage =
-                                        'An error occurred. Please try again.';
-                                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                                        errorMessage = xhr.responseJSON.message;
+                                        Swal.fire(
+                                            'Assigned!',
+                                            'The assignment has been successfully moved to Task Assigned tab.',
+                                            'success'
+                                        );
+                                    },
+                                    error: function(xhr) {
+                                        $.LoadingOverlay("hide");
+                                        let errorMessage =
+                                            'An error occurred. Please try again.';
+                                        if (xhr.responseJSON && xhr.responseJSON
+                                            .message) {
+                                            errorMessage = xhr.responseJSON.message;
+                                        }
+
+
                                     }
+                                });
+                            } else {
+                                selectedAgent.val('');
+                            }
+                        });
 
-                                    // On error, revert the select box and show an error message
-
-                                }
-                            });
-                        } else {
-                            // User cancelled, revert the select box to the default
-                            selectedAgent.val('');
-                        }
                     });
 
-                });
+
+                    $(document).on("change", '.agent', function() {
+\                        const selectedAgent = $(this);
+                        const agentId = selectedAgent.val();
+                        const assignmentId = selectedAgent.attr('data-id');
+
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "Once an agent is assigned, your assignment will be moved to the Tasks Assigned tab.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, assign it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.LoadingOverlay("show");
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ route('admin.assign.agent') }}',
+                                    data: {
+                                        _token: "{{ csrf_token() }}",
+                                        agent: agentId,
+                                        assignment: assignmentId,
+                                    },
+                                    success: function(response) {
+                                        $.LoadingOverlay("hide");
+                                        selectedAgent.closest('.assign-card')
+                                            .hide();
+
+                                        Swal.fire(
+                                            'Assigned!',
+                                            'The assignment has been successfully moved to Task Assigned tab.',
+                                            'success'
+                                        );
+                                    },
+                                    error: function(xhr) {
+                                        $.LoadingOverlay("hide");
+                                        let errorMessage =
+                                            'An error occurred. Please try again.';
+                                        if (xhr.responseJSON && xhr.responseJSON
+                                            .message) {
+                                            errorMessage = xhr.responseJSON.message;
+                                        }
 
 
-                $(document).on("change",'.agent', function() {
-                    // Store the selected element and its values for use inside the SweetAlert function
-                    const selectedAgent = $(this);
-                    const agentId = selectedAgent.val();
-                    const assignmentId = selectedAgent.attr('data-id');
-
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "Once an agent is assigned, your assignment will be moved to the Tasks Assigned tab.",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, assign it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // User confirmed, now perform the AJAX request to assign the agent and hide the card
-                            $.LoadingOverlay("show");
-                            $.ajax({
-                                type: 'POST',
-                                url: '{{ route('admin.assign.agent') }}',
-                                data: {
-                                    _token: "{{ csrf_token() }}",
-                                    agent: agentId,
-                                    assignment: assignmentId,
-                                },
-                                success: function(response) {
-                                    $.LoadingOverlay("hide");
-                                    // Find the parent card and hide it from the DOM
-                                    selectedAgent.closest('.assign-card').hide();
-
-                                    Swal.fire(
-                                        'Assigned!',
-                                        'The assignment has been successfully moved to Task Assigned tab.',
-                                        'success'
-                                    );
-                                },
-                                error: function(xhr) {
-                                    $.LoadingOverlay("hide");
-                                    let errorMessage =
-                                        'An error occurred. Please try again.';
-                                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                                        errorMessage = xhr.responseJSON.message;
                                     }
+                                });
+                            } else {
 
-                                    // On error, revert the select box and show an error message
+                                selectedAgent.val('');
+                            }
+                        });
 
-                                }
-                            });
-                        } else {
-                            // User cancelled, revert the select box to the default
-                            selectedAgent.val('');
-                        }
-                    });
-
-                })
+                    })
                 });
             })
         </script>
         <script></script>
         <script>
             $(document).ready(function() {
-                // Function to calculate and update elapsed time
                 function updateElapsedTime() {
-                    // Select all elements with the data-created-at attribute
+
                     $('.board-area .text-end').each(function() {
                         const createdAt = $(this).data('created-at');
                         if (createdAt) {
-                            // Parse the date as UTC and get its timestamp
+
                             const createdDate = new Date(createdAt + 'Z');
                             const now = new Date();
 
@@ -630,19 +619,49 @@
                             $(this).text(timeAgo.trim().replace(/,$/, '') + ' ago');
                         }
                     });
+
+
+                    $(document).each('.board-area', function() {
+                        const createdAt = $(this).data('created-at');
+                        if (createdAt) {
+
+                            const createdDate = new Date(createdAt + 'Z');
+                            const now = new Date();
+
+                            let diffInMilliseconds = now.getTime() - createdDate.getTime();
+
+                            diffInMilliseconds = Math.abs(diffInMilliseconds);
+
+                            
+                            const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+                            const diffInHours = Math.floor(diffInMinutes / 60);
+                            const diffInDays = Math.floor(diffInHours / 24);
+
+                            let timeAgo = '';
+                            if (diffInDays > 0) {
+                                timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}, `;
+                            }
+                            if (diffInHours > 0) {
+                                const remainingHours = diffInHours % 24;
+                                timeAgo += `${remainingHours} hour${remainingHours > 1 ? 's' : ''}, `;
+                            }
+                            const remainingMinutes = diffInMinutes % 60;
+                            timeAgo += `${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
+
+                            $(this).text(timeAgo.trim().replace(/,$/, '') + ' ago');
+                        }
+                    });
                 }
 
-                // Call the function initially to update all elements
                 updateElapsedTime();
 
-                // Set an interval to update the time every minute
                 setInterval(updateElapsedTime, 60000);
             });
         </script>
         <script>
             $(document).ready(function() {
                 $('#assignmentForm').on("submit", function(event) {
-                    event.preventDefault(); // This is the key line to prevent page reload
+                    event.preventDefault();
 
                     console.log($('#insurance').val());
                     console.log($('#owner').val());
@@ -678,12 +697,12 @@
                                 title: 'Success!',
                                 text: 'Assignment added successfully.',
                                 showConfirmButton: false,
-                                timer: 1000 // Hide after 0.8 seconds
+                                timer: 1000
                             }).then(() => {
 
                                 window.location
                                     .reload();
-                                // Reload the page after the alert closes
+
                             });
                         },
                         error: function(xhr) {
@@ -739,18 +758,17 @@
                 const closeImport = document.querySelector(".close-import");
                 const importForm = document.getElementById("importForm");
 
-                // Modal open
+
                 importBtn.addEventListener("click", () => {
                     importModal.style.display = "flex";
                 });
 
-                // Modal close
                 closeImport.addEventListener("click", () => {
                     importModal.style.display = "none";
                     importForm.reset();
                 });
 
-                // Form submit via AJAX
+
                 importForm.addEventListener("submit", (e) => {
                     e.preventDefault();
                     const fileInput = document.getElementById("importFile");
@@ -778,6 +796,7 @@
                             importForm.reset();
 
                             if (response.success) {
+                                // Full success - green swal
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success!',
@@ -788,10 +807,12 @@
                                     window.location.reload(
                                         true); // Force reload to show new assignments
                                 });
-                            } else if (response.csv_errors && response.error_csv) {
+                            } else if (response.success_count > 0 && response.error_count > 0) {
+                                // Partial import - 1 row imported but 7 rows failed - show as warning
                                 Swal.fire({
                                     title: 'Partial Import',
-                                    text: response.csv_errors,
+                                    text: response
+                                        .message, // "Imported 1 assignments successfully, but 7 rows had errors..."
                                     icon: 'warning',
                                     showCancelButton: true,
                                     confirmButtonText: 'Download Error CSV',
@@ -811,6 +832,7 @@
                                     }
                                 });
                             } else {
+                                // Complete failure - red swal
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Import Failed',
@@ -862,13 +884,13 @@
                                     link.click();
                                     document.body.removeChild(link);
                                 }
-                                // No reload for error case
+
                             });
                         }
                     });
                 });
 
-                // Close modal on outside click
+
                 window.addEventListener("click", (e) => {
                     if (e.target === importModal) {
                         importModal.style.display = "none";
@@ -896,7 +918,7 @@
                         data: {
                             _token: "{{ csrf_token() }}",
                             search_query: input,
-                            filter:'index'
+                            filter: 'index'
                         },
                         success: function(response) {
                             console.log(response)
@@ -915,7 +937,7 @@
                     <div class="card-id-wrapper">
                         <h3>${item.id}</h3>
                         <div class="toggler-btn-wrapper">
-                                                                <select name="" data-id="{{isset($assignment) ?  $assignment->id : '' }}" class="selectpicker agent">
+                                                                <select name="" data-id="{{ isset($assignment) ? $assignment->id : '' }}" class="selectpicker agent">
                                         <option value="" selected disabled>Select agent </option>
                                         @forelse ($users as $user)
                                             <option value="{{ $user->id }}"
@@ -951,14 +973,16 @@
                         </div>
                     </div>
                 </div>
-                `
+                ` })
 
-                                })
-                            } else {
-                                assignment = '<div class="container">No Results Found. </div>'
-                            }
+            } else {
+                assignment = '<div class="container">No Results Found. </div>'
+            }
 
                             $('.board-area').html(assignment)
+                            updateElapsedTime();
+
+
 
                         }
                     })
@@ -966,8 +990,6 @@
                 })
 
             })
-
-
         </script>
     @endpush
 @endsection

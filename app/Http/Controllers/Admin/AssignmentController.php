@@ -71,139 +71,147 @@ class AssignmentController extends Controller
         return view('screens.admin.assignment.task', get_defined_vars());
     }
 
-    public function upload(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|file|mimes:csv,xlsx'
-        ]);
+public function upload(Request $request)
+{
+    $request->validate([
+        'file' => 'required|file|mimes:csv,xlsx'
+    ]);
 
-        \Log::info('Uploaded file MIME type: ' . $request->file('file')->getClientMimeType());
-        \Log::info('Uploaded file extension: ' . $request->file('file')->getClientOriginalExtension());
+    \Log::info('Uploaded file MIME type: ' . $request->file('file')->getClientMimeType());
+    \Log::info('Uploaded file extension: ' . $request->file('file')->getClientOriginalExtension());
 
-        DB::beginTransaction();
+    DB::beginTransaction();
 
-        try {
-            $import = new AssignmentsImport();
-            Excel::import($import, $request->file('file'));
+    try {
+        $import = new AssignmentsImport();
+        Excel::import($import, $request->file('file'));
 
-            $successCount = $import->getSuccessCount();
-            $errors = $import->getErrors();
+        $successCount = $import->getSuccessCount();
+        $errors = $import->getErrors();
 
-            // Check for empty CSV (no rows processed, no errors)
-            if ($successCount === 0 && empty($errors)) {
-                DB::rollBack();
-                $errorMessage = 'The uploaded CSV file is empty. Please upload a file with valid data.';
-
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => $errorMessage,
-                    ], 422);
-                }
-
-                return back()->with('error', $errorMessage);
-            }
-
-            // Check for zero successful imports with errors (all rows failed)
-            if ($successCount === 0 && !empty($errors)) {
-                DB::rollBack();
-                $errorCsvPath = $this->generateErrorCsv($errors);
-                $errorMessage = 'No rows were imported due to validation errors. Download the error CSV for details.';
-
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => $errorMessage,
-                        'error_csv' => $errorCsvPath,
-                    ], 422);
-                }
-
-                return back()->with([
-                    'error' => $errorMessage,
-                    'error_csv' => $errorCsvPath,
-                ]);
-            }
-
-            // Partial success (some rows imported, some failed)
-            if (!empty($errors)) {
-                $errorCsvPath = $this->generateErrorCsv($errors);
-                $message = "Imported {$successCount} assignments successfully, but " . count($errors) . " rows had errors. Download the error CSV for details";
-
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'csv_errors' => $message,
-                        'error_csv' => $errorCsvPath,
-                        'success_count' => $successCount,
-                    ], 206);
-                }
-
-                return back()->with([
-                    'csv_errors' => $message,
-                    'error_csv' => $errorCsvPath,
-                    'success_count' => $successCount,
-                ]);
-            }
-
-            // Full success (all rows imported)
-            DB::commit();
-            $message = "Imported {$successCount} assignments successfully!";
-
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => $message,
-                    'success_count' => $successCount,
-                ], 201);
-            }
-
-            return redirect()->back()->with('success', $message);
-        } catch (\Exception $e) {
+        // Check for empty CSV (no rows processed, no errors)
+        if ($successCount === 0 && empty($errors)) {
             DB::rollBack();
-            \Log::error('Import error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-            $errorMessage = $e->getMessage() === 'Could not find zip member'
-                ? 'Invalid or corrupted XLSX file. Please upload a valid CSV or XLSX file.'
-                : 'Failed to process the file: ' . $e->getMessage();
+            $errorMessage = 'The uploaded CSV file is empty. Please upload a file with valid data.';
 
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => $errorMessage,
-                ], 400);
+                ], 422);
             }
 
             return back()->with('error', $errorMessage);
         }
-    }
 
-    private function generateErrorCsv($errors)
-    {
-        $columns = ['insurance', 'owner_name', 'owner_phone', 'owner_email', 'claim_number', 'claim_type', 'loss_type', 'vehicle_location', 'appointment_date'];
-        $headers = array_merge(['Row'], $columns, ['Errors']);
-        $csvData = implode(',', $headers) . "\n";
+        // Check for zero successful imports with errors (all rows failed) - ROLLBACK
+        if ($successCount === 0 && !empty($errors)) {
+            DB::rollBack();
+            $errorCsvPath = $this->generateErrorCsv($errors);
+            $errorMessage = 'No rows were imported due to validation errors. Download the error CSV for details.';
 
-        foreach ($errors as $error) {
-            $rowData = [$error['row']];
-            foreach ($columns as $column) {
-                $value = isset($error['values'][$column]) ? str_replace([",", "\n", "\r"], ' ', $error['values'][$column]) : '';
-                $rowData[] = $value;
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage,
+                    'error_csv' => $errorCsvPath,
+                    'success_count' => 0,
+                ], 422);
             }
-            $errorsColumn = implode(', ', $error['errors']);
-            $rowData[] = str_replace([",", "\n", "\r"], ' ', $errorsColumn);
-            $csvData .= implode(',', $rowData) . "\n";
+
+            return back()->with([
+                'error' => $errorMessage,
+                'error_csv' => $errorCsvPath,
+                'success_count' => 0,
+            ]);
         }
 
-        $fileName = 'assignment_import_errors_' . now()->timestamp . '.csv';
-        $path = public_path('Uploads/error_logs/' . $fileName);
+        // At this point, we have at least one successful import
+        // COMMIT the transaction for partial or full success
+        DB::commit();
 
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
+        // Check for partial success (some rows failed) - SHOW AS WARNING
+        if (!empty($errors)) {
+            $errorCsvPath = $this->generateErrorCsv($errors);
+            $message = "Imported {$successCount} assignments successfully, but " . count($errors) . " rows had errors. Download the error CSV for details";
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false, // Changed to false for warning style
+                    'message' => $message,
+                    'error_csv' => $errorCsvPath,
+                    'success_count' => $successCount,
+                    'error_count' => count($errors),
+                    'type' => 'warning', // Add type indicator for frontend
+                ], 206);
+            }
+
+            return back()->with([
+                'warning' => $message, // Use 'warning' instead of 'success'
+                'error_csv' => $errorCsvPath,
+                'success_count' => $successCount,
+            ]);
         }
 
-        file_put_contents($path, $csvData);
+        // Full success (all rows imported, no errors)
+        $message = "Imported {$successCount} assignments successfully!";
 
-        return asset('Uploads/error_logs/' . $fileName);
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'success_count' => $successCount,
+            ], 201);
+        }
+
+        return redirect()->back()->with('success', $message);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('Import error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+        $errorMessage = $e->getMessage() === 'Could not find zip member'
+            ? 'Invalid or corrupted XLSX file. Please upload a valid CSV or XLSX file.'
+            : 'Failed to process the file: ' . $e->getMessage();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => $errorMessage,
+            ], 400);
+        }
+
+        return back()->with('error', $errorMessage);
     }
+}
+
+private function generateErrorCsv($errors)
+{
+    $columns = ['insurance', 'owner_name', 'owner_phone', 'owner_email', 'claim_number', 'claim_type', 'loss_type', 'vehicle_location', 'appointment_date'];
+    $headers = array_merge(['Row'], $columns, ['Errors']);
+    $csvData = implode(',', $headers) . "\n";
+
+    foreach ($errors as $error) {
+        $rowData = [$error['row']];
+        foreach ($columns as $column) {
+            $value = isset($error['values'][$column]) ? str_replace([",", "\n", "\r"], ' ', $error['values'][$column]) : '';
+            $rowData[] = $value;
+        }
+        $errorsColumn = implode(', ', $error['errors']);
+        $rowData[] = str_replace([",", "\n", "\r"], ' ', $errorsColumn);
+        $csvData .= implode(',', $rowData) . "\n";
+    }
+
+    $fileName = 'assignment_import_errors_' . now()->timestamp . '.csv';
+    $path = public_path('Uploads/error_logs/' . $fileName);
+
+    if (!file_exists(dirname($path))) {
+        mkdir(dirname($path), 0755, true);
+    }
+
+    file_put_contents($path, $csvData);
+
+    return asset('Uploads/error_logs/' . $fileName);
+}
 
     public function completeAssign()
     {
