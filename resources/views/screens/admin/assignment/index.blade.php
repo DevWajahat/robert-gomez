@@ -526,7 +526,8 @@
 
 
                     $(document).on("change", '.agent', function() {
-\                        const selectedAgent = $(this);
+
+                        const selectedAgent = $(this);
                         const agentId = selectedAgent.val();
                         const assignmentId = selectedAgent.attr('data-id');
 
@@ -585,6 +586,7 @@
         <script></script>
         <script>
             $(document).ready(function() {
+                
                 function updateElapsedTime() {
 
                     $('.board-area .text-end').each(function() {
@@ -632,7 +634,7 @@
 
                             diffInMilliseconds = Math.abs(diffInMilliseconds);
 
-                            
+
                             const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
                             const diffInHours = Math.floor(diffInMinutes / 60);
                             const diffInDays = Math.floor(diffInHours / 24);
@@ -899,9 +901,68 @@
                 });
             });
         </script>
+
         <script>
             $(document).ready(function() {
+                // Enhanced time formatting helper function
+                function formatTimeAgo(createdAt) {
+                    if (!createdAt) return 'Just now';
 
+                    let createdDate;
+                    try {
+                        // Handle different date formats more robustly
+                        if (typeof createdAt === 'number') {
+                            // Unix timestamp
+                            createdDate = new Date(createdAt * 1000);
+                        } else {
+                            // Try ISO format first
+                            createdDate = new Date(createdAt);
+
+                            // If invalid, try adding 'Z' for UTC
+                            if (isNaN(createdDate.getTime())) {
+                                createdDate = new Date(createdAt + 'Z');
+                            }
+
+                            // If still invalid, try MySQL format
+                            if (isNaN(createdDate.getTime())) {
+                                const mysqlMatch = createdAt.match(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})/);
+                                if (mysqlMatch) {
+                                    createdDate = new Date(`${mysqlMatch[1]}T${mysqlMatch[2]}Z`);
+                                }
+                            }
+                        }
+
+                        if (isNaN(createdDate.getTime())) {
+                            console.warn('Invalid date format:', createdAt);
+                            return 'Just now';
+                        }
+                    } catch (error) {
+                        console.warn('Date parsing error:', error, 'for date:', createdAt);
+                        return 'Just now';
+                    }
+
+                    const now = new Date();
+                    let diffInMilliseconds = Math.abs(now.getTime() - createdDate.getTime());
+
+                    if (diffInMilliseconds < 0) {
+                        diffInMilliseconds = 0;
+                    }
+
+                    const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+                    const diffInHours = Math.floor(diffInMinutes / 60);
+                    const diffInDays = Math.floor(diffInHours / 24);
+                    let timeAgo = '';
+
+                    if (diffInDays > 0) {
+                        timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}`;
+                    } else if (diffInHours > 0) {
+                        timeAgo = `${diffInHours} hour${diffInHours > 1 ? 's' : ''}`;
+                    } else {
+                        timeAgo = `${diffInMinutes} min${diffInMinutes !== 1 ? 's' : ''}`;
+                    }
+
+                    return timeAgo + ' ago';
+                }
 
                 $('#searchForm').on("submit", function(e) {
                     e.preventDefault();
@@ -918,7 +979,7 @@
                         data: {
                             _token: "{{ csrf_token() }}",
                             search_query: input,
-                            filter: 'index'
+                            filter: 'task-assigned'
                         },
                         success: function(response) {
                             console.log(response)
@@ -926,69 +987,71 @@
                             $('#searchModal').css("display", "none");
 
                             if (response.assignments != 'No Results Found') {
-
                                 $.each(response.assignments, function(index, item) {
                                     console.log(item);
                                     var status = item.status;
                                     var statusColor = item.status == 'completed' ?
-                                        '#00A84C' : '#d3c501'
-                                    assignment +=
-                                        `<div class="assign-card" >
-                    <div class="card-id-wrapper">
-                        <h3>${item.id}</h3>
-                        <div class="toggler-btn-wrapper">
-                                                                <select name="" data-id="{{ isset($assignment) ? $assignment->id : '' }}" class="selectpicker agent">
-                                        <option value="" selected disabled>Select agent </option>
-                                        @forelse ($users as $user)
-                                            <option value="{{ $user->id }}"
-                                                {{ isset($assignment) && $user->id == $assignment->user_id ? 'selected' : '' }}>
-                                                {{ $user->first_name . ' ' . $user->last_name }}</option>
-                                        @empty
-                                        @endforelse
-                                    </select>
-                            <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
-                            <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
-                        </div>
-                    </div>
-                    <div class="insurance-wrapper">
-                        <div>
-                            <p><span>Insurance:</span> ABC Claims Logistics ABC Insurance Company.</p>
-                            <div class="other-desc-area hidden-class">
-                                <p><span>Owner: </span>${item.owner} </p>
-                                <p><span>Owner Phone: </span> ${item.owner_phone} </p>
-                                <p><span>Owner Email: </span> ${item.owner_email} </p>
-                                <p><span>Claim#: </span> ${item.claim} </p>
-                                <p><span>Type of Claim: </span> ${item.claim_type}</p>
-                                <p><span>Loss Type:</span> ${item.loss_type}</p>
-                                <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
-                                <p><span>Appointment:</span> ${item.appointment_date} </p>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-end m-0" data-created-at="${item.created_at}"></p>
-                            <div class="pending-btn-wrapper hidden-class">
-                                <button>Quick Updates</button>
-                                <button style="background:${item.statusColor} !important;">${item.status}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                ` })
+                                        '#00A84C' : '#d3c501';
 
-            } else {
-                assignment = '<div class="container">No Results Found. </div>'
-            }
+                                    // Format the time ONCE during template generation
+                                    const formattedTime = formatTimeAgo(item.created_at);
+
+                                    assignment +=
+                                        `<div class="assign-card">
+                                <div class="card-id-wrapper">
+                                    <h3>${item.id}</h3>
+                                    <div class="toggler-btn-wrapper">
+                                        <select name="" data-id="${item.id}" class="selectpicker agent">
+                                            <option value="" selected disabled>Select agent </option>
+                                            @forelse ($users as $user)
+                                                <option value="{{ $user->id }}"
+                                                    {{ isset($assignment) && $user->id == $assignment->user_id ? 'selected' : '' }}>
+                                                    {{ $user->first_name . ' ' . $user->last_name }}</option>
+                                            @empty
+                                            @endforelse
+                                        </select>
+                                        <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
+                                        <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
+                                    </div>
+                                </div>
+                                <div class="insurance-wrapper">
+                                    <div>
+                                        <p><span>Insurance:</span> ABC Claims Logistics ABC Insurance Company.</p>
+                                        <div class="other-desc-area hidden-class">
+                                            <p><span>Owner: </span>${item.owner} </p>
+                                            <p><span>Owner Phone: </span> ${item.owner_phone} </p>
+                                            <p><span>Owner Email: </span> ${item.owner_email} </p>
+                                            <p><span>Claim#: </span> ${item.claim} </p>
+                                            <p><span>Type of Claim: </span> ${item.claim_type}</p>
+                                            <p><span>Loss Type:</span> ${item.loss_type}</p>
+                                            <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
+                                            <p><span>Appointment:</span> ${item.appointment_date} </p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <!-- Time is formatted once and stored as static text -->
+                                        <p class="text-end m-0">${formattedTime}</p>
+                                        <div class="pending-btn-wrapper hidden-class">
+                                            <button>Quick Updates</button>
+                                            <button style="background:${statusColor} !important;">${item.status}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+                                })
+                            } else {
+                                assignment = '<div class="container">No Results Found. </div>'
+                            }
 
                             $('.board-area').html(assignment)
-                            updateElapsedTime();
-
-
-
+                            // No additional processing needed - time is already formatted and static
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            $.LoadingOverlay("hide");
                         }
                     })
-
                 })
-
             })
         </script>
     @endpush

@@ -7,14 +7,14 @@
                 <h3>Your Assignments</h3>
                 <p>View your list of active claims below or search to find specific claims.</p>
             </div>
-            {{-- <div class="assign-header-child">
+            <div class="assign-header-child">
                 <div class="search-bar-area position-relative">
                     <button class="head-search-icon" type="submit"><i class="fa-solid fa-magnifying-glass "></i></button>
                     <input type="text" class="head-search-input" placeholder="Search Assignment" name=""
                         id="">
                 </div>
                 <button class="add-assign-btn">Add Assignment</button>
-            </div> --}}
+            </div>
         </div>
         <div class="board-area">
             @forelse ($assignments as $assignment)
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div>
-                            <p class="text-end m-0" data-created-at="{{ $assignment->created_at }}">20 hours, 27 mins </p>
+                            <p class="text-end m-0" data-created-at="{{ $assignment->created_at }}"></p>
                             <div class="pending-btn-wrapper hidden-class">
                                 <button>Quick Updates</button>
                                 @if ($assignment->status == 'pending')
@@ -512,8 +512,8 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
-        < script >
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script>
             $(document).ready(function() {
                 // Function to calculate and update elapsed time
                 function updateElapsedTime() {

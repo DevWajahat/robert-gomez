@@ -187,14 +187,15 @@
                             <div class="card-id-wrapper">
                                 <h3>{{ $assignment->id }}</h3>
                                 <div class="toggler-btn-wrapper">
-                                    <select name="" data-id="{{ $assignment->id }}" data-value="{{ $assignment->user->first_name . ' ' . $assignment->user->last_name }}" class="selectpicker agent">
-                                        <option value=""  disabled>Select agent </option>
+                                    <select name="" data-id="{{ $assignment->id }}"
+                                        data-value="{{ $assignment->user->first_name . ' ' . $assignment->user->last_name }}"
+                                        class="selectpicker agent">
+                                        <option value="" disabled>Select agent </option>
                                         @forelse ($users as $user)
                                             <option value="{{ $user->id }}"
                                                 {{ $user->id == $assignment->user_id ? 'selected' : '' }}>
                                                 {{ $user->first_name . ' ' . $user->last_name }}</option>
                                         @empty
-
                                         @endforelse
                                     </select>
                                     <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i>
@@ -223,16 +224,18 @@
                                     <div class="pending-btn-wrapper hidden-class">
                                         <button>Quick Updates</button>
                                         @if ($assignment->status == 'pending')
-                                            <button style="background:#d3c501 !important;" class="assign-status">Pending</button>
+                                            <button style="background:#d3c501 !important;"
+                                                class="assign-status">Pending</button>
                                         @else
-                                            <button style="background:#00A84C !important;" class="assign-status">Completed</button>
+                                            <button style="background:#00A84C !important;"
+                                                class="assign-status">Completed</button>
                                         @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                     @empty
-                                                            <div class="container">No Results Found</div>
+                        <div class="container">No Results Found</div>
                     @endforelse
                 </div>
             </div>
@@ -315,7 +318,7 @@
     </div>
 
     <!-- Search Modal -->
-      <div id="searchModal" class="modal" style="display:none;">
+    <div id="searchModal" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Search Assignments</h2>
@@ -470,7 +473,7 @@
                     caretIcon.toggleClass('rotated');
                 });
 
-                 $(document).on('click','.toggler-btn', function() {
+                $(document).on('click', '.toggler-btn', function() {
                     var parentCard = $(this).closest('.assign-card');
                     var otherDescArea = parentCard.find('.other-desc-area');
                     var pendingBtnWrapper = parentCard.find('.pending-btn-wrapper');
@@ -484,146 +487,148 @@
                 });
             });
 
-      $(document).ready(function() {
+            $(document).ready(function() {
 
-    $('.agent').on("change", function() {
-        const selectedAgent = $(this);
-        const agentId = selectedAgent.val();
-        const assignmentId = selectedAgent.attr('data-id');
+                $('.agent').on("change", function() {
+                    const selectedAgent = $(this);
+                    const agentId = selectedAgent.val();
+                    const assignmentId = selectedAgent.attr('data-id');
 
-        // Store reference to the current element
-        const currentAgentSelect = $(this);
+                    // Store reference to the current element
+                    const currentAgentSelect = $(this);
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to change agent",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, change it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.LoadingOverlay("show");
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('admin.assign.agent') }}',
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        agent: agentId,
-                        assignment: assignmentId,
-                    },
-                    success: function(response) {
-                        $.LoadingOverlay("hide");
-                        Swal.fire(
-                            'Assigned!',
-                            'The agent has been changed successfully.',
-                            'success'
-                        );
-
-
-                        const assignStatusBtn = currentAgentSelect
-                            .closest('.assign-card')
-                            .find('.assign-status');
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to change agent",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, change it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.LoadingOverlay("show");
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ route('admin.assign.agent') }}',
+                                data: {
+                                    _token: "{{ csrf_token() }}",
+                                    agent: agentId,
+                                    assignment: assignmentId,
+                                },
+                                success: function(response) {
+                                    $.LoadingOverlay("hide");
+                                    Swal.fire(
+                                        'Assigned!',
+                                        'The agent has been changed successfully.',
+                                        'success'
+                                    );
 
 
-                        assignStatusBtn.html('Pending');
-                        assignStatusBtn.css('background', '#d3c501');
+                                    const assignStatusBtn = currentAgentSelect
+                                        .closest('.assign-card')
+                                        .find('.assign-status');
 
 
-                    },
-                    error: function(xhr) {
-                        $.LoadingOverlay("hide");
-                        let errorMessage = 'An error occurred. Please try again.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
+                                    assignStatusBtn.html('Pending');
+                                    assignStatusBtn.css('background', '#d3c501');
+
+
+                                },
+                                error: function(xhr) {
+                                    $.LoadingOverlay("hide");
+                                    let errorMessage =
+                                        'An error occurred. Please try again.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMessage = xhr.responseJSON.message;
+                                    }
+                                    Swal.fire(
+                                        'Error!',
+                                        errorMessage,
+                                        'error'
+                                    );
+                                    selectedAgent.val('');
+                                }
+                            });
+                        } else {
+                            // selectedAgent.val();
+
                         }
-                        Swal.fire(
-                            'Error!',
-                            errorMessage,
-                            'error'
-                        );
-                        selectedAgent.val('');
-                    }
+                    });
                 });
-            } else {
-                // selectedAgent.val();
 
-            }
-        });
-    });
+                $(document).on("change", '.agent', function() {
+                    const selectedAgent = $(this);
+                    const agentId = selectedAgent.val();
+                    const assignmentId = selectedAgent.attr('data-id');
 
-      $(document).on("change",'.agent', function() {
-        const selectedAgent = $(this);
-        const agentId = selectedAgent.val();
-        const assignmentId = selectedAgent.attr('data-id');
+                    // Store reference to the current element
+                    const currentAgentSelect = $(this);
 
-        // Store reference to the current element
-        const currentAgentSelect = $(this);
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to change agent",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, change it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.LoadingOverlay("show");
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('admin.assign.agent') }}',
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        agent: agentId,
-                        assignment: assignmentId,
-                    },
-                    success: function(response) {
-                        $.LoadingOverlay("hide");
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to change agent",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, change it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.LoadingOverlay("show");
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ route('admin.assign.agent') }}',
+                                data: {
+                                    _token: "{{ csrf_token() }}",
+                                    agent: agentId,
+                                    assignment: assignmentId,
+                                },
+                                success: function(response) {
+                                    $.LoadingOverlay("hide");
 
 
 
 
-                        Swal.fire(
-                            'Assigned!',
-                            'The agent has been changed successfully.',
-                            'success'
-                        );
+                                    Swal.fire(
+                                        'Assigned!',
+                                        'The agent has been changed successfully.',
+                                        'success'
+                                    );
 
 
 
 
-                        const assignStatusBtn = currentAgentSelect
-                            .closest('.assign-card')
-                            .find('.assign-status');
+                                    const assignStatusBtn = currentAgentSelect
+                                        .closest('.assign-card')
+                                        .find('.assign-status');
 
-                        assignStatusBtn.html('Pending');
-                        assignStatusBtn.css('background', '#d3c501');
+                                    assignStatusBtn.html('Pending');
+                                    assignStatusBtn.css('background', '#d3c501');
 
 
-                    },
-                    error: function(xhr) {
-                        $.LoadingOverlay("hide");
-                        let errorMessage = 'An error occurred. Please try again.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
+                                },
+                                error: function(xhr) {
+                                    $.LoadingOverlay("hide");
+                                    let errorMessage =
+                                        'An error occurred. Please try again.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMessage = xhr.responseJSON.message;
+                                    }
+                                    Swal.fire(
+                                        'Error!',
+                                        errorMessage,
+                                        'error'
+                                    );
+                                    selectedAgent.val('');
+                                }
+                            });
+                        } else {
+                            // selectedAgent.val('');
                         }
-                        Swal.fire(
-                            'Error!',
-                            errorMessage,
-                            'error'
-                        );
-                        selectedAgent.val('');
-                    }
+                    });
                 });
-            } else {
-                // selectedAgent.val('');
-            }
-        });
-    });
-});
+            });
         </script>
         <script>
             $(document).ready(function() {
@@ -712,14 +717,14 @@
                                     timer: 1500
                                 }).then(() => {
                                     window.location.reload(
-                                    true); // Force reload to show new assignments
+                                        true); // Force reload to show new assignments
                                 });
                             } else if (response.success_count > 0 && response.error_count > 0) {
                                 // Partial import - 1 row imported but 7 rows failed - show as warning
                                 Swal.fire({
                                     title: 'Partial Import',
                                     text: response
-                                    .message, // "Imported 1 assignments successfully, but 7 rows had errors..."
+                                        .message, // "Imported 1 assignments successfully, but 7 rows had errors..."
                                     icon: 'warning',
                                     showCancelButton: true,
                                     confirmButtonText: 'Download Error CSV',
@@ -733,7 +738,7 @@
                                         link.click();
                                         document.body.removeChild(link);
                                         setTimeout(() => window.location.reload(true),
-                                        1000);
+                                            1000);
                                     } else {
                                         window.location.reload(true);
                                     }
@@ -828,71 +833,64 @@
         </script>
         <script>
             $(document).ready(function() {
-function formatTimeAgo(createdAt) {
-        if (!createdAt) return 'Just now';
+                function formatTimeAgo(createdAt) {
+                    if (!createdAt) return 'Just now';
 
-        // Handle different date formats
-        let createdDate;
+                    let createdDate;
 
-        try {
-            // Try parsing with 'Z' first (ISO format)
-            createdDate = new Date(createdAt + 'Z');
+                    try {
+                        createdDate = new Date(createdAt + 'Z');
 
-            // If that doesn't work, try without 'Z'
-            if (isNaN(createdDate.getTime())) {
-                createdDate = new Date(createdAt);
-            }
+                        if (isNaN(createdDate.getTime())) {
+                            createdDate = new Date(createdAt);
+                        }
 
-            // If still invalid, try parsing different formats
-            if (isNaN(createdDate.getTime())) {
-                // Handle MySQL datetime format (YYYY-MM-DD HH:MM:SS)
-                const mysqlRegex = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})$/;
-                if (mysqlRegex.test(createdAt)) {
-                    createdDate = new Date(createdAt + '.000Z');
+                        if (isNaN(createdDate.getTime())) {
+                            const mysqlRegex = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})$/;
+                            if (mysqlRegex.test(createdAt)) {
+                                createdDate = new Date(createdAt + '.000Z');
+                            }
+                        }
+
+                        if (isNaN(createdDate.getTime())) {
+                            console.warn('Invalid date format:', createdAt);
+                            return 'Just now';
+                        }
+                    } catch (error) {
+                        console.warn('Date parsing error:', error, 'for date:', createdAt);
+                        return 'Just now';
+                    }
+
+                    const now = new Date();
+                    let diffInMilliseconds = Math.abs(now.getTime() - createdDate.getTime());
+
+                    if (diffInMilliseconds < 0) {
+                        diffInMilliseconds = 0;
+                    }
+
+                    const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+                    const diffInHours = Math.floor(diffInMinutes / 60);
+                    const diffInDays = Math.floor(diffInHours / 24);
+                    let timeAgo = '';
+
+                    if (diffInDays > 0) {
+                        timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}, `;
+                    }
+                    if (diffInHours > 0) {
+                        const remainingHours = diffInHours % 24;
+                        if (remainingHours > 0 || diffInDays === 0) {
+                            timeAgo += `${remainingHours} hour${remainingHours > 1 ? 's' : ''}, `;
+                        }
+                    }
+                    const remainingMinutes = diffInMinutes % 60;
+                    if (remainingMinutes > 0 || (diffInHours === 0 && diffInDays === 0)) {
+                        timeAgo += `${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
+                    } else if (timeAgo === '') {
+                        timeAgo = 'Just now';
+                    }
+
+                    return timeAgo.trim().replace(/,$/, '') + ' ago';
                 }
-            }
-
-            // Final check - if still invalid, return current time
-            if (isNaN(createdDate.getTime())) {
-                console.warn('Invalid date format:', createdAt);
-                return 'Just now';
-            }
-        } catch (error) {
-            console.warn('Date parsing error:', error, 'for date:', createdAt);
-            return 'Just now';
-        }
-
-        const now = new Date();
-        let diffInMilliseconds = Math.abs(now.getTime() - createdDate.getTime());
-
-        // If the difference is very small, it might be a future date or invalid
-        if (diffInMilliseconds < 0) {
-            diffInMilliseconds = 0;
-        }
-
-        const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        const diffInDays = Math.floor(diffInHours / 24);
-        let timeAgo = '';
-
-        if (diffInDays > 0) {
-            timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}, `;
-        }
-        if (diffInHours > 0) {
-            const remainingHours = diffInHours % 24;
-            if (remainingHours > 0 || diffInDays === 0) {
-                timeAgo += `${remainingHours} hour${remainingHours > 1 ? 's' : ''}, `;
-            }
-        }
-        const remainingMinutes = diffInMinutes % 60;
-        if (remainingMinutes > 0 || (diffInHours === 0 && diffInDays === 0)) {
-            timeAgo += `${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
-        } else if (timeAgo === '') {
-            timeAgo = 'Just now';
-        }
-
-        return timeAgo.trim().replace(/,$/, '') + ' ago';
-    }
 
                 $('#searchForm').on("submit", function(e) {
                     e.preventDefault();
@@ -909,7 +907,7 @@ function formatTimeAgo(createdAt) {
                         data: {
                             _token: "{{ csrf_token() }}",
                             search_query: input,
-                            filter:'task-assigned'
+                            filter: 'task-assigned'
                         },
                         success: function(response) {
                             console.log(response)
@@ -923,7 +921,8 @@ function formatTimeAgo(createdAt) {
                                 $.each(response.assignments, function(index, item) {
                                     console.log(item);
                                     var status = item.status;
-                                    var statusColor = item.status == 'completed' ? '#00A84C' : '#d3c501';
+                                    var statusColor = item.status == 'completed' ?
+                                        '#00A84C' : '#d3c501';
 
                                     const formattedTime = formatTimeAgo(item.created_at);
 
@@ -937,7 +936,7 @@ function formatTimeAgo(createdAt) {
                                         <option value="" selected disabled>Select agent </option>
                                         @forelse ($users as $user)
                                             <option value="{{ $user->id }}"
-                                                {{ isset($assignment)  && $user->id == $assignment->user_id ? 'selected' : '' }}>
+                                                {{ isset($assignment) && $user->id == $assignment->user_id ? 'selected' : '' }}>
                                                 {{ $user->first_name . ' ' . $user->last_name }}</option>
                                         @empty
                                         @endforelse
@@ -970,22 +969,17 @@ function formatTimeAgo(createdAt) {
                     </div>
                 </div>
                 `
-
-                                })
+           })
                             } else {
                                 assignment = '<div class="container">No Results Found. </div>'
                             }
-
                             $('.board-area').html(assignment)
-
                         }
                     })
 
                 })
 
             })
-
-
         </script>
     @endpush
 @endsection

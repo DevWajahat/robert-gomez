@@ -233,7 +233,7 @@
                             </div>
                         </div>
                     @empty
-                    <div class="container">No Results Found</div>
+                        <div class="container">No Results Found</div>
                     @endforelse
                 </div>
             </div>
@@ -471,7 +471,7 @@
                     caretIcon.toggleClass('rotated');
                 });
 
-                $(document).on('click','.toggler-btn', function() {
+                $(document).on('click', '.toggler-btn', function() {
                     var parentCard = $(this).closest('.assign-card');
                     var otherDescArea = parentCard.find('.other-desc-area');
                     var pendingBtnWrapper = parentCard.find('.pending-btn-wrapper');
@@ -627,14 +627,14 @@
                                     timer: 1500
                                 }).then(() => {
                                     window.location.reload(
-                                    true); // Force reload to show new assignments
+                                        true); // Force reload to show new assignments
                                 });
                             } else if (response.success_count > 0 && response.error_count > 0) {
                                 // Partial import - 1 row imported but 7 rows failed - show as warning
                                 Swal.fire({
                                     title: 'Partial Import',
                                     text: response
-                                    .message, // "Imported 1 assignments successfully, but 7 rows had errors..."
+                                        .message, // "Imported 1 assignments successfully, but 7 rows had errors..."
                                     icon: 'warning',
                                     showCancelButton: true,
                                     confirmButtonText: 'Download Error CSV',
@@ -648,7 +648,7 @@
                                         link.click();
                                         document.body.removeChild(link);
                                         setTimeout(() => window.location.reload(true),
-                                        1000);
+                                            1000);
                                     } else {
                                         window.location.reload(true);
                                     }
@@ -741,87 +741,149 @@
                 });
             });
         </script>
-        <script>
-            $(document).ready(function() {
+     <script>
+$(document).ready(function() {
+    // Enhanced time formatting helper function
+    function formatTimeAgo(createdAt) {
+        if (!createdAt) return 'Just now';
 
+        let createdDate;
+        try {
+            // Handle different date formats more robustly
+            if (typeof createdAt === 'number') {
+                // Unix timestamp
+                createdDate = new Date(createdAt * 1000);
+            } else {
+                // Try ISO format first
+                createdDate = new Date(createdAt);
 
-                $('#searchForm').on("submit", function(e) {
-                    e.preventDefault();
-                    const input = $(".search-input").val();
+                // If invalid, try adding 'Z' for UTC
+                if (isNaN(createdDate.getTime())) {
+                    createdDate = new Date(createdAt + 'Z');
+                }
 
-                    console.log(input)
-                    $.LoadingOverlay("show")
+                // If still invalid, try MySQL format
+                if (isNaN(createdDate.getTime())) {
+                    const mysqlMatch = createdAt.match(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})/);
+                    if (mysqlMatch) {
+                        createdDate = new Date(`${mysqlMatch[1]}T${mysqlMatch[2]}Z`);
+                    }
+                }
+            }
 
-                    var assignment = '';
+            if (isNaN(createdDate.getTime())) {
+                console.warn('Invalid date format:', createdAt);
+                return 'Just now';
+            }
+        } catch (error) {
+            console.warn('Date parsing error:', error, 'for date:', createdAt);
+            return 'Just now';
+        }
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route('admin.assign.search') }}',
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            search_query: input,
-                            filter: 'index'
-                        },
-                        success: function(response) {
-                            console.log(response)
-                            $.LoadingOverlay("hide")
-                            $('#searchModal').css("display", "none");
+        const now = new Date();
+        let diffInMilliseconds = Math.abs(now.getTime() - createdDate.getTime());
 
-                            if (response.assignments != 'No Results Found') {
+        if (diffInMilliseconds < 0) {
+            diffInMilliseconds = 0;
+        }
 
-                                $.each(response.assignments, function(index, item) {
-                                    console.log(item);
-                                    var status = item.status;
-                                    var statusColor = item.status == 'completed' ?
-                                        '#00A84C' : '#d3c501'
-                                    assignment +=
-                                        `<div class="assign-card" >
-                    <div class="card-id-wrapper">
-                        <h3>${item.id}</h3>
-                        <div class="toggler-btn-wrapper">
+        const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        const diffInDays = Math.floor(diffInHours / 24);
+        let timeAgo = '';
 
-                            <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
-                            <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
-                        </div>
-                    </div>
-                    <div class="insurance-wrapper">
-                        <div>
-                            <p><span>Insurance:</span> ABC Claims Logistics ABC Insurance Company.</p>
-                            <div class="other-desc-area hidden-class">
-                                <p><span>Owner: </span>${item.owner} </p>
-                                <p><span>Owner Phone: </span> ${item.owner_phone} </p>
-                                <p><span>Owner Email: </span> ${item.owner_email} </p>
-                                <p><span>Claim#: </span> ${item.claim} </p>
-                                <p><span>Type of Claim: </span> ${item.claim_type}</p>
-                                <p><span>Loss Type:</span> ${item.loss_type}</p>
-                                <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
-                                <p><span>Appointment:</span> ${item.appointment_date} </p>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-end m-0" data-created-at="${item.created_at}"></p>
-                            <div class="pending-btn-wrapper hidden-class">
-                                <button>Quick Updates</button>
-                                <button style="background:${item.statusColor} !important;">${item.status}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                `
+        if (diffInDays > 0) {
+            timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}`;
+        } else if (diffInHours > 0) {
+            timeAgo = `${diffInHours} hour${diffInHours > 1 ? 's' : ''}`;
+        } else {
+            timeAgo = `${diffInMinutes} min${diffInMinutes !== 1 ? 's' : ''}`;
+        }
 
-                                })
-                            } else {
-                                assignment = '<div class="container">No Results Found. </div>'
-                            }
+        return timeAgo + ' ago';
+    }
 
-                            $('.board-area').html(assignment)
+    $('#searchForm').on("submit", function(e) {
+        e.preventDefault();
+        const input = $(".search-input").val();
 
-                        }
+        console.log(input)
+        $.LoadingOverlay("show")
+
+        var assignment = '';
+
+        $.ajax({
+            type: 'POST',
+            url: '{{ route('admin.assign.search') }}',
+            data: {
+                _token: "{{ csrf_token() }}",
+                search_query: input,
+                filter: 'task-assigned'
+            },
+            success: function(response) {
+                console.log(response)
+                $.LoadingOverlay("hide")
+                $('#searchModal').css("display", "none");
+
+                if (response.assignments != 'No Results Found') {
+                    $.each(response.assignments, function(index, item) {
+                        console.log(item);
+                        var status = item.status;
+                        var statusColor = item.status == 'completed' ?
+                            '#00A84C' : '#d3c501';
+
+                        // Format the time ONCE during template generation
+                        const formattedTime = formatTimeAgo(item.created_at);
+
+                        assignment +=
+                            `<div class="assign-card">
+                                <div class="card-id-wrapper">
+                                    <h3>${item.id}</h3>
+                                    <div class="toggler-btn-wrapper">
+                                       
+                                        <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
+                                        <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
+                                    </div>
+                                </div>
+                                <div class="insurance-wrapper">
+                                    <div>
+                                        <p><span>Insurance:</span> ABC Claims Logistics ABC Insurance Company.</p>
+                                        <div class="other-desc-area hidden-class">
+                                            <p><span>Owner: </span>${item.owner} </p>
+                                            <p><span>Owner Phone: </span> ${item.owner_phone} </p>
+                                            <p><span>Owner Email: </span> ${item.owner_email} </p>
+                                            <p><span>Claim#: </span> ${item.claim} </p>
+                                            <p><span>Type of Claim: </span> ${item.claim_type}</p>
+                                            <p><span>Loss Type:</span> ${item.loss_type}</p>
+                                            <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
+                                            <p><span>Appointment:</span> ${item.appointment_date} </p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <!-- Time is formatted once and stored as static text -->
+                                        <p class="text-end m-0">${formattedTime}</p>
+                                        <div class="pending-btn-wrapper hidden-class">
+                                            <button>Quick Updates</button>
+                                            <button style="background:${statusColor} !important;">${item.status}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
                     })
+                } else {
+                    assignment = '<div class="container">No Results Found. </div>'
+                }
 
-                })
-
-            })
-        </script>
+                $('.board-area').html(assignment)
+                // No additional processing needed - time is already formatted and static
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                $.LoadingOverlay("hide");
+            }
+        })
+    })
+})
+</script>
     @endpush
 @endsection
