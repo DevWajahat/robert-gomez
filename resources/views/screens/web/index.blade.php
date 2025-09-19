@@ -7,14 +7,14 @@
                 <h3>Your Assignments</h3>
                 <p>View your list of active claims below or search to find specific claims.</p>
             </div>
-            <div class="assign-header-child">
+            {{-- <div class="assign-header-child">
                 <div class="search-bar-area position-relative">
                     <button class="head-search-icon" type="submit"><i class="fa-solid fa-magnifying-glass "></i></button>
                     <input type="text" class="head-search-input" placeholder="Search Assignment" name=""
                         id="">
                 </div>
                 <button class="add-assign-btn">Add Assignment</button>
-            </div>
+            </div> --}}
         </div>
         <div class="board-area">
             @forelse ($assignments as $assignment)
@@ -47,7 +47,7 @@
                                 <button>Quick Updates</button>
                                 @if ($assignment->status == 'pending')
                                     <button style="background:#d3c501 !important;">Pending</button>
-                                    <button class="btn btn-primary completeBtn" 
+                                    <button class="btn btn-primary completeBtn"
                                         data-id="{{ $assignment->id }}">Complete</button>
                                 @else
                                     <button style="background:#00A84C !important;">Completed</button>

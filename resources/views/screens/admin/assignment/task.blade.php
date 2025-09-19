@@ -194,6 +194,7 @@
                                                 {{ $user->id == $assignment->user_id ? 'selected' : '' }}>
                                                 {{ $user->first_name . ' ' . $user->last_name }}</option>
                                         @empty
+
                                         @endforelse
                                     </select>
                                     <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i>
@@ -231,6 +232,7 @@
                             </div>
                         </div>
                     @empty
+                                                            <div class="container">No Results Found</div>
                     @endforelse
                 </div>
             </div>
@@ -313,7 +315,7 @@
     </div>
 
     <!-- Search Modal -->
-    <div id="searchModal" class="modal" style="display:none;">
+      <div id="searchModal" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Search Assignments</h2>
@@ -326,11 +328,7 @@
                         <label style="color:#fff !important">Search</label>
                         <input type="text" name="search" class="search-input" autocomplete="off"
                             placeholder="Enter Claim # or Owner Name">
-                        <div class="search-suggestions">
-                            <ul class="search-suggestions--list style">
-                                <li>No Assignments found.</li>
-                            </ul>
-                        </div>
+
                     </div>
 
                 </div>
@@ -512,7 +510,7 @@
 
                         const assignStatusBtn = currentAgentSelect
                             .closest('.assign-card')
-                            .find('.assign-status'); 
+                            .find('.assign-status');
 
 
                         assignStatusBtn.html('Pending');
@@ -736,161 +734,91 @@
 
                 $('#searchForm').on("submit", function(e) {
                     e.preventDefault();
+                    const input = $(".search-input").val();
+
+                    console.log(input)
+                    $.LoadingOverlay("show")
+
+                    var assignment = '';
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('admin.assign.search') }}',
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            search_query: input,
+                            filter:'task-assigned'
+                        },
+                        success: function(response) {
+                            console.log(response)
+                            $.LoadingOverlay("hide")
+                            $('#searchModal').css("display", "none");
+
+                            if (response.assignments != 'No Results Found') {
+
+                                $.each(response.assignments, function(index, item) {
+                                    console.log(item);
+                                    var status = item.status;
+                                    var statusColor = item.status == 'completed' ?
+                                        '#00A84C' : '#d3c501'
+                                    assignment +=
+                                        `<div class="assign-card" >
+                    <div class="card-id-wrapper">
+                        <h3>${item.id}</h3>
+                        <div class="toggler-btn-wrapper">
+                                                                <select name="" data-id="${item.id}" class="selectpicker agent">
+                                        <option value="" selected disabled>Select agent </option>
+                                        @forelse ($users as $user)
+                                            <option value="{{ $user->id }}"
+                                                {{ isset($assignment)  && $user->id == $assignment->user_id ? 'selected' : '' }}>
+                                                {{ $user->first_name . ' ' . $user->last_name }}</option>
+                                        @empty
+                                        @endforelse
+                                    </select>
+                            <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
+                            <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
+                        </div>
+                    </div>
+                    <div class="insurance-wrapper">
+                        <div>
+                            <p><span>Insurance:</span> ABC Claims Logistics ABC Insurance Company.</p>
+                            <div class="other-desc-area hidden-class">
+                                <p><span>Owner: </span>${item.owner} </p>
+                                <p><span>Owner Phone: </span> ${item.owner_phone} </p>
+                                <p><span>Owner Email: </span> ${item.owner_email} </p>
+                                <p><span>Claim#: </span> ${item.claim} </p>
+                                <p><span>Type of Claim: </span> ${item.claim_type}</p>
+                                <p><span>Loss Type:</span> ${item.loss_type}</p>
+                                <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
+                                <p><span>Appointment:</span> ${item.appointment_date} </p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-end m-0" data-created-at="${item.created_at}"></p>
+                            <div class="pending-btn-wrapper hidden-class">
+                                <button>Quick Updates</button>
+                                <button style="background:${item.statusColor} !important;">${item.status}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `
+
+                                })
+                            } else {
+                                assignment = '<div class="container">No Results Found. </div>'
+                            }
+
+                            $('.board-area').html(assignment)
+
+                        }
+                    })
+
                 })
 
-                const input = $(".search-input");
-                const select = $(".search-select");
-                const results = $(".search-suggestions--list");
+            })
 
-                function detectSearch() {
-                    let query = input.val().trim() ?? null;
-                    let category = select.val() ?? null;
-                    console.log(query, category);
 
-                    // Clear and hide results immediately if query is empty
-                    if (query === '' && category === '') {
-                        results.empty();
-                        results.addClass("hidden");
-                        return;
-                    }
-
-                    // Only proceed with AJAX if query is not empty
-                    if (query !== '') {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('admin.assign.search') }}",
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                                query: query,
-                            },
-                            success: function(response) {
-                                console.log(response);
-                                let assignments = response; // Direct array of assignments from controller
-                                results.empty();
-                                if (assignments.length > 0) {
-                                    results.removeClass("hidden");
-                                    assignments.forEach(function(assignment) {
-                                        let html = `
-                                <li>
-                                    <a href="https://example.com/assignment/${assignment.id}">
-                                        <div class="searched-content" style="height:auto">
-                                            <div>
-                                                ${assignment.claim} (Owner: ${assignment.owner})
-                                                <p>Location: ${assignment.vehicle_location}</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            `;
-                                        results.append(html);
-                                        results.addClass("style");
-                                    });
-                                } else {
-                                    let html = `
-                            <li>No assignments found.</li>
-                        `;
-                                    results.append(html);
-                                    results.removeClass("style");
-                                }
-                            },
-                            error: function(error) {
-                                console.error(error);
-                            }
-                        });
-                    } else {
-                        results.empty();
-                        results.addClass("hidden");
-                    }
-                }
-
-                input.on("keyup change", detectSearch);
-                select.on("change", detectSearch);
-
-                let body = document.body;
-
-                $("body").on("click", () => {
-                    results.addClass("hidden");
-                    input.val("");
-                    results.empty();
-                });
-            });
-
-            // $(document).ready(function() {
-            //     const input = $(".search-input");
-            //     const select = $(".search-select");
-            //     const results = $(".search-suggestions--list");
-
-            //     function detectSearch() {
-            //         let query = input.val().trim() ?? null;
-            //         let category = select.val() ?? null;
-            //         console.log(query, category);
-            //         if (query == '' && category == '') {
-            //             results.addClass("hidden");
-            //             return;
-            //         }
-            //         $.ajax({
-            //             type: "POST",
-            //             url: "{{ route('admin.assign.search') }}",
-            //             data: {
-            //                 _token: "{{ csrf_token() }}",
-            //                 query: query,
-            //             },
-            //             success: function(response) {
-            //                 console.log(response);
-            //                 let products = response.products;
-            //                 results.empty();
-            //                 if (response.success) {
-            //                     if (products.length > 0) {
-            //                         results.removeClass("hidden");
-            //                         products.forEach(function(product) {
-            //                             let html = `
-
-    //                                 <li>
-    //                                  <a href="https://testingdemolink.com/custom_live/anjan_parmar/product/${product.slug}" >
-    //                                    <div class="searched-content" style="height:auto">
-    //                                     <div>
-    //                                         ${product.name}
-    //                                         <p>${product.category.name}</p>
-    //                                     </div>
-    //                                     </div>
-    //                                  </a>
-    //                                 </li>
-
-    //                         `;
-            //                             results.append(html);
-            //                             results.addClass("style");
-            //                         });
-            //                     } else {
-            //                         let html = `
-    //                             <li>No products found.</li>
-    //                         `;
-            //                         results.append(html);
-            //                         results.removeClass("style");
-            //                     }
-            //                 }
-
-            //             },
-            //             error: function(error) {
-            //                 console.error(error);
-            //             }
-            //         });
-            //         if (query || category != '') {
-            //             results.removeClass("hidden");
-            //         } else {
-            //             results.addClass("hidden");
-            //         }
-            //         // console.log(query, category == '');
-            //     }
-            //     input.on("keyup change", detectSearch);
-            //     select.on("change", detectSearch);
-
-            //     let body = document.body;
-
-            //     $("body").on("click", () => {
-            //         results.addClass("hidden");
-            //         input.val("");
-            //     })
-            // });
         </script>
     @endpush
 @endsection

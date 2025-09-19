@@ -215,12 +215,20 @@ class AssignmentController extends Controller
 
   public function searchAssign(Request $request)
     {
-        $searchQuery = $request->input('query');
+// dd($request->all(),$request->search_query);
+
+        $searchQuery = $request->search_query;
 
         $assignments = Assignment::where('claim', 'like', "%{$searchQuery}%")
             ->orWhere('owner', 'like', "%{$searchQuery}%")->take(20)
             ->get();
 
-        return response()->json($assignments);
+            $assignments = count($assignments) == 0 ? 'No Results Found' : $assignments;
+
+        return response()->json([
+                'status' => 'true',
+                'assignments' => $assignments,
+                'message' => 'assignments searched successfully.'
+            ]);
     }
 }

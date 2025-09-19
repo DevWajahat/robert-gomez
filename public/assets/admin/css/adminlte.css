@@ -56225,6 +56225,7 @@ a.text-muted:hover {
 .content-wrapper>.content {
     padding-top: 70px;
     background-image: url("../img/Banner-image.png");
+    min-height:100vh;
     background-size: cover;
     background-position: center;
 }

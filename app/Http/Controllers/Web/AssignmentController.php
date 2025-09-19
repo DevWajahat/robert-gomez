@@ -11,6 +11,7 @@ class AssignmentController extends Controller
     public function updateStatus(Request $request)
     {
 
+        
         $assignment= Assignment::find($request->assignment);
 
         $assignment->update([
@@ -21,7 +22,7 @@ class AssignmentController extends Controller
         return response()->json([
             'status' => 'true',
             'message' => 'assignment completed successfully.'
-            
+
         ]);
     }
 }
