@@ -65,7 +65,7 @@ class AssignmentController extends Controller
 
     public function task()
     {
-        $assignments = Assignment::whereNotNull('user_id')->orderBy('id','desc')->get();
+        $assignments = Assignment::whereNotNull('user_id')->where('status','pending')->orderBy('id','desc')->get();
         $users = User::where('role', 'agent')->get();
 
         return view('screens.admin.assignment.task', get_defined_vars());
@@ -218,6 +218,9 @@ private function generateErrorCsv($errors)
 
         $assignments = Assignment::where('status','completed')->orderBy('updated_at','desc')->get();
 
+        $users = User::where('role','agent')->get();
+
+
         return view('screens.admin.assignment.complete',get_defined_vars());
     }
 
@@ -233,10 +236,16 @@ private function generateErrorCsv($errors)
 
             $assignments = count($assignments) == 0 ? 'No Results Found' : $assignments;
 
+            $users = User::where('role','agent')->get();
+
+            $html = view('includes.web.assignment-dropdown',get_defined_vars())->render();
+
         return response()->json([
                 'status' => 'true',
                 'assignments' => $assignments,
-                'message' => 'assignments searched successfully.'
+                'message' => 'assignments searched successfully.',
+                'users' => $users,
+                'html' => $html
             ]);
     }
 }

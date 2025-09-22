@@ -367,9 +367,7 @@
     </div>
 
     @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
-        </script>
+       
 
         <script>
             $(document).ready(function() {
@@ -833,22 +831,31 @@
         </script>
         <script>
             $(document).ready(function() {
+                // Enhanced time formatting helper function
                 function formatTimeAgo(createdAt) {
                     if (!createdAt) return 'Just now';
 
                     let createdDate;
-
                     try {
-                        createdDate = new Date(createdAt + 'Z');
-
-                        if (isNaN(createdDate.getTime())) {
+                        // Handle different date formats more robustly
+                        if (typeof createdAt === 'number') {
+                            // Unix timestamp
+                            createdDate = new Date(createdAt * 1000);
+                        } else {
+                            // Try ISO format first
                             createdDate = new Date(createdAt);
-                        }
 
-                        if (isNaN(createdDate.getTime())) {
-                            const mysqlRegex = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})$/;
-                            if (mysqlRegex.test(createdAt)) {
-                                createdDate = new Date(createdAt + '.000Z');
+                            // If invalid, try adding 'Z' for UTC
+                            if (isNaN(createdDate.getTime())) {
+                                createdDate = new Date(createdAt + 'Z');
+                            }
+
+                            // If still invalid, try MySQL format
+                            if (isNaN(createdDate.getTime())) {
+                                const mysqlMatch = createdAt.match(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})/);
+                                if (mysqlMatch) {
+                                    createdDate = new Date(`${mysqlMatch[1]}T${mysqlMatch[2]}Z`);
+                                }
                             }
                         }
 
@@ -874,22 +881,14 @@
                     let timeAgo = '';
 
                     if (diffInDays > 0) {
-                        timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}, `;
-                    }
-                    if (diffInHours > 0) {
-                        const remainingHours = diffInHours % 24;
-                        if (remainingHours > 0 || diffInDays === 0) {
-                            timeAgo += `${remainingHours} hour${remainingHours > 1 ? 's' : ''}, `;
-                        }
-                    }
-                    const remainingMinutes = diffInMinutes % 60;
-                    if (remainingMinutes > 0 || (diffInHours === 0 && diffInDays === 0)) {
-                        timeAgo += `${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
-                    } else if (timeAgo === '') {
-                        timeAgo = 'Just now';
+                        timeAgo = `${diffInDays} day${diffInDays > 1 ? 's' : ''}`;
+                    } else if (diffInHours > 0) {
+                        timeAgo = `${diffInHours} hour${diffInHours > 1 ? 's' : ''}`;
+                    } else {
+                        timeAgo = `${diffInMinutes} min${diffInMinutes !== 1 ? 's' : ''}`;
                     }
 
-                    return timeAgo.trim().replace(/,$/, '') + ' ago';
+                    return timeAgo + ' ago';
                 }
 
                 $('#searchForm').on("submit", function(e) {
@@ -915,70 +914,113 @@
                             $('#searchModal').css("display", "none");
 
                             if (response.assignments != 'No Results Found') {
-
-
-
                                 $.each(response.assignments, function(index, item) {
                                     console.log(item);
+
+                                    var agentId = item.user_id;
+
+
+                                    // console.log(selected)
                                     var status = item.status;
                                     var statusColor = item.status == 'completed' ?
                                         '#00A84C' : '#d3c501';
 
+
                                     const formattedTime = formatTimeAgo(item.created_at);
 
 
-                                    assignment +=
-                                        `<div class="assign-card" >
-                    <div class="card-id-wrapper">
-                        <h3>${item.id}</h3>
-                        <div class="toggler-btn-wrapper">
-                                                                <select name="" data-id="${item.id}" class="selectpicker agent">
-                                        <option value="" selected disabled>Select agent </option>
-                                        @forelse ($users as $user)
-                                            <option value="{{ $user->id }}"
-                                                {{ isset($assignment) && $user->id == $assignment->user_id ? 'selected' : '' }}>
-                                                {{ $user->first_name . ' ' . $user->last_name }}</option>
-                                        @empty
-                                        @endforelse
-                                    </select>
-                            <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
-                            <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
-                        </div>
-                    </div>
-                    <div class="insurance-wrapper">
-                        <div>
-                            <p><span>Insurance:</span> ABC Claims Logistics ABC Insurance Company.</p>
-                            <div class="other-desc-area hidden-class">
-                                <p><span>Owner: </span>${item.owner} </p>
-                                <p><span>Owner Phone: </span> ${item.owner_phone} </p>
-                                <p><span>Owner Email: </span> ${item.owner_email} </p>
-                                <p><span>Claim#: </span> ${item.claim} </p>
-                                <p><span>Type of Claim: </span> ${item.claim_type}</p>
-                                <p><span>Loss Type:</span> ${item.loss_type}</p>
-                                <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
-                                <p><span>Appointment:</span> ${item.appointment_date} </p>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-end m-0" data-created-at="${item.created_at}">${formattedTime}</p>
-                            <div class="pending-btn-wrapper hidden-class">
-                                <button>Quick Updates</button>
-                                <button style="background:${item.statusColor} !important;">${item.status}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                `
-           })
+
+                                    //         assignment +=
+                                    //             `<div class="assign-card">
+                            //     <div class="card-id-wrapper">
+                            //         <h3>${item.id}</h3>
+                            //         <div class="toggler-btn-wrapper">
+                            //             <select name="agent"  data-id="${item.id}" data-user-id="${item.user_id}" class="selectpicker agent">
+                            //                 <option value="" >Select agent </option>
+
+                            //             </select>
+                            //             <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
+                            //             <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
+                            //         </div>
+                            //     </div>
+                            //     <div class="insurance-wrapper">
+                            //         <div>
+                            //             <p><span>Insurance:</span> ${item.company}</p>
+                            //             <div class="other-desc-area hidden-class">
+                            //                 <p><span>Owner: </span>${item.owner} </p>
+                            //                 <p><span>Owner Phone: </span> ${item.owner_phone} </p>
+                            //                 <p><span>Owner Email: </span> ${item.owner_email} </p>
+                            //                 <p><span>Claim#: </span> ${item.claim} </p>
+                            //                 <p><span>Type of Claim: </span> ${item.claim_type}</p>
+                            //                 <p><span>Loss Type:</span> ${item.loss_type}</p>
+                            //                 <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
+                            //                 <p><span>Appointment:</span> ${item.appointment_date} </p>
+                            //             </div>
+                            //         </div>
+                            //         <div>
+                            //             <!-- Time is formatted once and stored as static text -->
+                            //             <p class="text-end m-0">${formattedTime}</p>
+                            //             <div class="pending-btn-wrapper hidden-class">
+                            //                 <button>Quick Updates</button>
+                            //                 <button style="background:${statusColor} !important;">${item.status}</button>
+                            //             </div>
+                            //         </div>
+                            //     </div>
+                            // </div>`;
+
+                                    // if(item.user_id == null){
+                                    //     console.log("sdfa")
+                                    //     $('.agent').val('0')
+                                    // }
+
+
+
+                                })
                             } else {
                                 assignment = '<div class="container">No Results Found. </div>'
                             }
-                            $('.board-area').html(assignment)
+
+                            // $('.board-area').html(assignment)
+                            $('.board-area').html(response.html)
+                            const timeAgo = t => {
+                                const now = new Date().getTime();
+                                const created = new Date(t).getTime();
+                                const diff = now - created;
+
+                                if (diff < 0) return 'Future date';
+                                if (diff < 6e4) return 'Just now'; // < 1 minute
+
+                                const m = Math.floor((diff % 36e5) / 6e4);
+                                const h = Math.floor(diff / 36e5);
+                                const d = Math.floor(h / 24);
+
+                                if (diff < 36e5) return `${m}min ago`; // < 1 hour
+                                return d ? `${d}d ${h%24 ? h%24 + 'h' : ''} ago` : `${h}h ago`;
+                            };
+
+                            $(document).ready(function() {
+                                formatTimeElements();
+                            });
+
+                            function formatTimeElements() {
+                                $('[data-created-at]').each(function() {
+                                    const timestamp = $(this).attr('data-created-at');
+                                    if (timestamp) {
+                                        $(this).text(timeAgo(timestamp));
+                                    }
+                                });
+                            }
+
+                            window.formatNewTimeElements = formatTimeElements;
+                            // $('.agent').val($('.agent').attr('data-user-id'))
+                            // No additional processing needed - time is already formatted and static
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            $.LoadingOverlay("hide");
                         }
                     })
-
                 })
-
             })
         </script>
     @endpush
