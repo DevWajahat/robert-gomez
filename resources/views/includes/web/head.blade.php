@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/web/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/web/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/auth/css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" />
 </head>
 
 <body>

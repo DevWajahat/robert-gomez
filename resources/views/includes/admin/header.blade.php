@@ -211,6 +211,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('admin.agents.index') }}" class="nav-link">
+                                <img src="{{ asset('assets/admin/img/link-img-1.png') }}" alt="">
+                                <p>
+                                    Agents
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="admin-CMS.html" class="nav-link">
                                 <img src="{{ asset('assets/admin/img/link-img-1.png') }}" alt="">
                                 <p>
