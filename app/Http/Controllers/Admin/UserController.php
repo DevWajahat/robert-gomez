@@ -8,13 +8,13 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class AgentController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
         $users = User::where('role', 'agent')->get();
 
-        return view('screens.admin.agents.index', get_defined_vars());
+        return view('screens.admin.user.index', get_defined_vars());
     }
 
     public function store(StoreRequest $request): JsonResponse

@@ -326,7 +326,7 @@
                 $.LoadingOverlay("show")
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('admin.agents.store') }}',
+                    url: '{{ route('admin.users.store') }}',
                     data: {
                         _token: "{{ csrf_token() }}",
                         first_name: $('#firstName').val(),

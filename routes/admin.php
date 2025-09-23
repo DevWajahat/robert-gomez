@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\AgentController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +20,7 @@ Route::prefix('assignments')->controller(AssignmentController::class)->name('ass
     Route::post('search', 'searchAssign')->name('search');
 });
 
-Route::prefix('agents')->controller(AgentController::class)->name('agents.')->group(function () {
+Route::prefix('agents')->controller(UserController::class)->name('users.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('store','store')->name('store');
 });

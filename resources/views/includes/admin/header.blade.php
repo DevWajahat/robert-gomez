@@ -211,7 +211,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.agents.index') }}" class="nav-link">
+                            <a href="{{ route('admin.users.index') }}" class="nav-link">
                                 <img src="{{ asset('assets/admin/img/link-img-1.png') }}" alt="">
                                 <p>
                                     Agents
