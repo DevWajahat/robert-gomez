@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <!-- Time is formatted once and stored as static text -->
-                    <p class="text-end m-0" data-created-at="{{ $assignment->created_at->toISOString() }}"></p>
+                   <p class="text-end m-0" data-created-at="{{ $assignment->created_at->timestamp }}"></p>
                     <div class="pending-btn-wrapper hidden-class">
                         <button>Quick Updates</button>
                         @if ($assignment->status == 'pending')

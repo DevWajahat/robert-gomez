@@ -1,0 +1,4 @@
+Row,insurance,owner_name,owner_phone,owner_email,claim_number,claim_type,loss_type,vehicle_location,appointment_date,Errors
+2,ABC Insurance,John Doe,555-123-4567,john.doe@email.com,C-12345,Collision,Auto Accident,123 Main St,12/02/2025 10:30:00 AM,The claim_number 'C-12345' already exists in the database and must be unique.
+3,XYZ Insurance,Jane Smith,555-987-6543,jane.smith@email.com,C-67890,Comprehensive,Hail Damage,456 Oak Ave,12/06/2025 02:00:00 PM,The claim_number 'C-67890' already exists in the database and must be unique.
+4,FGH Insurance,Grok Musk,3434232423,grok12@gmail. Com,C-23232323,boom,lorem,karachi,11/16/1980 01:16:00 PM,The owner_email must be a valid email.  The appointment_date must be a future date and time.

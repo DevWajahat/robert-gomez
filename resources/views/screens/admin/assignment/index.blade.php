@@ -191,7 +191,7 @@
                                 <div>
                                     <p><span>Insurance:</span> {{ $assignment->company }}</p>
                                     <div class="other-desc-area hidden-class">
-                                        <p><span>Owner</span> {{ $assignment->owner }}</p>
+                                        <p><span>Owner: </span> {{ $assignment->owner }}</p>
                                         <p><span>Owner Phone:</span> {{ $assignment->owner_phone }}</p>
                                         <p><span>Owner Email:</span> {{ $assignment->owner_email }}</p>
                                         <p><span>Claim#:</span> {{ $assignment->claim }}</p>
@@ -371,8 +371,6 @@
 
 
     @push('scripts')
-
-
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const appointmentInput = document.getElementById('appointment');
@@ -897,68 +895,68 @@
 
                             if (response.assignments != 'No Results Found') {
 
-                            //     $.each(response.assignments, function(index, item) {
-                            //         console.log(item);
+                                //     $.each(response.assignments, function(index, item) {
+                                //         console.log(item);
 
-                            //         var agentId = item.user_id;
-
-
-                            //         // console.log(selected)
-                            //         var status = item.status;
-                            //         var statusColor = item.status == 'completed' ?
-                            //             '#00A84C' : '#d3c501';
+                                //         var agentId = item.user_id;
 
 
-                            //         const formattedTime = formatTimeAgo(item.created_at);
+                                //         // console.log(selected)
+                                //         var status = item.status;
+                                //         var statusColor = item.status == 'completed' ?
+                                //             '#00A84C' : '#d3c501';
 
 
-
-                            // //         assignment +=
-                            // //             `<div class="assign-card">
-                            // //     <div class="card-id-wrapper">
-                            // //         <h3>${item.id}</h3>
-                            // //         <div class="toggler-btn-wrapper">
-                            // //             <select name="agent"  data-id="${item.id}" data-user-id="${item.user_id}" class="selectpicker agent">
-                            // //                 <option value="" >Select agent </option>
-
-                            // //             </select>
-                            // //             <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
-                            // //             <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
-                            // //         </div>
-                            // //     </div>
-                            // //     <div class="insurance-wrapper">
-                            // //         <div>
-                            // //             <p><span>Insurance:</span> ${item.company}</p>
-                            // //             <div class="other-desc-area hidden-class">
-                            // //                 <p><span>Owner: </span>${item.owner} </p>
-                            // //                 <p><span>Owner Phone: </span> ${item.owner_phone} </p>
-                            // //                 <p><span>Owner Email: </span> ${item.owner_email} </p>
-                            // //                 <p><span>Claim#: </span> ${item.claim} </p>
-                            // //                 <p><span>Type of Claim: </span> ${item.claim_type}</p>
-                            // //                 <p><span>Loss Type:</span> ${item.loss_type}</p>
-                            // //                 <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
-                            // //                 <p><span>Appointment:</span> ${item.appointment_date} </p>
-                            // //             </div>
-                            // //         </div>
-                            // //         <div>
-                            // //             <!-- Time is formatted once and stored as static text -->
-                            // //             <p class="text-end m-0">${formattedTime}</p>
-                            // //             <div class="pending-btn-wrapper hidden-class">
-                            // //                 <button>Quick Updates</button>
-                            // //                 <button style="background:${statusColor} !important;">${item.status}</button>
-                            // //             </div>
-                            // //         </div>
-                            // //     </div>
-                            // // </div>`;
-
-                            // // if(item.user_id == null){
-                            // //     console.log("sdfa")
-                            // //     $('.agent').val('0')
-                            // // }
+                                //         const formattedTime = formatTimeAgo(item.created_at);
 
 
 
-                            //     })
+                                // //         assignment +=
+                                // //             `<div class="assign-card">
+                        // //     <div class="card-id-wrapper">
+                        // //         <h3>${item.id}</h3>
+                        // //         <div class="toggler-btn-wrapper">
+                        // //             <select name="agent"  data-id="${item.id}" data-user-id="${item.user_id}" class="selectpicker agent">
+                        // //                 <option value="" >Select agent </option>
+
+                        // //             </select>
+                        // //             <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
+                        // //             <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
+                        // //         </div>
+                        // //     </div>
+                        // //     <div class="insurance-wrapper">
+                        // //         <div>
+                        // //             <p><span>Insurance:</span> ${item.company}</p>
+                        // //             <div class="other-desc-area hidden-class">
+                        // //                 <p><span>Owner: </span>${item.owner} </p>
+                        // //                 <p><span>Owner Phone: </span> ${item.owner_phone} </p>
+                        // //                 <p><span>Owner Email: </span> ${item.owner_email} </p>
+                        // //                 <p><span>Claim#: </span> ${item.claim} </p>
+                        // //                 <p><span>Type of Claim: </span> ${item.claim_type}</p>
+                        // //                 <p><span>Loss Type:</span> ${item.loss_type}</p>
+                        // //                 <p><span>Vehicle Location: </span> ${item.vehicle_location} </p>
+                        // //                 <p><span>Appointment:</span> ${item.appointment_date} </p>
+                        // //             </div>
+                        // //         </div>
+                        // //         <div>
+                        // //             <!-- Time is formatted once and stored as static text -->
+                        // //             <p class="text-end m-0">${formattedTime}</p>
+                        // //             <div class="pending-btn-wrapper hidden-class">
+                        // //                 <button>Quick Updates</button>
+                        // //                 <button style="background:${statusColor} !important;">${item.status}</button>
+                        // //             </div>
+                        // //         </div>
+                        // //     </div>
+                        // // </div>`;
+
+                                // // if(item.user_id == null){
+                                // //     console.log("sdfa")
+                                // //     $('.agent').val('0')
+                                // // }
+
+
+
+                                //     })
                             } else {
                                 assignment = '<div class="container">No Results Found. </div>'
                             }
@@ -966,13 +964,13 @@
                             // $('.board-area').html(assignment)
                             $('.board-area').html(response.html)
                             // $('.agent').val($('.agent').attr('data-user-id'))
-
-                              const timeAgo = t => {
-                                const now = new Date().getTime();
-                                const created = new Date(t).getTime();
+                            const timeAgo = t => {
+                                // Fix: Multiply seconds by 1000 to get milliseconds
+                                const created = parseInt(t) * 1000;
+                                const now = Date.now();
                                 const diff = now - created;
 
-                                if (diff < 0) return 'Future date';
+                                if (isNaN(diff) || diff < 0) return 'Invalid date';
                                 if (diff < 6e4) return 'Just now'; // < 1 minute
 
                                 const m = Math.floor((diff % 36e5) / 6e4);
@@ -985,6 +983,8 @@
 
                             $(document).ready(function() {
                                 formatTimeElements();
+                                // Update every minute
+                                setInterval(formatTimeElements, 60000);
                             });
 
                             function formatTimeElements() {
@@ -1009,4 +1009,3 @@
         </script>
     @endpush
 @endsection
-

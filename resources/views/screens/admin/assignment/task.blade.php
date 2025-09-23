@@ -208,7 +208,7 @@
                                 <div>
                                     <p><span>Insurance:</span> {{ $assignment->company }}</p>
                                     <div class="other-desc-area hidden-class">
-                                        <p><span>Owner</span> {{ $assignment->owner }}</p>
+                                        <p><span>Owner: </span> {{ $assignment->owner }}</p>
                                         <p><span>Owner Phone:</span> {{ $assignment->owner_phone }}</p>
                                         <p><span>Owner Email:</span> {{ $assignment->owner_email }}</p>
                                         <p><span>Claim#:</span> {{ $assignment->claim }}</p>
@@ -367,7 +367,7 @@
     </div>
 
     @push('scripts')
-       
+
 
         <script>
             $(document).ready(function() {
@@ -982,12 +982,13 @@
 
                             // $('.board-area').html(assignment)
                             $('.board-area').html(response.html)
-                            const timeAgo = t => {
-                                const now = new Date().getTime();
-                                const created = new Date(t).getTime();
+                           const timeAgo = t => {
+                                // Fix: Multiply seconds by 1000 to get milliseconds
+                                const created = parseInt(t) * 1000;
+                                const now = Date.now();
                                 const diff = now - created;
 
-                                if (diff < 0) return 'Future date';
+                                if (isNaN(diff) || diff < 0) return 'Invalid date';
                                 if (diff < 6e4) return 'Just now'; // < 1 minute
 
                                 const m = Math.floor((diff % 36e5) / 6e4);
@@ -1000,6 +1001,8 @@
 
                             $(document).ready(function() {
                                 formatTimeElements();
+                                // Update every minute
+                                setInterval(formatTimeElements, 60000);
                             });
 
                             function formatTimeElements() {

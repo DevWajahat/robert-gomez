@@ -19,60 +19,70 @@ class AssignmentsImport implements ToCollection, WithHeadingRow
     /**
      * Parse appointment_date and handle Excel numeric timestamps
      */
-    private function parseAppointmentDate($value)
-    {
-        \Log::debug('Raw appointment_date: ' . (string) $value);
+  private function parseAppointmentDate($value)
+{
+    \Log::debug('Raw appointment_date: ' . (string) $value);
 
-        // Handle Excel numeric timestamp (e.g., 45992.4375)
-        if (is_numeric($value) && $value > 10000) {
-            try {
-                $excelBaseDate = Carbon::createFromDate(1899, 12, 31, 'UTC');
-                $days = floor($value);
-                $fraction = $value - $days;
-                $hours = floor($fraction * 24);
-                $minutes = floor(($fraction * 24 - $hours) * 60);
-                $seconds = floor((($fraction * 24 - $hours) * 60 - $minutes) * 60);
-                $date = $excelBaseDate->copy()->addDays($days)->setTime($hours, $minutes, $seconds);
-                $formatted = $date->format('m/d/Y h:i:s A');
-                \Log::debug('Parsed numeric appointment_date: ' . $formatted);
-                return [
-                    'date' => $date,
-                    'formatted' => $formatted,
-                ];
-            } catch (\Exception $e) {
-                \Log::debug('Failed to parse numeric appointment_date: ' . $e->getMessage());
-                return null;
-            }
-        }
-
-        // Try parsing as M/D/YYYY h:mm:ss A
+    // Handle Excel numeric timestamp (e.g., 45992.4375)
+    if (is_numeric($value) && $value > 10000) {
         try {
-            $date = Carbon::createFromFormat('m/d/Y h:i:s A', $value, 'Asia/Karachi');
-            if ($date) {
-                \Log::debug('Parsed appointment_date (M/D/YYYY): ' . $value);
-                return [
-                    'date' => $date,
-                    'formatted' => $value,
-                ];
+            // Fix: Use the correct Excel base date and timezone handling
+            $excelBaseDate = Carbon::create(1899, 12, 30, 0, 0, 0, 'UTC'); // Excel's actual base date
+            $days = floor($value);
+            $fraction = $value - $days;
+            $hours = floor($fraction * 24);
+            $minutes = floor(($fraction * 24 - $hours) * 60);
+            $seconds = floor((($fraction * 24 - $hours) * 60 - $minutes) * 60);
+
+            // Create the date by adding to base, then set your app's timezone
+            $date = $excelBaseDate->copy()
+                ->addDays($days)
+                ->setTime($hours, $minutes, $seconds)
+                ->setTimezone(config('app.timezone')); // Use your app's timezone
+
+            $formatted = $date->format('m/d/Y h:i:s A');
+            \Log::debug('Parsed numeric appointment_date: ' . $formatted . ' (UTC: ' . $date->clone()->setTimezone('UTC')->format('Y-m-d H:i:s') . ')');
+
+            return [
+                'date' => $date,
+                'formatted' => $formatted,
+            ];
+        } catch (\Exception $e) {
+            \Log::debug('Failed to parse numeric appointment_date: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    // Handle string dates (add this if you want to support both numeric and string)
+    if (is_string($value) && !empty($value)) {
+        try {
+            $formats = [
+                'm/d/Y h:i:s A',  // 12/1/2025 10:30:00 AM
+                'm/d/Y H:i:s',    // 12/01/2025 10:30:00
+                'Y-m-d H:i:s',    // 2025-12-01 10:30:00
+                'm/d/Y',          // 12/1/2025
+                'Y-m-d'           // 2025-12-01
+            ];
+
+            foreach ($formats as $format) {
+                $date = Carbon::createFromFormat($format, $value);
+                if ($date && $date->format($format) === $value) {
+                    $date = $date->setTimezone(config('app.timezone'));
+                    $formatted = $date->format('m/d/Y h:i:s A');
+                    \Log::debug('Parsed string appointment_date: ' . $formatted);
+                    return [
+                        'date' => $date,
+                        'formatted' => $formatted,
+                    ];
+                }
             }
         } catch (\Exception $e) {
-            // Fallback to any valid date format
-            try {
-                $date = Carbon::parse($value, 'Asia/Karachi');
-                $formatted = $date->format('m/d/Y h:i:s A');
-                \Log::debug('Parsed appointment_date (fallback): ' . $formatted);
-                return [
-                    'date' => $date,
-                    'formatted' => $formatted,
-                ];
-            } catch (\Exception $e) {
-                \Log::debug('Failed to parse appointment_date: ' . $e->getMessage());
-                return null;
-            }
+            \Log::debug('Failed to parse string appointment_date: ' . $e->getMessage());
         }
-
-        return null;
     }
+
+    return null;
+}
 
     public function collection(Collection $rows)
     {

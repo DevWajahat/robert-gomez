@@ -31,7 +31,7 @@
                         <div>
                             <p><span>Insurance:</span> {{ $assignment->company }}</p>
                             <div class="other-desc-area hidden-class">
-                                <p><span>Owner</span> {{ $assignment->owner }}</p>
+                                <p><span>Owner: </span> {{ $assignment->owner }}</p>
                                 <p><span>Owner Phone:</span> {{ $assignment->owner_phone }}</p>
                                 <p><span>Owner Email:</span> {{ $assignment->email }}</p>
                                 <p><span>Claim#:</span> {{ $assignment->claim }}</p>
