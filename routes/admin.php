@@ -22,4 +22,5 @@ Route::prefix('assignments')->controller(AssignmentController::class)->name('ass
 
 Route::prefix('agents')->controller(AgentController::class)->name('agents.')->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::post('store','store')->name('store');
 });

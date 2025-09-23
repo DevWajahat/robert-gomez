@@ -1,149 +1,161 @@
 @extends('layouts.admin.app')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" />
-    <style>
-        /* Modal Base */
-        .modal {
-            position: fixed !important ;
-            top: 0 !important ;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            background: rgba(0, 0, 0, 0.5) !important;
-            display: flex ;
-            justify-content: center !important;
-            align-items: center !important;
-            z-index: 99999 !important;
+<style>
+    /* Modal Base */
+    .modal {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+        z-index: 99999 !important;
+    }
+
+    .swal2-container {
+        z-index: 999999 !important;
+    }
+
+    .modal-content {
+        background: #fff;
+        border-radius: 6px;
+        width: 600px !important;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: zoomIn 0.3s ease;
+    }
+
+    @keyframes zoomIn {
+        from {
+            transform: scale(0.9);
+            opacity: 0;
         }
 
-        .modal-content {
-            background: #fff;
-            border-radius: 6px;
-            width: 600px !important;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: zoomIn 0.3s ease;
+        to {
+            transform: scale(1);
+            opacity: 1;
         }
+    }
 
-        @keyframes zoomIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
+    /* Header */
+    .modal-header {
+        background: #007bff;
+        color: #fff;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 6px 6px 0 0;
+    }
 
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
+    .modal-header h2 {
+        margin: 0;
+        font-size: 18px;
+    }
 
-        /* Header */
-        .modal-header {
-            background: #007bff;
-            color: #fff;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 6px 6px 0 0;
-        }
+    .close-modal {
+        font-size: 22px;
+        cursor: pointer;
+    }
 
-        .modal-header h2 {
-            margin: 0;
-            font-size: 18px;
-        }
+    /* Form Layout */
+    .modal-form {
+        padding: 20px;
+    }
 
-        .close-modal {
-            font-size: 22px;
-            cursor: pointer;
-        }
+    .form-row {
+        display: flex;
+        gap: 15px;
+    }
 
-        /* Form Layout */
-        .modal-form {
-            padding: 20px;
-        }
+    .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
 
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
+    .form-group.full-width {
+        flex: 100%;
+    }
 
-        .form-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
 
-        .form-group.full-width {
-            flex: 100%;
-        }
+    .form-group input,
+    .form-group select {
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        outline: none;
+    }
 
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
+    .form-group input:focus {
+        border-color: #007bff;
+    }
 
-        .form-group input,
-        .form-group select {
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            outline: none;
-        }
+    /* Button */
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background: #007bff;
+        color: #fff;
+        font-weight: 600;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
 
-        .form-group input:focus {
-            border-color: #007bff;
-        }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+        -webkit-text-fill-color: black !important;
+    }
 
-        /* Button */
-        .submit-btn {
-            width: 100%;
-            padding: 10px;
-            background: #007bff;
-            color: #fff;
-            font-weight: 600;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    .submit-btn:hover {
+        background: #0056b3;
+    }
 
-        .submit-btn:hover {
-            background: #0056b3;
-        }
+    .close-search-modal {
+        font-size: 25px;
+        cursor: pointer;
+    }
 
-        .close-search-modal {
-            font-size: 25px;
-            cursor: pointer;
-        }
+    /* Validation Messages */
+    .text-danger {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 5px;
+    }
 
-        /* Validation Messages */
-        .text-danger {
-            color: #e74c3c;
-            font-size: 12px;
-            margin-top: 5px;
-        }
+    /* Toggle Classes */
+    .hidden-class {
+        display: none !important;
+    }
 
-        /* Toggle Classes */
-        .hidden-class {
-            display: none !important;
-        }
+    .smooth-toggle {
+        display: block;
+    }
 
-        .smooth-toggle {
-            display: block;
-        }
+    .rotate-icon {
+        transition: transform 0.3s ease;
+    }
 
-        .rotate-icon {
-            transition: transform 0.3s ease;
-        }
-
-        .rotate-icon.rotated {
-            transform: rotate(180deg);
-        }
+    .rotate-icon.rotated {
+        transform: rotate(180deg);
+    }
 
 
-        .hidden {
-            display: none;
-        }
-    </style>
+    .hidden {
+        display: none;
+    }
+</style>
 @section('content')
     <section class="content" style="min-height: 100vh;">
         <div class="container-fluid">
@@ -153,9 +165,9 @@
                         <div class="dashboard-content">
                             <div class="inner-head-wrap2">
                                 <ul class="inner-head2 justify-content-end">
-                                        <button class="link text-decoration-none" id="agentModalbtn">
-                                            <li class="inner-list inner-list-1">Add Agent</li>
-                                        </button>
+                                    <button class="link text-decoration-none" id="agentModalbtn">
+                                        <li class="inner-list inner-list-1">Add Agent</li>
+                                    </button>
                                 </ul>
                             </div>
                         </div>
@@ -172,14 +184,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Robert</td>
-                                        <td>gomez</td>
-                                        <td>robert@gmail.com</td>
+                                    @forelse ($users as  $user)
+                                        <tr>
+                                            <td>{{ $user->first_name }}</td>
+                                            <td>{{ $user->last_name }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->phone }}</td>
+                                            <td>{{ $user->address }}</td>
+                                            <td>X</td>
+                                            {{-- <td>robert@gmail.com</td>
                                         <td>111111111</td>
-                                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
-                                        <td>X</td>
-                                    </tr>
+                                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td> --}}
+                                        </tr>
+
+                                    @empty
+                                    @endforelse
                                 </tbody>
 
                             </table>
@@ -199,43 +218,48 @@
                 <span class="close-modal">&times;</span>
             </div>
 
-            <form  class="modal-form">
+            <form class="modal-form" autocomplete="off" id="agent-form">
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="text-white">Fisrt Name</label>
-                        <input type="text" autocomplete="off" name="insurance" id="insurance">
-                        <span class="text-danger error-msg" id="insurance-error"></span>
+                        <label class="text-white">First Name</label>
+                        <input type="text" name="first_name" id="firstName">
+                        <span class="text-danger error-msg" id="first_name-error"></span>
                     </div>
 
                     <div class="form-group">
                         <label class="text-white">Last Name</label>
-                        <input type="text" autocomplete="off" name="owner" id="owner">
-                        <span class="text-danger error-msg" id="owner-error"></span>
+                        <input type="text" name="" id="lastName">
+                        <span class="text-danger error-msg" id="last_name-error"></span>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="text-white">Email</label>
-                        <input type="tel" pattern="[0-9]*" id="ownerPhone" autocomplete="off"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="phone">
-                        <span class="text-danger error-msg" id="owner_phone-error"></span>
+                        <input type="text" id="email" name="">
+                        <span class="text-danger error-msg" id="email-error"></span>
 
                     </div>
                     <div class="form-group">
-                        <label class="text-white">Phone</label>
-                        <input type="text" autocomplete="off" id="ownerEmail" name="email">
-                        <span class="text-danger error-msg" id="owner_email-error"></span>
-
+                        <label class="text-white">Password</label>
+                        <input type="password" id="password" name="password">
+                        <span class="text-danger error-msg" id="password-error"></span>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
+                        <label class="text-white">Phone</label>
+                        <input type="tel" pattern="[0-9]*" id="phone"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="phone">
+                        <span class="text-danger error-msg" id="phone-error"></span>
+                    </div>
+                    <div class="form-group">
                         <label class="text-white">Address</label>
-                        <input type="text" autocomplete="off" id="claim" name="claim">
-                        <span class="text-danger error-msg" id="claim-error"></span>
+                        <input type="text" id="address" name="address">
+                        <span class="text-danger error-msg" id="address-error"></span>
 
                     </div>
+
                 </div>
 
                 <button type="submit" id="addBtn" class="submit-btn">Add</button>
@@ -278,16 +302,76 @@
             });
         });
     </script>
-<script>
-$(document).ready(function(){
-    $("#agentModalbtn").on("click", function(){
-        $(".modal").show();
-        $(".modal").css("display", "flex")
-    });
+    <script>
+        $(document).ready(function() {
+            $("#agentModalbtn").on("click", function() {
+                $(".modal").show();
+                $(".modal").css("display", "flex")
+            });
 
-    $(".close-modal").on("click", function(){
-        $(".modal").hide();
-    });
-});
-</script>
+            $(".close-modal").on("click", function() {
+                $(".modal").hide();
+            });
+
+            $('#agent-form').on("submit", function(e) {
+                e.preventDefault();
+                console.log($('#firstName').val());
+                console.log($('#lastName').val());
+                console.log($('#email').val());
+                console.log($('#password').val())
+                console.log($('#phone').val());
+                console.log($('#address').val());
+
+
+                $.LoadingOverlay("show")
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('admin.agents.store') }}',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        first_name: $('#firstName').val(),
+                        last_name: $('#lastName').val(),
+                        email: $('#email').val(),
+                        password: $('#password').val(),
+                        phone: $('#phone').val(),
+                        address: $('#address').val()
+                    },
+                    success: function(response) {
+                        console.log(response)
+                        $.LoadingOverlay("hide")
+                         $(".modal").hide();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Agents Added Successfully.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        $.LoadingOverlay("hide")
+
+                        if (xhr.status == 422) {
+
+                            const errors = xhr.responseJSON.errors;
+                            $('.error-msg').html(' ');
+
+                            $.each(errors, function(key, value) {
+                                $(`#${key}-error`).html(`${value[0]}`);
+                            });
+                        }
+
+                        let errorMessage = 'An error occurred.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                    }
+
+                })
+            })
+        });
+    </script>
 @endpush
