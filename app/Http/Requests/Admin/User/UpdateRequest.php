@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\Agent;
+namespace App\Http\Requests\Admin\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class StoreRequest extends FormRequest
         return [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|unique:users,email',
-            'password' => 'required|min:8|max:16',
             'phone' => 'required|min:8|max:15',
-            'address' => 'required'
+            'address' => 'required',
+            'role' => 'required'
         ];
     }
 }

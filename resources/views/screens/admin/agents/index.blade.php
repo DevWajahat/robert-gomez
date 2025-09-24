@@ -165,8 +165,8 @@
                         <div class="dashboard-content">
                             <div class="inner-head-wrap2">
                                 <ul class="inner-head2 justify-content-end">
-                                    <button class="link text-decoration-none" id="agentModalbtn">
-                                        <li class="inner-list inner-list-1">Add Agent</li>
+                                    <button class="link text-decoration-none" id="userModalbtn">
+                                        <li class="inner-list inner-list-1">Add User</li>
                                     </button>
                                 </ul>
                             </div>
@@ -177,6 +177,7 @@
                                     <tr>
                                         <th>First Name</th>
                                         <th>Last Name</th>
+                                        <th>Role</th>
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Address</th>
@@ -188,10 +189,12 @@
                                         <tr>
                                             <td>{{ $user->first_name }}</td>
                                             <td>{{ $user->last_name }}</td>
+                                            <td>{{ $user->role }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->phone }}</td>
                                             <td>{{ $user->address }}</td>
-                                            <td>X</td>
+                                            <td><button class="btn user-edit-btn" data-id="{{ $user->id }}"><i
+                                                        class="fa-solid fa-pencil"></i></button></td>
                                             {{-- <td>robert@gmail.com</td>
                                         <td>111111111</td>
                                         <td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td> --}}
@@ -211,14 +214,14 @@
 
 
     <!-- Add Agent modal -->
-    <div id="agentModal" class="modal" style="display:none;">
+    <div id="userModal" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Add New Agent</h2>
+                <h2>Add New User</h2>
                 <span class="close-modal">&times;</span>
             </div>
 
-            <form class="modal-form" autocomplete="off" id="agent-form">
+            <form class="modal-form" autocomplete="off" id="user-form">
                 <div class="form-row">
                     <div class="form-group">
                         <label class="text-white">First Name</label>
@@ -257,14 +260,25 @@
                         <label class="text-white">Address</label>
                         <input type="text" id="address" name="address">
                         <span class="text-danger error-msg" id="address-error"></span>
-
                     </div>
+                </div>
 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="text-white">Role</label>
+                        {{-- <input type="text" id="address" name="address"> --}}
+                        <select name="role" style="opacity: 100%" id="role">
+                            <option value="agent">Agent</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <span class="text-danger error-msg" id="role-error"></span>
+                    </div>
                 </div>
 
                 <button type="submit" id="addBtn" class="submit-btn">Add</button>
             </form>
         </div>
+    </div>
     </div>
 @endsection
 @push('scripts')
@@ -290,6 +304,9 @@
                         data: "First Name",
                     },
                     {
+                        data: "Role"
+                    },
+                    {
                         data: "Last Name",
                     },
                     {
@@ -304,16 +321,16 @@
     </script>
     <script>
         $(document).ready(function() {
-            $("#agentModalbtn").on("click", function() {
-                $(".modal").show();
-                $(".modal").css("display", "flex")
+            $("#userModalbtn").on("click", function() {
+                $("#userModal").show();
+                $("#userModal").css("display", "flex")
             });
 
             $(".close-modal").on("click", function() {
                 $(".modal").hide();
             });
 
-            $('#agent-form').on("submit", function(e) {
+            $('#user-form').on("submit", function(e) {
                 e.preventDefault();
                 console.log($('#firstName').val());
                 console.log($('#lastName').val());
@@ -321,6 +338,7 @@
                 console.log($('#password').val())
                 console.log($('#phone').val());
                 console.log($('#address').val());
+                console.log($('#role').find(":selected").val());
 
 
                 $.LoadingOverlay("show")
@@ -334,16 +352,17 @@
                         email: $('#email').val(),
                         password: $('#password').val(),
                         phone: $('#phone').val(),
-                        address: $('#address').val()
+                        address: $('#address').val(),
+                        role: $('#role').find(":selected").val()
                     },
                     success: function(response) {
                         console.log(response)
                         $.LoadingOverlay("hide")
-                         $(".modal").hide();
+                        $(".modal").hide();
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
-                            text: 'Agents Added Successfully.',
+                            text: 'User Added Successfully.',
                             showConfirmButton: false,
                             timer: 1500,
                         }).then(() => {
@@ -371,7 +390,9 @@
                     }
 
                 })
+
             })
         });
     </script>
+    <script></script>
 @endpush

@@ -214,7 +214,7 @@
                             <a href="{{ route('admin.users.index') }}" class="nav-link">
                                 <img src="{{ asset('assets/admin/img/link-img-1.png') }}" alt="">
                                 <p>
-                                    Agents
+                                    Users
                                 </p>
                             </a>
                         </li>

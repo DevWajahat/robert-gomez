@@ -20,7 +20,9 @@ Route::prefix('assignments')->controller(AssignmentController::class)->name('ass
     Route::post('search', 'searchAssign')->name('search');
 });
 
-Route::prefix('agents')->controller(UserController::class)->name('users.')->group(function () {
+Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('store','store')->name('store');
+    Route::get('edit/{id}','edit')->name('edit');
+    Route::post('update/{id}','update')->name('update');
 });
