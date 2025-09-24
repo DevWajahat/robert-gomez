@@ -21,7 +21,7 @@
                         src="{{ asset('assets/web/images/link-img-3.png') }}" alt=""> Accounting</a>
             </li>
             <li class="menu-list">
-                <a class="menu-link" href="{{ route('profile') }}"><img
+                <a class="menu-link" href="{{ route('profile.index') }}"><img
                         src="{{ asset('assets/web/images/link-img-4.png') }}" alt=""> Profile</a>
             </li>
         </div>

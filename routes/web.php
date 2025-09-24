@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::middleware(['prevent-back-history','CheckAgent'])->group(function () {
+Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 
@@ -22,11 +22,18 @@ Route::middleware(['prevent-back-history','CheckAgent'])->group(function () {
 
     Route::get('/Resources', [ResourcesController::class, 'index'])->name('resources');
 
-    Route::get('/user_profile', [ProfileController::class, 'index'])->name('profile');
 
-    Route::post('assignment-status',[AssignmentController::class,'updateStatus'])->name('assign.status');
+    Route::prefix('user_profile')->controller(ProfileController::class)->name('profile.')->group(function () {
+
+        Route::get('/', 'index')->name('index');
+        Route::post('update', 'update')->name('update');
+        Route::post('change-password','updatePsw')->name('update.psw');
+        Route::post('update-profile','updatePfp')->name('update.pfp');
+    });
 
 
+
+    Route::post('assignment-status', [AssignmentController::class, 'updateStatus'])->name('assign.status');
     // end main pages routes
 
     // start Auth pages routes

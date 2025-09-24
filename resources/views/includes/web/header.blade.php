@@ -103,13 +103,13 @@
                 </div>
 
                 <div class="dropdown">
-                    <button class="btn bg-transparent  dropdown-toggle border-0" type="button"
+                    <button class="btn bg-transparent  dropdown-toggle border-0" style="overflow: hidden" type="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ asset('assets/web/images/profile.png') }}" alt="">
+                        <img src="{{ auth()->user()->avatar !== null ? asset('images/pfp/'.auth()->user()->avatar) : asset('assets/web/images/no-profile-pic.jfif') }}" style="border-radius:50%; height:60px; !important" alt="">
                     </button>
                     <ul class="dropdown-menu header-dropdown">
                         <li>
-                            <a class="dropdown-item dropdown-link" href="{{ route('profile')}}">Profile</a>
+                            <a class="dropdown-item dropdown-link" href="{{ route('profile.index')}}">Profile</a>
                         </li>
                         <li>
                             <a class="dropdown-item dropdown-link" href="{{ route('admin.logout') }}">Sign Out</a>
