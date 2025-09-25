@@ -62,7 +62,8 @@ class UserController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
-            'address' => $request->address
+            'address' => $request->address,
+            'role' => $request->role
         ]);
 
         return response()->json([
