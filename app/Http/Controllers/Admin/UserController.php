@@ -37,7 +37,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit($id)
+     function edit($id)
     {
 
         $user = User::find($id);
@@ -48,11 +48,22 @@ class UserController extends Controller
         return response()->json([
             'status' => 'true',
             'message' => 'data fetched successfully.',
-            'user' => $user
+            'publicuser' => $user
         ]);
     }
 
     public function update(UpdateRequest $request, $id){
+
+
+        $user = User::find($id);
+
+
+        $user->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+            'address' => $request->address
+        ]);
 
         return response()->json([
             'status' => 'true',

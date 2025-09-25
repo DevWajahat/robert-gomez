@@ -279,6 +279,56 @@
             </form>
         </div>
     </div>
+
+    <div id="editUserModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit User</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form class="modal-form" autocomplete="off" id="edit-user-form">
+                <input type="hidden" id="editUserId" name="id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="text-light">First Name</label>
+                        <input type="text" name="first_name" id="editFirstName">
+                        <span class="text-danger error-msg" id="edit_first_name-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-light">Last Name</label>
+                        <input type="text" name="last_name" id="editLastName">
+                        <span class="text-danger error-msg" id="edit_last_name-error"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="text-light">Phone</label>
+                        <input type="tel" pattern="[0-9]*" id="editPhone"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="phone">
+                        <span class="text-danger error-msg" id="edit_phone-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-light">Address</label>
+                        <input type="text" id="editAddress" name="address">
+                        <span class="text-danger error-msg" id="edit_address-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="text-white">Role</label>
+                        {{-- <input type="text" id="address" name="address"> --}}
+                        <select name="edit_role" style="opacity: 100%" id="editRole">
+                            <option value="agent">Agent</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <span class="text-danger error-msg" id="role-error"></span>
+                    </div>
+                </div>
+                <button type="submit" id="editBtn" class="submit-btn">Update</button>
+            </form>
+        </div>
+    </div>
     </div>
 @endsection
 @push('scripts')
@@ -394,5 +444,108 @@
             })
         });
     </script>
-    <script></script>
+    <script>
+        $(document).ready(function() {
+
+            // Edit User Button Click
+            $(document).on('click', '.user-edit-btn', function() {
+                var userId = $(this).data('id');
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('admin.users.edit', ':id') }}'.replace(':id', userId),
+                    success: function(response) {
+                        $.LoadingOverlay("hide");
+                        if (response.status === 'true') {
+                            var user = response.publicuser;
+                            // Debug: Log the role value to verify
+                            console.log('Fetched role:', user.role);
+                            $('#editUserId').val(user.id);
+                            $('#editFirstName').val(user.first_name);
+                            $('#editLastName').val(user.last_name);
+                            $('#editPhone').val(user.phone);
+                            $('#editAddress').val(user.address);
+                            $('#editRole').val(user.role).change();
+                            $('#editUserModal').show();
+                            $('#editUserModal').css("display", "flex");
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message || 'Failed to fetch user data.',
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        $.LoadingOverlay("hide");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to fetch user data.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+                });
+            });
+
+
+            $(document).on("submit", '#edit-user-form', function(e) {
+                e.preventDefault();
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('admin.users.update', ':id') }}'.replace(':id', $('#editUserId')
+                        .val()),
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: $('#editUserId').val(),
+                        first_name: $('#editFirstName').val(),
+                        last_name: $('#editLastName').val(),
+                        phone: $('#editPhone').val(),
+                        address: $('#editAddress').val(),
+                        role: $('#editRole').find(":selected").val()
+                    },
+                    success: function(response) {
+                        $.LoadingOverlay("hide");
+                        $(".modal").hide();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'User Updated Successfully.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        $.LoadingOverlay("hide");
+                        if (xhr.status == 422) {
+                            const errors = xhr.responseJSON.errors;
+                            $('.error-msg').html(''); // Clear previous errors
+                            $.each(errors, function(key, value) {
+                                $(`#edit_${key}-error`).html(
+                                `${value[0]}`); // e.g., #edit_role-error for 'role'
+                            });
+                        } else {
+                            let errorMessage = 'An error occurred.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorMessage,
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 @endpush
