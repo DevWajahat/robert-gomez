@@ -7,7 +7,9 @@ use App\Http\Requests\Admin\ClientForm\StoreRequest;
 use App\Http\Requests\Admin\ClientForm\UpdateRequest;
 use App\Models\ClientForm;
 use App\Models\GeneralForm;
+use App\Models\Guideline;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -18,7 +20,10 @@ class SettingsController extends Controller
 
     public function guidelines()
     {
-        return view('screens.admin.settings.guidelines');
+
+        $guideline = Guideline::latest()->first();
+
+        return view('screens.admin.settings.guidelines',get_defined_vars());
     }
     // public function generalForms()
     // {
@@ -34,7 +39,7 @@ class SettingsController extends Controller
     public function storeClientForm(StoreRequest $request)
     {
         if ($request->has('file')) {
-            $fileName = time() . '_' . $request->file->getClientOriginalExtension();
+            $fileName = time() . '.' . $request->file->getClientOriginalExtension();
 
             $request->file->move(public_path('files/client-forms/'), $fileName);
         }
@@ -69,7 +74,7 @@ class SettingsController extends Controller
         $clientForm = ClientForm::find($id);
 
         if ($request->has('file')) {
-            $fileName = time() . '_' . $request->file->getClientOriginalExtension();
+            $fileName = time() . '.' . $request->file->getClientOriginalExtension();
 
             $request->file->move(public_path('files/client-forms/'), $fileName);
         }
@@ -111,7 +116,7 @@ class SettingsController extends Controller
     public function storeGeneralForm(StoreRequest $request)
     {
         if ($request->has('file')) {
-            $fileName = time() . '_' . $request->file->getClientOriginalExtension();
+            $fileName = time() . '.' . $request->file->getClientOriginalExtension();
             $request->file->move(public_path('files/general-forms/'), $fileName);
         }
 
@@ -143,7 +148,7 @@ class SettingsController extends Controller
         $generalForm = GeneralForm::find($id);
 
         if ($request->has('file')) {
-            $fileName = time() . '_' . $request->file->getClientOriginalExtension();
+            $fileName = time() . '.' . $request->file->getClientOriginalExtension();
             $request->file->move(public_path('files/general-forms/'), $fileName);
         } else {
             $fileName = $generalForm->file;
@@ -171,4 +176,32 @@ class SettingsController extends Controller
             'message' => 'General Form Deleted Successfully.'
         ]);
     }
+
+        public function guidelinesStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'content' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Update or create the guideline
+        $guideline = Guideline::updateOrCreate(
+            ['id' => 1], // Assuming single record with ID 1
+            ['content' => $request->content]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Guideline saved successfully!',
+            'data' => $guideline
+        ]);
+    }
+
+
 }

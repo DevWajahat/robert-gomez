@@ -30,7 +30,6 @@ Route::prefix('users')->controller(UserController::class)->name('users.')->group
 
 Route::prefix('settings')->controller(SettingsController::class)->name('settings.')->group(function () {
     Route::get('/', 'index')->name('index');
-    Route::get('guidelines', 'guidelines')->name('guidelines');
     Route::get('client-forms', 'clientForms')->name('client.forms');
 
 
@@ -40,10 +39,15 @@ Route::prefix('settings')->controller(SettingsController::class)->name('settings
     Route::post('client-forms/destroy', 'destroyClientForm')->name('client.forms.destroy');
 
 
-     // General Forms Routes (New)
+    // General Forms Routes (New)
     Route::get('general-forms', 'generalForms')->name('general.forms');
     Route::post('general-forms/store', 'storeGeneralForm')->name('general.forms.store');
     Route::get('general-forms/edit/{id}', 'editGeneralForms')->name('general.forms.edit');
     Route::post('general-forms/update/{id}', 'updateGeneralForms')->name('general.forms.update');
     Route::post('general-forms/destroy', 'destroyGeneralForm')->name('general.forms.destroy');
+
+
+    Route::get('guidelines', 'guidelines')->name('guidelines');
+    Route::post('guidelines-store','guidelinesStore')->name('guidelines.store');
+
 });

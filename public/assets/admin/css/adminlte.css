@@ -56225,7 +56225,7 @@ a.text-muted:hover {
 .content-wrapper>.content {
     padding-top: 70px;
     background-image: url("../img/Banner-image.png");
-    min-height:100vh;
+    min-height: 100vh;
     background-size: cover;
     background-position: center;
 }
@@ -57119,3 +57119,101 @@ table.dataTable thead th {
 }
 
 
+/* code editor css */
+
+.selecion option {
+    background-color: white;
+    color: grey;
+}
+
+.selecion,
+.selection-input,
+.selection-btn {
+    background-color: white;
+    border: none;
+    padding: 0.5em 0.8em;
+    border-radius: 4px;
+    color: grey;
+    cursor: pointer;
+    outline-style: none;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+}
+
+.selecion:hover,
+.selection-input:hover,
+.selection-btn:hover {
+    background-color: #EFEFEF;
+    color: black;
+}
+
+.selecion:not(:last-child),
+.selection-input:not(:last-child),
+.selection-btn:not(:last-child) {
+    margin-right: 4px;
+}
+
+.selecion[type=color],
+.selection-input[type=color],
+.selection-btn[type=color] {
+    width: 1.2em;
+}
+
+.selecion[type=number],
+.selection-input[type=number],
+.selection-btn[type=number] {
+    width: 3em;
+}
+
+#wysiwyg {
+    border-radius: 8px;
+    width: 100%;
+    max-height: 100%;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#wysiwyg .btns {
+    padding: 0.3em 0.3em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border-bottom: 1px solid #EFEFEF;
+    background-color: white;
+    flex-grow: 2;
+}
+
+#wysiwyg .btns .category {
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #EFEFEF;
+    padding: 0 4px;
+}
+
+#wysiwyg #editor {
+    resize: none;
+    color: black;
+    outline-style: none;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 50px 50px;
+    max-height: calc(80vh);
+    overflow: auto;
+}
+
+#wysiwyg #editor img {
+    max-width: 100%;
+}
+
+
+#editor ol li,
+#editor ul li {
+    list-style: square !important;
+    color: black;
+}
+#editor ol li{
+    list-style-type: numeric !important;
+}

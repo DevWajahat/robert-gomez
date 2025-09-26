@@ -52,7 +52,7 @@ class ProfileController extends Controller
     {
 
         if ($request->has('upload_profile')) {
-            $imageName = time() . '_' . $request->upload_profile->getClientOriginalExtension();
+            $imageName = time() . '.' . $request->upload_profile->getClientOriginalExtension();
 
             $request->upload_profile->move(public_path('images/pfp/'), $imageName);
         }
