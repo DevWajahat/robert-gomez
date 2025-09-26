@@ -193,7 +193,10 @@
                                     <td><a href="{{ asset('files/client-forms/' . $clientForm->file) }}" download> <i
                                                 class="fa fa-download"></i> </a></td>
                                     <td><button class="btn user-edit-btn" data-id="{{ $clientForm->id }}"><i
-                                                class="fa-solid fa-pencil"></i></button></td>
+                                                class="fa-solid fa-pencil"></i></button>
+                                            <button class="btn user-delete-btn" data-id="{{ $clientForm->id }}"><i class="fa-solid fa-trash"></i></button>
+                                            </td>
+
                                     {{-- <td>sdfasasdf</td>
                                 <td>asdfasdf</td> --}}
                                     {{-- <td>robert@gmail.com</td>
@@ -502,7 +505,63 @@
                     }
                 });
             });
-                        // Edit Form Submission
+
+                // Delete Form
+            $(document).on('click', '.user-delete-btn', function() {
+                const id = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.LoadingOverlay("show");
+
+                        $.ajax({
+                            url: '{{ route("admin.settings.client.forms.destroy") }}',
+                            type: 'POST',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                id: id
+                            },
+                            success: function(response) {
+                                $.LoadingOverlay("hide");
+                                if (response.status === 'true') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: response.message || 'Client Form Deleted Successfully.',
+                                        showConfirmButton: true,
+                                        timer: 2000
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: response.message || 'Failed to delete client form.',
+                                        showConfirmButton: true
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                $.LoadingOverlay("hide");
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: xhr.responseJSON?.message || 'An error occurred while deleting the form.',
+                                    showConfirmButton: true
+                                });
+                            }
+                        });
+                    }
+                });
+            });  // Edit Form Submission
 
         })
     </script>

@@ -158,6 +158,8 @@
             display: none;
         }
     </style>
+
+
     <div class="content-wrapper">
         <section class="content" style="min-height: 100vh;">
             <div class="container-fluid">
@@ -166,11 +168,11 @@
                 </div>
                 <div class="dashboard-content">
                     <ul class="inner-head3 justify-content-end">
-                        <button class="link text-decoration-none" id="userModalbtn">
+                        <button class="link text-decoration-none" id="generalFormModalBtn">
                             <li class="inner-list inner-list-1">Add General Forms</li>
                         </button>
                     </ul>
-                    <table id="companyAdmins">
+                    <table id="generalFormsTable">
                         <thead>
                             <tr>
                                 <th>File Name</th>
@@ -178,57 +180,89 @@
                                 <th>Date</th>
                                 <th>Download</th>
                                 <th>Action</th>
-                                {{-- <th>Address</th>
-                                <th>Action</th> --}}
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr>
-                                <td>File</td>
-                                <td>sdfasdf</td>
-                                <td>sdfasd</td>
-                                <td>asdfasdf</td>
-                                <td><button class="btn user-edit-btn" data-id=""><i
-                                            class="fa-solid fa-pencil"></i></button></td>
-                                {{-- <td>sdfasasdf</td>
-                                <td>asdfasdf</td> --}}
-                                {{-- <td>robert@gmail.com</td>
-                                        <td>111111111</td>
-                                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td> --}}
-                            </tr>
+                            @forelse ($generalForms as $generalForm)
+                                <tr>
+                                    <td>{{ $generalForm->file }}</td>
+                                    <td>{{ $generalForm->label }}</td>
+                                    <td>{{ str_replace('-', '/', explode(' ', $generalForm->updated_at)[0]) }}</td>
+                                    <td><a href="{{ asset('files/general-forms/' . $generalForm->file) }}" download> <i
+                                                class="fa fa-download"></i> </a></td>
+                                    <td><button class="btn general-form-edit-btn" data-id="{{ $generalForm->id }}"><i
+                                                class="fa-solid fa-pencil"></i></button>
+                                            <button class="btn general-form-delete-btn" data-id="{{ $generalForm->id }}"><i class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                </tr>
+                            @empty
+                            @endforelse
                         </tbody>
 
                     </table>
                 </div>
             </div>
         </section>
+    </div>
 
-        <div id="addFormModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Add Form</h2>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <form class="modal-form" autocomplete="off" id="add-form-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="text-light">Label</label>
-                            <input type="text" name="label" id="addLabel">
-                            <span class="text-danger error-msg" id="add_label-error"></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label class="text-light">File</label>
-                            <input type="file" name="file" id="addFile" style="opacity: 100%">
-                            <span class="text-danger error-msg" id="add_file-error"></span>
-                        </div>
-                    </div>
-                    <button type="submit" id="addBtn" class="submit-btn">Add</button>
-                </form>
+
+    <div id="addFormModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add General Form</h2>
+                <span class="close-modal" data-modal="addFormModal">&times;</span>
             </div>
+            <form class="modal-form" autocomplete="off" enctype="multipart/form-data" id="addGeneralForm">
+                @csrf
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="text-light">Label</label>
+                        <input type="text" name="label" id="addLabel">
+                        <span class="text-danger error-msg" id="add_label-error"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label class="text-light">File</label>
+                        <input type="file" accept=".docx,.pdf" name="file" id="addFile" style="opacity: 100%">
+                        <span class="text-danger error-msg" id="add_file-error"></span>
+                    </div>
+                </div>
+                <button type="submit" id="addBtn" class="submit-btn">Add</button>
+            </form>
         </div>
+    </div>
+
+    <div id="editFormModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit General Form</h2>
+                <span class="close-modal" data-modal="editFormModal">&times;</span>
+            </div>
+            <form class="modal-form" autocomplete="off" enctype="multipart/form-data" id="editGeneralForm">
+                @csrf
+                 <input type="hidden" id="editGeneralFormId" name="id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="text-light">Label</label>
+                        <input type="text" name="label" id="editLabel">
+                        <span class="text-danger error-msg" id="edit_label-error"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    {{-- <a href="" download id="currentFile"></a> --}}
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label class="text-light">File</label>
+                        <input type="file" accept=".docx,.pdf" name="file" id="editFile" style="opacity: 100%">
+                        <span class="text-danger error-msg" id="edit_file-error"></span>
+                    </div>
+                </div>
+                <button type="submit" id="editBtn" class="submit-btn">Update</button>
+            </form>
+        </div>
+    </div>
     </div>
 @endsection
 
@@ -237,7 +271,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(function() {
-            $("#companyAdmins").DataTable({
+            $("#generalFormsTable").DataTable({
                 processing: true,
                 language: {
                     paginate: {
@@ -246,13 +280,13 @@
                     },
                 },
                 columns: [{
-                        data: "ID",
-                    },
-                    {
                         data: "File Name",
                     },
                     {
                         data: "Label",
+                    },
+                    {
+                        data: "Date"
                     },
                     {
                         data: "Download"
@@ -265,31 +299,249 @@
         });
     </script>
     <script>
-    $(document).ready(function() {
-        // Open Add Form Modal
-        $('#userModalbtn').on('click', function() {
-            // Clear form fields and error messages
-            $('#add-form-form')[0].reset();
-            $('.error-msg').html('');
-            // Show modal
-            $('#addFormModal').show();
-            $('#addFormModal').css("display", "flex");
-        });
+        $(document).ready(function() {
+            // Open Add Form Modal
+            $('#generalFormModalBtn').on('click', function() {
+                // Clear form fields and error messages
+                $('#addGeneralForm')[0].reset();
+                $('.error-msg').html('');
+                // Show modal
+                $('#addFormModal').show();
+                $('#addFormModal').css("display", "flex");
+            });
+            $(document).on('click', '.close-modal', function() {
+                const modalId = $(this).data('modal');
+                // $(`#${modalId} .modal-form`)[0].reset(); // No need to reset on close-modal button
+                // $(`#${modalId} .error-msg`).html('');
+                $(`#${modalId}`).hide();
+            });
 
-        // Close Modal
-        $('.close-modal').on('click', function() {
-            // Clear form fields and error messages
-            $('#add-form-form')[0].reset();
-            $('.error-msg').html('');
-            // Hide modal
-            $('#addFormModal').hide();
-        });
 
-        // Placeholder for Form Submission (to be expanded with AJAX)
-        $('#add-form-form').on('submit', function(e) {
-            e.preventDefault();
-            // Future AJAX POST to admin.forms.store will go here
-        });
-    });
-</script>
+            // Form Submission with AJAX (Add)
+            $('#addGeneralForm').on('submit', function(e) {
+                e.preventDefault();
+
+                // Show loading overlay
+                $.LoadingOverlay("show");
+
+                // Prepare form data
+                let formData = new FormData(this);
+
+                $.ajax({
+                    url: '{{ route('admin.settings.general.forms.store') }}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Hide loading overlay
+                        $.LoadingOverlay("hide");
+
+                        if (response.status === 'true') {
+                            // Show success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message ||
+                                    'General Form Stored Successfully.',
+                                showConfirmButton: true,
+                                timer: 2000
+                            }).then(() => {
+                                // Reset form and hide modal
+                                $('#addGeneralForm')[0].reset();
+                                $('#addFormModal').hide();
+                                // Reload DataTable
+                                window.location.reload();
+                            });
+                        } else {
+                            // Show error message for non-validation errors
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message ||
+                                    'Failed to store general form.',
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        // Hide loading overlay
+                        $.LoadingOverlay("hide");
+
+                        // Handle validation errors
+                        let errors = xhr.responseJSON?.errors || {};
+                        $('.error-msg').html(''); // Clear previous error messages
+
+                        if (errors) {
+                            $.each(errors, function(key, value) {
+                                $(`#add_${key}-error`).html(value[0]);
+                            });
+                        } else {
+                            // Show error message for non-validation errors
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: xhr.responseJSON?.message ||
+                                    'An error occurred while submitting the form.',
+                                showConfirmButton: true
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Open Edit Form Modal and Fetch Data
+            $(document).on('click', '.general-form-edit-btn', function() {
+                const id = $(this).attr('data-id');
+                $.LoadingOverlay("show");
+
+                $.ajax({
+                    url: '{{ route('admin.settings.general.forms.edit', ':id') }}'.replace(':id',id),
+                    type: 'GET',
+                    success: function(response) {
+                        $.LoadingOverlay("hide");
+                        if (response.status === 'true' && response.generalForm) {
+                            $('#editLabel').val(response.generalForm.label);
+                            $('#editGeneralFormId').val(response.generalForm.id);
+                            $('#editFormModal').show();
+                            $('#editFormModal').css("display", "flex");
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message || 'Failed to load form data.',
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        $.LoadingOverlay("hide");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: xhr.responseJSON?.message ||
+                                'An error occurred while loading the form data.',
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            });
+
+            // Form Submission with AJAX (Update)
+            $('#editGeneralForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.LoadingOverlay("show");
+
+                let formData = new FormData(this);
+                const id =  $('#editGeneralFormId').val();
+
+                $.ajax({
+                    url: '{{ route("admin.settings.general.forms.update", ":id") }}'.replace(':id', id),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $.LoadingOverlay("hide");
+                        if (response.status === 'true') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message || 'General Form Updated Successfully.',
+                                showConfirmButton: true,
+                                timer: 2000
+                            }).then(() => {
+                                $('#editGeneralForm')[0].reset();
+                                $('#editFormModal').hide();
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message || 'Failed to update general form.',
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        $.LoadingOverlay("hide");
+                        let errors = xhr.responseJSON?.errors || {};
+                        $('.error-msg').html('');
+                        if (errors) {
+                            $.each(errors, function(key, value) {
+                                $(`#edit_${key}-error`).html(value[0]);
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: xhr.responseJSON?.message || 'An error occurred while updating the form.',
+                                showConfirmButton: true
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Delete Form
+            $(document).on('click', '.general-form-delete-btn', function() {
+                const id = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.LoadingOverlay("show");
+
+                        $.ajax({
+                            url: '{{ route("admin.settings.general.forms.destroy") }}',
+                            type: 'POST',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                id: id
+                            },
+                            success: function(response) {
+                                $.LoadingOverlay("hide");
+                                if (response.status === 'true') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: response.message || 'General Form Deleted Successfully.',
+                                        showConfirmButton: true,
+                                        timer: 2000
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: response.message || 'Failed to delete general form.',
+                                        showConfirmButton: true
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                $.LoadingOverlay("hide");
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: xhr.responseJSON?.message || 'An error occurred while deleting the form.',
+                                    showConfirmButton: true
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+        })
+    </script>
 @endpush
