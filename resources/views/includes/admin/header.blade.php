@@ -243,7 +243,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="settings.html" class="nav-link">
+                            <a href="{{ route('admin.settings.index') }}" class="nav-link">
                                 <img src="{{ asset('assets/admin/img/link-img-1.png') }}" alt="">
                                 <p>
                                     Settings

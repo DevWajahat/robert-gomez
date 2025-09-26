@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-
+        
         return view('screens.admin.agents.index', get_defined_vars());
     }
 
