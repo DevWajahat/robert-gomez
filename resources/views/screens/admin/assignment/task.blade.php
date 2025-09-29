@@ -183,7 +183,7 @@
 
                 <div class="board-area">
                     @forelse ($assignments as $assignment)
-                        <div class="assign-card">
+                        <div class="assign-card" data-url="{{ route('admin.assign.detail',$assignment->id) }}">
                             <div class="card-id-wrapper">
                                 <h3>{{ $assignment->id }}</h3>
                                 <div class="toggler-btn-wrapper">
@@ -371,6 +371,17 @@
 
         <script>
             $(document).ready(function() {
+
+                 window.addEventListener( "pageshow", function ( event ) {
+                  var historyTraversal = event.persisted ||
+                                         ( typeof window.performance != "undefined" &&
+                                              window.performance.navigation.type === 2 );
+                  if ( historyTraversal ) {
+                    // Handle page restore.
+                    window.location.reload();
+                  }
+                });
+
                 $('#assignmentForm').on("submit", function(event) {
                     event.preventDefault(); // This is the key line to prevent page reload
 
@@ -457,7 +468,7 @@
         </script>
 
         <script>
-            $(document).ready(function() {
+          $(document).ready(function() {
                 $('.toggler-btn').on('click', function() {
                     var parentCard = $(this).closest('.assign-card');
                     var otherDescArea = parentCard.find('.other-desc-area');
@@ -471,7 +482,11 @@
                     caretIcon.toggleClass('rotated');
                 });
 
-                $(document).on('click', '.toggler-btn', function() {
+
+                // Event delegation for dynamically added .toggler-btn
+                $(document).on('click', '.toggler-btn', function(e) {
+                    e.stopPropagation(); // Prevent bubbling to .assign-card
+
                     var parentCard = $(this).closest('.assign-card');
                     var otherDescArea = parentCard.find('.other-desc-area');
                     var pendingBtnWrapper = parentCard.find('.pending-btn-wrapper');
@@ -482,6 +497,26 @@
                     otherDescArea.toggleClass('hidden-class smooth-toggle');
                     pendingBtnWrapper.toggleClass('hidden-class smooth-toggle');
                     caretIcon.toggleClass('rotated');
+                });
+
+
+                $(document).on('click', '.pending-btn-wrapper button', function(e) {
+                    e.stopPropagation();
+                });
+
+                $(document).on('click', '.assign-card', function() {
+                    var $card = $(this);
+                    var isExpanded = $card.find('.other-desc-area').hasClass('smooth-toggle');
+
+                    if (isExpanded) {
+                        var url = $card.attr('data-url');
+                        if (url) {
+                            console.log('Redirecting to:', url);
+                            window.location.href = url;
+                        } else {
+                            console.error('No data-url found for card:', $card.attr('id'));
+                        }
+                    }
                 });
             });
 
@@ -1024,6 +1059,22 @@
                         }
                     })
                 })
+
+                                $(document).on('click', '.assign-card', function() {
+                    var $card = $(this);
+                    var isExpanded = $card.find('.other-desc-area').hasClass('smooth-toggle');
+
+                    if (isExpanded) {
+                        var url = $card.attr('data-url');
+                        if (url) {
+                            console.log('Redirecting to:', url);
+                            window.location.href = url;
+                        } else {
+                            console.error('No data-url found for card:', $card.attr('id'));
+                        }
+                    }
+                });
+
             })
         </script>
     @endpush

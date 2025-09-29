@@ -386,18 +386,15 @@
 
         <script>
             $(document).ready(function() {
-                $(document).on('click', '.toggler-btn', function() {
-                    var parentCard = $(this).closest('.assign-card');
-                    var otherDescArea = parentCard.find('.other-desc-area');
-                    var pendingBtnWrapper = parentCard.find('.pending-btn-wrapper');
-                    var caretIcon = $(this).find('.rotate-icon');
-                    var eyeBtn = parentCard.find('.eye-btn');
 
-
-                    eyeBtn.toggleClass('hidden-class smooth-toggle');
-                    otherDescArea.toggleClass('hidden-class smooth-toggle');
-                    pendingBtnWrapper.toggleClass('hidden-class smooth-toggle');
-                    caretIcon.toggleClass('rotated');
+                 window.addEventListener( "pageshow", function ( event ) {
+                  var historyTraversal = event.persisted ||
+                                         ( typeof window.performance != "undefined" &&
+                                              window.performance.navigation.type === 2 );
+                  if ( historyTraversal ) {
+                    // Handle page restore.
+                    window.location.reload();
+                  }
                 });
 
                 $('.toggler-btn').on('click', function() {
@@ -407,11 +404,47 @@
                     var caretIcon = $(this).find('.rotate-icon');
                     var eyeBtn = parentCard.find('.eye-btn');
 
+                    eyeBtn.toggleClass('hidden-class smooth-toggle');
+                    otherDescArea.toggleClass('hidden-class smooth-toggle');
+                    pendingBtnWrapper.toggleClass('hidden-class smooth-toggle');
+                    caretIcon.toggleClass('rotated');
+                });
+
+
+                // Event delegation for dynamically added .toggler-btn
+                $(document).on('click', '.toggler-btn', function(e) {
+                    e.stopPropagation(); // Prevent bubbling to .assign-card
+
+                    var parentCard = $(this).closest('.assign-card');
+                    var otherDescArea = parentCard.find('.other-desc-area');
+                    var pendingBtnWrapper = parentCard.find('.pending-btn-wrapper');
+                    var caretIcon = $(this).find('.rotate-icon');
+                    var eyeBtn = parentCard.find('.eye-btn');
 
                     eyeBtn.toggleClass('hidden-class smooth-toggle');
                     otherDescArea.toggleClass('hidden-class smooth-toggle');
                     pendingBtnWrapper.toggleClass('hidden-class smooth-toggle');
                     caretIcon.toggleClass('rotated');
+                });
+
+
+                $(document).on('click', '.pending-btn-wrapper button', function(e) {
+                    e.stopPropagation();
+                });
+
+                $(document).on('click', '.assign-card', function() {
+                    var $card = $(this);
+                    var isExpanded = $card.find('.other-desc-area').hasClass('smooth-toggle');
+
+                    if (isExpanded) {
+                        var url = $card.attr('data-url');
+                        if (url) {
+                            console.log('Redirecting to:', url);
+                            window.location.href = url;
+                        } else {
+                            console.error('No data-url found for card:', $card.attr('id'));
+                        }
+                    }
                 });
             });
 
@@ -1005,6 +1038,22 @@
                         }
                     })
                 })
+
+                                $(document).on('click', '.assign-card', function() {
+                    var $card = $(this);
+                    var isExpanded = $card.find('.other-desc-area').hasClass('smooth-toggle');
+
+                    if (isExpanded) {
+                        var url = $card.attr('data-url');
+                        if (url) {
+                            console.log('Redirecting to:', url);
+                            window.location.href = url;
+                        } else {
+                            console.error('No data-url found for card:', $card.attr('id'));
+                        }
+                    }
+                });
+
             })
         </script>
     @endpush

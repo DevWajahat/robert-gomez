@@ -3836,12 +3836,12 @@ document.querySelectorAll(".assign-card").forEach(function (card, index) {
 
   let isExpanded = false;
 
-  const cardUrls = [
-    "assignment.html",
-    "assignment.html",
-    "assignment.html",
-    "assignment.html",
-  ];
+//   const cardUrls = [
+//     "assignment.html",
+//     "assignment.html",
+//     "assignment.html",
+//     "assignment.html",
+//   ];
 
   togglerBtn.addEventListener("click", function (e) {
     e.stopPropagation();

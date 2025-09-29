@@ -3,7 +3,7 @@
 @else
 
    @forelse ($assignments as $assignment )
-        <div class="assign-card">
+        <div class="assign-card" data-url="{{ route('admin.assign.detail',$assignment->id) }}">
             <div class="card-id-wrapper">
                 <h3>{{ $assignment->id }}</h3>
                 <div class="toggler-btn-wrapper">
