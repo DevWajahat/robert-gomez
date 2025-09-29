@@ -318,6 +318,11 @@
 
                 <div class="form-row">
                     <div class="form-group">
+                        <label class="text-light">Password</label>
+                        <input type="password" id="editPassword" name="edit_password">
+                        <span class="text-danger error-msg" id="edit_password"></span>
+                    </div>
+                    <div class="form-group">
                         <label class="text-white">Role</label>
                         {{-- <input type="text" id="address" name="address"> --}}
                         <select name="edit_role" style="opacity: 100%" id="editRole">
@@ -500,6 +505,10 @@
             $(document).on("submit", '#edit-user-form', function(e) {
                 e.preventDefault();
                 $.LoadingOverlay("show");
+
+                const password = $('#editPassword').val().trim();
+
+
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('admin.users.update', ':id') }}'.replace(':id', $('#editUserId')
@@ -511,7 +520,8 @@
                         last_name: $('#editLastName').val(),
                         phone: $('#editPhone').val(),
                         address: $('#editAddress').val(),
-                        role: $('#editRole').find(":selected").val()
+                        role: $('#editRole').find(":selected").val(),
+                        ...(password !== '' && { password: password })
                     },
                     success: function(response) {
                         $.LoadingOverlay("hide");
@@ -533,7 +543,7 @@
                             $('.error-msg').html(''); // Clear previous errors
                             $.each(errors, function(key, value) {
                                 $(`#edit_${key}-error`).html(
-                                `${value[0]}`); // e.g., #edit_role-error for 'role'
+                                    `${value[0]}`); // e.g., #edit_role-error for 'role'
                             });
                         } else {
                             let errorMessage = 'An error occurred.';
@@ -553,4 +563,5 @@
             });
         });
     </script>
+
 @endpush

@@ -26,6 +26,7 @@ class UpdateRequest extends FormRequest
             'last_name' => 'required',
             'phone' => 'required|min:8|max:15',
             'address' => 'required',
+            'password' => 'string|min:8|max:16',
             'role' => 'required'
         ];
     }

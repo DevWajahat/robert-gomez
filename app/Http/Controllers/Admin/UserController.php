@@ -8,13 +8,14 @@ use App\Http\Requests\Admin\User\UpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function index()
     {
         $users = User::all();
-        
+
         return view('screens.admin.agents.index', get_defined_vars());
     }
 
@@ -37,7 +38,7 @@ class UserController extends Controller
         ]);
     }
 
-     function edit($id)
+    function edit($id)
     {
 
         $user = User::find($id);
@@ -52,19 +53,27 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UpdateRequest $request, $id){
+    public function update(UpdateRequest $request, $id)
+    {
 
+        // dd($request->all());
 
         $user = User::find($id);
 
-
-        $user->update([
+        $updateData = [
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,
             'address' => $request->address,
             'role' => $request->role
-        ]);
+        ];
+
+        // Add password to update data if provided
+        if ($request->has('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($updateData);
 
         return response()->json([
             'status' => 'true',
