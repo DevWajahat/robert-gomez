@@ -180,8 +180,8 @@
                                         <th>Role</th>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Status</th>
                                         <th>Address</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -193,10 +193,17 @@
                                             <td>{{ $user->role }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->phone }}</td>
-                                            <td>{{ $user->status }}</td>
                                             <td>{{ $user->address }}</td>
+                                            <td> <select name="status" class="status" id="status-{{ $user->id }}">
+                                                    <option value="active"
+                                                        {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
+                                                    <option value="inactive"
+                                                        {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive
+                                                    </option>
+                                                </select></td>
                                             <td><button class="btn user-edit-btn" data-id="{{ $user->id }}"><i
-                                                        class="fa-solid fa-pencil"></i></button></td>
+                                                        class="fa-solid fa-pencil"></i></button>
+                                            </td>
                                             {{-- <td>robert@gmail.com</td>
                                         <td>111111111</td>
                                         <td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td> --}}
@@ -521,7 +528,9 @@
                         phone: $('#editPhone').val(),
                         address: $('#editAddress').val(),
                         role: $('#editRole').find(":selected").val(),
-                        ...(password !== '' && { password: password })
+                        ...(password !== '' && {
+                            password: password
+                        })
                     },
                     success: function(response) {
                         $.LoadingOverlay("hide");
@@ -563,5 +572,63 @@
             });
         });
     </script>
+    <script>
+      $(document).ready(function() {
+    // Store the initial value of each dropdown when the page loads
+    $('.status').each(function() {
+        $(this).data('original-value', $(this).val());
+    });
 
+    $('.status').on("change", function() {
+        var $dropdown = $(this);
+        var originalValue = $dropdown.data('original-value');
+        var userId = $dropdown.attr("id").split("-")[1];
+        var statusMessage = $dropdown.find(":selected").text() === 'active'
+            ? 'Are you sure you want to activate this user? They will regain access to the system.'
+            : 'Are you sure you want to deactivate this user? They will lose access to the system.';
+        // console.log(userId + $(this).val())
+
+        Swal.fire({
+            title: 'Confirm Status Change',
+            text: statusMessage,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $dropdown.data('original-value', $dropdown.val());
+
+                $.ajax({
+                    type:'POST',
+                    url: '{{ route('admin.users.update.status') }}',
+                    data:{
+                        _token: "{{ csrf_token() }}",
+                        status: $(this).val(),
+                        id: userId
+                    },
+                    success: function (response){
+                        console.log(response)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Status Updated Successfully.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        })
+                    }
+                })
+
+            } else {
+
+                $dropdown.val(originalValue);
+
+            }
+        });
+    });
+});
+    </script>
 @endpush

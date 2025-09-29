@@ -29,7 +29,7 @@ class UserController extends Controller
             'password' => $request->password,
             'phone' => $request->phone,
             'address' => $request->address,
-            'role' => $request->role
+            'role' => $request->role,
         ]);
 
         return response()->json([
@@ -78,6 +78,22 @@ class UserController extends Controller
         return response()->json([
             'status' => 'true',
             'message' => 'User details updated successfully.'
+        ]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+
+        $user = User::find($request->id);
+
+
+        $user->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'Status Updated Successfully.'
         ]);
     }
 }
