@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Assignment\StoreRequest;
 use App\Imports\AssignmentsImport;
 use App\Models\Assignment;
+use App\Models\ClientForm;
+use App\Models\GeneralForm;
+use App\Models\Guideline;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -247,4 +250,19 @@ class AssignmentController extends Controller
             'html' => $html
         ]);
     }
+
+    public function detail($id)
+    {
+        $assignment = Assignment::find($id);
+
+        $generalForms = GeneralForm::all();
+
+        $clientForms = ClientForm::all();
+
+        $guideline = Guideline::latest()->first();
+
+        return view('screens.admin.assignment.detail',get_defined_vars());
+    }
+
+
 }

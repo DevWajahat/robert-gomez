@@ -180,6 +180,7 @@
                                         <th>Role</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th>Status</th>
                                         <th>Address</th>
                                         <th>Action</th>
                                     </tr>
@@ -192,6 +193,7 @@
                                             <td>{{ $user->role }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->phone }}</td>
+                                            <td>{{ $user->status }}</td>
                                             <td>{{ $user->address }}</td>
                                             <td><button class="btn user-edit-btn" data-id="{{ $user->id }}"><i
                                                         class="fa-solid fa-pencil"></i></button></td>
@@ -345,25 +347,28 @@
                     },
                 },
                 columns: [{
-                        data: "ID",
-                    },
-                    {
-                        data: "User Name",
-                    },
-                    {
                         data: "First Name",
-                    },
-                    {
-                        data: "Role"
                     },
                     {
                         data: "Last Name",
                     },
                     {
-                        data: "Active",
+                        data: "Role",
                     },
                     {
-                        data: "Division",
+                        data: "Email"
+                    },
+                    {
+                        data: "Phone",
+                    },
+                    {
+                        data: "Status",
+                    },
+                    {
+                        data: "Address",
+                    },
+                    {
+                        data: "Action",
                     },
                 ],
             });

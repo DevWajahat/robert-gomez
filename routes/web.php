@@ -147,14 +147,14 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [WebAuthController::class, 'login_view'])->name('login');
     Route::post('/login', [WebAuthController::class, 'login']);
-    Route::get('/register', [WebAuthController::class, 'register_view'])->name('register');
-    Route::post('/register', [WebAuthController::class, 'register']);
+    // Route::get('/register', [WebAuthController::class, 'register_view'])->name('register');
+    // Route::post('/register', [WebAuthController::class, 'register']);
 
 
 
     Route::get('admin/login', [AdminAuthController::class, 'login_view'])->name('admin.login');
-    Route::get('admin/register', [AdminAuthController::class, 'register_view'])->name('admin.register');
-    Route::post('admin/register', [AdminAuthController::class, 'register']);
+    // Route::get('admin/register', [AdminAuthController::class, 'register_view'])->name('admin.register');
+    // Route::post('admin/register', [AdminAuthController::class, 'register']);
     Route::post('admin/login', [AdminAuthController::class, 'login']);
 });
 
