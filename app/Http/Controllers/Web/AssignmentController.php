@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
+use App\Models\ClientForm;
+use App\Models\GeneralForm;
+use App\Models\Guideline;
 use Illuminate\Http\Request;
 
 class AssignmentController extends Controller
@@ -11,7 +14,7 @@ class AssignmentController extends Controller
     public function updateStatus(Request $request)
     {
 
-        
+
         $assignment= Assignment::find($request->assignment);
 
         $assignment->update([
@@ -24,5 +27,18 @@ class AssignmentController extends Controller
             'message' => 'assignment completed successfully.'
 
         ]);
+    }
+
+    public function view($id)
+    {
+        $assignment = Assignment::find($id);
+
+        $clientForms = ClientForm::all();
+
+        $generalForms = GeneralForm::all();
+
+        $guideline = Guideline::latest()->first();
+
+        return view('screens.web.view',get_defined_vars());
     }
 }

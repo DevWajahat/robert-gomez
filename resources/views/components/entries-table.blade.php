@@ -21,8 +21,8 @@
         </thead>
         <tbody>
             {{-- @foreach ($entries as $entry)
-            
-                
+
+
                 <tr>
                     <td>{{ $entry['name'] }}</td>
                     <td>{{ $entry['label'] }}</td>

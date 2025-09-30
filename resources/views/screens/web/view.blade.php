@@ -1,13 +1,15 @@
 @extends('layouts.web.app')
 @section('content')
     @php
-        $headers = ['File Name', 'Label', 'Date', 'Download', 'Add to Docs/Photos'];
-        $entries = [
-            ['1_IAS_Knowledgebase.docx', 'IAS KNOWLEDGE BASE', '04/09/2024', 'Lorem Ipsum Dummy', 'Add to Docs/Photos'],
-            ['1_IAS_Knowledgebase.docx', 'IAS KNOWLEDGE BASE', '04/09/2024', 'Lorem Ipsum Dummy', 'Add to Docs/Photos'],
-            ['1_IAS_Knowledgebase.docx', 'IAS KNOWLEDGE BASE', '04/09/2024', 'Lorem Ipsum Dummy', 'Add to Docs/Photos'],
-            ['1_IAS_Knowledgebase.docx', 'IAS KNOWLEDGE BASE', '04/09/2024', 'Lorem Ipsum Dummy', 'Add to Docs/Photos'],
+         $headers = ['File Name', 'Label', 'Date', 'Download'];
+    $entries = $clientForms->map(function ($clientForm) {
+        return [
+            $clientForm->file ?? 'N/A',
+            $clientForm->label ?? 'N/A',
+            $clientForm->created_at ? $clientForm->created_at->format('d/m/Y') : 'N/A',
+            ''
         ];
+    })->toArray();
 
         $headersy = ['File Name', 'Label', 'Date', 'Download'];
         $entriesy = [
@@ -619,7 +621,8 @@
                                     </button>
                                     <div class="faq-body mb-0">
                                         <div class="view-tab-content">
-                                            <p class="guide-para">Lorem Ipsum is simply dummy text of the printing and
+                                            {!! $guideline->content !!}
+                                            {{-- <p class="guide-para">Lorem Ipsum is simply dummy text of the printing and
                                                 typesetting industry. Lorem Ipsum has been the industry's standard dummy
                                                 text
                                                 ever since the 1500s, when an unknown printer took a galley of type and
@@ -739,7 +742,7 @@
                                                 unchanged. It was popularised in the 1960s with the release of Letraset
                                                 sheets
                                                 containing Lorem Ipsum passages, and more recently with desktop publishing
-                                                software like Aldus PageMaker including versions of Lorem Ipsum</p>
+                                                software like Aldus PageMaker including versions of Lorem Ipsum</p> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -2163,6 +2166,14 @@
         });
     });
 </script>
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.guideline-content p,.guideline-content span').addClass('guide-para');
+        });
+    </script>
+@endpush
+
 
 {{-- <script>
     function toggleDropdown() {

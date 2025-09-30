@@ -18,7 +18,7 @@
         </div>
         <div class="board-area">
             @forelse ($assignments as $assignment)
-                <div class="assign-card" data-url="{{ route('view') }}">
+                <div class="assign-card" data-url="{{ route('view',$assignment->id) }}">
                     <div class="card-id-wrapper">
                         <h3>{{ $assignment->id }}</h3>
                         <div class="toggler-btn-wrapper">

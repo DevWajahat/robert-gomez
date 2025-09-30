@@ -43,9 +43,10 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
 
     // start inner pages routes
 
-    Route::get('/View', function () {
-        return view('screens.web.view');
-    })->name('view');
+    // Route::get('/View', function () {
+    //     return view('screens.web.view');
+    // })->name('view');
+    Route::get('/View/{id}', [AssignmentController::class,'view'])->name('view');
 
     Route::get('/Reject', function () {
         return view('screens.web.reject');
