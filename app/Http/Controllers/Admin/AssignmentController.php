@@ -20,7 +20,7 @@ class AssignmentController extends Controller
     public function index()
     {
         $assignments = Assignment::where('user_id', null)->where('status', 'pending')->latest()->orderBy('id', 'desc')->get();
-        $users = User::where('role', 'agent')->get();
+        $users = User::where('role', 'agent')->where('status','active')->get();
 
         return view('screens.admin.assignment.index', get_defined_vars());
     }
@@ -238,7 +238,7 @@ class AssignmentController extends Controller
 
         $assignments = count($assignments) == 0 ? 'No Results Found' : $assignments;
 
-        $users = User::where('role', 'agent')->get();
+        $users = User::where('role', 'agent')->where('status','active')->get();
 
         $html = view('includes.web.assignment-dropdown', get_defined_vars())->render();
 

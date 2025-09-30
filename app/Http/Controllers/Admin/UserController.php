@@ -82,18 +82,27 @@ class UserController extends Controller
     }
 
     public function updateStatus(Request $request)
-    {
+{
+    $user = User::find($request->id);
 
-        $user = User::find($request->id);
-
-
-        $user->update([
-            'status' => $request->status
-        ]);
-
+    if (!$user) {
         return response()->json([
-            'status' => 'true',
-            'message' => 'Status Updated Successfully.'
-        ]);
+            'status' => false,
+            'message' => 'User not found.'
+        ], 404);
     }
+
+    $user->update([
+        'status' => $request->status
+    ]);
+
+    if ($user->status == 'inactive') {
+        $user->assignments()->update(['user_id' => null]);
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Status Updated Successfully.'
+    ]);
+}
 }
