@@ -349,42 +349,100 @@
     <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script>
-        $(function() {
-            $("#companyAdmins").DataTable({
-                processing: true,
-                language: {
-                    paginate: {
-                        previous: '<i class="fa-solid fa-angle-left"></i>',
-                        next: '<i class="fa-solid fa-angle-right"></i>',
-                    },
+        // $(function() {
+        //     $("#companyAdmins").DataTable({
+        //         processing: true,
+        //         language: {
+        //             paginate: {
+        //                 previous: '<i class="fa-solid fa-angle-left"></i>',
+        //                 next: '<i class="fa-solid fa-angle-right"></i>',
+        //             },
+        //         },
+        //         columns: [{
+        //                 data: "First Name",
+        //             },
+        //             {
+        //                 data: "Last Name",
+        //             },
+        //             {
+        //                 data: "Role",
+        //             },
+        //             {
+        //                 data: "Email"
+        //             },
+        //             {
+        //                 data: "Phone",
+        //             },
+        //             {
+        //                 data: "Status",
+        //             },
+        //             {
+        //                 data: "Address",
+        //             },
+        //             {
+        //                 data: "Action",
+        //             },
+        //         ],
+        //     });
+        // });
+
+     $(document).ready(function() {
+
+        var table = $("#companyAdmins").DataTable({
+            processing: true,
+            language: {
+                paginate: {
+                    previous: '<i class="fa-solid fa-angle-left"></i>',
+                    next: '<i class="fa-solid fa-angle-right"></i>',
                 },
-                columns: [{
-                        data: "First Name",
-                    },
-                    {
-                        data: "Last Name",
-                    },
-                    {
-                        data: "Role",
-                    },
-                    {
-                        data: "Email"
-                    },
-                    {
-                        data: "Phone",
-                    },
-                    {
-                        data: "Status",
-                    },
-                    {
-                        data: "Address",
-                    },
-                    {
-                        data: "Action",
-                    },
-                ],
-            });
+            },
+            columns: [{
+                    data: "First Name",
+                },
+                {
+                    data: "Last Name",
+                },
+                {
+                    data: "Role",
+                },
+                {
+                    data: "Email"
+                },
+                {
+                    data: "Phone",
+                },
+                {
+                    data: "Status",
+                },
+                {
+                    data: "Address",
+                },
+                {
+                    data: "Action",
+                },
+            ],
         });
+
+
+        function setOriginalValues() {
+            $('.status').each(function() {
+                var $this = $(this);
+
+                if (typeof $this.data('original-value') === 'undefined') {
+                    $this.data('original-value', $this.val() || 'active');
+                }
+            });
+        }
+
+
+        setOriginalValues();
+
+
+        table.on('draw.dt', setOriginalValues);
+
+
+
+    });
     </script>
     <script>
         $(document).ready(function() {
@@ -573,62 +631,68 @@
         });
     </script>
     <script>
-      $(document).ready(function() {
-    // Store the initial value of each dropdown when the page loads
-    $('.status').each(function() {
-        $(this).data('original-value', $(this).val());
-    });
+        $(document).ready(function() {
+        
 
-    $('.status').on("change", function() {
-        var $dropdown = $(this);
-        var originalValue = $dropdown.data('original-value');
-        var userId = $dropdown.attr("id").split("-")[1];
-        var statusMessage = $dropdown.find(":selected").text() === 'active'
-            ? 'Are you sure you want to activate this user? They will regain access to the system.'
-            : 'Are you sure you want to deactivate this user? They will lose access to the system.';
-        // console.log(userId + $(this).val())
 
-        Swal.fire({
-            title: 'Confirm Status Change',
-            text: statusMessage,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
-        }).then((result) => {
-            if (result.isConfirmed) {
+               $(document).on('change', '.status', function() {
+            var $dropdown = $(this);
+            var originalValue = $dropdown.data('original-value') || 'active'; // Fallback to 'active' if undefined
+            var userId = $dropdown.attr("id").split("-")[1];
+            var statusMessage = $dropdown.find(":selected").text() === 'active'
+                ? 'Are you sure you want to activate this user? They will regain access to the system.'
+                : 'Are you sure you want to deactivate this user? They will lose access to the system.';
 
-                $dropdown.data('original-value', $dropdown.val());
+            Swal.fire({
+                title: 'Confirm Status Change',
+                text: statusMessage,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-                $.ajax({
-                    type:'POST',
-                    url: '{{ route('admin.users.update.status') }}',
-                    data:{
-                        _token: "{{ csrf_token() }}",
-                        status: $(this).val(),
-                        id: userId
-                    },
-                    success: function (response){
-                        console.log(response)
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Status Updated Successfully.',
-                            showConfirmButton: false,
-                            timer: 1500,
-                        })
-                    }
-                })
+                    $dropdown.data('original-value', $dropdown.val());
 
-            } else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('admin.users.update.status') }}',
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            status: $dropdown.val(),
+                            id: userId
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Status Updated Successfully.',
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                        },
+                        error: function(xhr) {
 
-                $dropdown.val(originalValue);
+                            $dropdown.val(originalValue);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to update status.',
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                        }
+                    });
+                } else {
 
-            }
+                    $dropdown.val(originalValue);
+                }
+            });
         });
-    });
-});
+        });
     </script>
 @endpush

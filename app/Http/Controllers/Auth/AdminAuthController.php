@@ -20,7 +20,7 @@ class AdminAuthController extends Controller
     public function login(LoginRequest $request)
     {
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password,  'status' => 'active'])) {
             if (auth()->user()->role == 'admin') {
                 return redirect()->route('admin.index');
             } else {

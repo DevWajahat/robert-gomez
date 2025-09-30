@@ -39,3 +39,22 @@
         </div>
     </ul>
 </div>
+
+
+@push('scripts')
+    <script>
+        $(".menu-btn, .hamburger, .hamburger2").click(function () {
+    const isActive = $(".side-bar").toggleClass("active").hasClass("active");
+
+    // console.log("Sidebar active:", isActive);
+
+    if (isActive) {
+        $(".menu-list-2").css("justify-content", "center");
+        $("#logo-img").attr("src", "{{ asset('assets/web/images/link-img-open2.png') }}");
+    } else {
+        $(".menu-list-2").css("justify-content", "flex-end");
+        $("#logo-img").attr("src", "{{ asset('assets/web/images/link-img-open.png') }}");
+    }
+});
+    </script>
+@endpush

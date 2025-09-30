@@ -45,19 +45,19 @@ document.querySelectorAll(".assign-card").forEach(function (card) {
     });
 });
 
-$(".menu-btn, .hamburger, .hamburger2").click(function () {
-    const isActive = $(".side-bar").toggleClass("active").hasClass("active");
+// $(".menu-btn, .hamburger, .hamburger2").click(function () {
+//     const isActive = $(".side-bar").toggleClass("active").hasClass("active");
 
-    // console.log("Sidebar active:", isActive);
+//     // console.log("Sidebar active:", isActive);
 
-    if (isActive) {
-        $(".menu-list-2").css("justify-content", "center");
-        $("#logo-img").attr("src", "assets/web/images/link-img-open2.png");
-    } else {
-        $(".menu-list-2").css("justify-content", "flex-end");
-        $("#logo-img").attr("src", "assets/web/images/link-img-open.png");
-    }
-});
+//     if (isActive) {
+//         $(".menu-list-2").css("justify-content", "center");
+//         $("#logo-img").attr("src", "assets/web/images/link-img-open2.png");
+//     } else {
+//         $(".menu-list-2").css("justify-content", "flex-end");
+//         $("#logo-img").attr("src", "assets/web/images/link-img-open.png");
+//     }
+// });
 
 const form = document.getElementById("form");
 

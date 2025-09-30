@@ -1128,7 +1128,7 @@
 
                                                                     <td>{{ $clientForm->label }}</td>
 
-                                                                    <td>{{ $clientForm->created_at }}</td>
+                                                                    <td>{{ str_replace('-', '/', explode(' ', $clientForm->updated_at)[0]) }}</td>
 
                                                                     <td>
                                                                         <a href="{{ asset('files/client-forms/' . $clientForm->file) }}"
@@ -1310,7 +1310,7 @@
 
                                                                     <td>{{ $generalForm->label }}</td>
 
-                                                                    <td>{{ str_replace('-', '/', explode(' ', $clientForm->updated_at)[0]) }}
+                                                                    <td>{{ str_replace('-', '/', explode(' ', $generalForm->updated_at)[0]) }}
                                                                     </td>
                                                                     <td>
                                                                         <a href="{{ asset('files/general-forms/' . $generalForm->file) }}"
@@ -1407,5 +1407,99 @@
         $(document).ready(function() {
             $('.guideline-content p,.guideline-content span').addClass('guide-para');
         });
+
+         $(document).ready(function() {
+    // Function to initialize pagination for a given table and pagination container
+    function initPagination($table, $pagination) {
+        // Configuration
+        var rowsPerPage = 5; // Number of rows to display per page
+        var $rows = $table.find('tbody tr');
+        var totalRows = $rows.length;
+        var totalPages = Math.ceil(totalRows / rowsPerPage);
+        var currentPage = 1;
+        var noResultsMessage = '<tr class="no-results"><td colspan="4" style="text-align: center;">No results found</td></tr>';
+
+        // Function to update pagination display
+        function updatePagination() {
+            // Hide all rows
+            $rows.hide();
+
+            // Calculate start and end indices
+            var start = (currentPage - 1) * rowsPerPage;
+            var end = start + rowsPerPage;
+
+            // Show rows for current page
+            $rows.slice(start, end).show();
+
+            // Update active page
+            $pagination.find('.page').removeClass('active-page');
+            $pagination.find('.page').eq(currentPage - 1).addClass('active-page');
+
+            // Enable/disable prev/next buttons
+            $pagination.find('.prev').prop('disabled', currentPage === 1);
+            $pagination.find('.next').prop('disabled', currentPage === totalPages);
+        }
+
+        // Generate pagination buttons dynamically
+        function generatePaginationButtons() {
+            $pagination.find('.page').remove(); // Clear existing page buttons
+            for (var i = 1; i <= totalPages; i++) {
+                var $pageButton = $('<button class="page">' + i + '</button>');
+                if (i === currentPage) {
+                    $pageButton.addClass('active-page');
+                }
+                $pageButton.insertBefore($pagination.find('.next'));
+            }
+        }
+
+        // Initial setup
+        if (totalRows > 0) {
+            // Remove any existing no-results message
+            $table.find('.no-results').remove();
+            // Show pagination
+            $pagination.show();
+            generatePaginationButtons();
+            updatePagination();
+        } else {
+            // If no rows, append no-results message and hide pagination
+            $table.find('.no-results').remove(); // Clear any existing message
+            $table.find('tbody').append(noResultsMessage);
+            $pagination.hide();
+        }
+
+        // Event handlers
+        // Click on page number
+        $pagination.on('click', '.page', function() {
+            currentPage = parseInt($(this).text());
+            updatePagination();
+        });
+
+        // Previous button
+        $pagination.on('click', '.prev', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+            }
+        });
+
+        // Next button
+        $pagination.on('click', '.next', function() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePagination();
+            }
+        });
+    }
+
+    // Iterate over all tables and their corresponding pagination controls
+    $('.entries-table').each(function(index) {
+        var $table = $(this);
+        // Find the corresponding pagination (assumes pagination follows the table in DOM)
+        var $pagination = $('.pagination.assign-pagination').eq(index);
+        if ($table.length && $pagination.length) {
+            initPagination($table, $pagination);
+        }
+    });
+});
     </script>
 @endpush
