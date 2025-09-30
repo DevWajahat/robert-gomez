@@ -757,8 +757,198 @@
                                     </button>
                                     <div class="faq-body mb-0">
                                         <div class="view-tab-content">
-                                            <x-entries-table :entries="$entries" :headers="$headers" />
-                                            <x-pagination />
+
+                                                                                            <div class="entry-table-wrap">
+                                                    <table class="table entries-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                    File Name
+
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                    Label
+
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                    Date
+
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important; color: white !important;">
+                                                                    Download
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+                                                                {{--
+                                                                    <th scope="col"
+                                                                        style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                        Add to Docs/Photos
+
+                                                                        <i class="fa-solid fa-arrow-down"></i>
+                                                                    </th> --}}
+
+                                                                {{-- <th scope="col"
+                                                                        style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                        Action
+
+                                                                        <i class="fa-solid fa-arrow-down"></i>
+                                                                    </th> --}}
+
+                                                                {{-- <th scope="col"
+                                                                        style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                        Action
+
+                                                                        <i class="fa-solid fa-arrow-down"></i>
+                                                                    </th> --}}
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            @forelse($clientForms as $clientForm)
+                                                                <tr class="">
+                                                                    <td>{{ $clientForm->file }}</td>
+
+                                                                    <td>{{ $clientForm->label }}</td>
+
+                                                                    <td>{{ $clientForm->created_at }}</td>
+
+                                                                    <td>
+                                                                        <a href="{{ asset('files/client-forms/' . $clientForm->file) }}"
+                                                                            download class="icon" title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                    {{-- <td>Lorem Ipsum Dummy</td>
+
+                                                                    <td>Add to Docs/Photos</td>
+
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa-solid fa-check"></i>
+                                                                        </a>
+                                                                    </td> --}}
+                                                                </tr>
+                                                            @empty
+                                                                <div>No Files Found</div>
+                                                            @endforelse
+
+                                                            {{-- <tr class="bg-changed">
+                                                                    <td>1_IAS_Knowledgebase.docx</td>
+
+                                                                    <td>IAS KNOWLEDGE BASE</td>
+
+                                                                    <td>04/09/2024</td>
+
+                                                                    <td>Lorem Ipsum Dummy</td>
+
+                                                                    <td>Add to Docs/Photos</td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa-solid fa-check"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr class="">
+                                                                    <td>1_IAS_Knowledgebase.docx</td>
+
+                                                                    <td>IAS KNOWLEDGE BASE</td>
+
+                                                                    <td>04/09/2024</td>
+
+                                                                    <td>Lorem Ipsum Dummy</td>
+
+                                                                    <td>Add to Docs/Photos</td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa-solid fa-check"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr> --}}
+
+                                                            {{-- <tr class="bg-changed">
+                                                                    <td>1_IAS_Knowledgebase.docx</td>
+
+                                                                    <td>IAS KNOWLEDGE BASE</td>
+
+                                                                    <td>04/09/2024</td>
+
+                                                                    <td>Lorem Ipsum Dummy</td>
+
+                                                                    <td>Add to Docs/Photos</td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa-solid fa-check"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr> --}}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="pagination assign-pagination">
+                                                    <button class="prev">
+                                                        <i class="fa-solid fa-angle-left"></i>
+                                                    </button>
+
+                                                    <button class="page active-page">1</button>
+
+                                                    <button class="page">2</button>
+
+                                                    <button class="page">3</button>
+
+                                                    <button class="page">4</button>
+
+                                                    <button class="next">
+                                                        <i class="fa-solid fa-angle-right"></i>
+                                                    </button>
+                                                </div>
+                                            {{-- <x-entries-table :entries="$entries" :headers="$headers" />
+                                            <x-pagination /> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -773,8 +963,130 @@
                                     </button>
                                     <div class="faq-body mb-0">
                                         <div class="view-tab-content">
-                                            <x-entries-table2 :entriesy="$entriesy" :headersy="$headersy" />
-                                            <x-pagination />
+
+                                                                                            <div class="entry-table-wrap">
+                                                    <table class="table entries-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                    File Name
+
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                    Label
+
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                    Date
+
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+
+                                                                <th scope="col"
+                                                                    style="background: #8e8e8e !important;
+                                        color: white !important;">
+                                                                    Download
+
+                                                                    <i class="fa-solid fa-arrow-down"></i>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            @forelse($generalForms as $generalForm)
+                                                                <tr>
+                                                                    <td>{{ $generalForm->file }}</td>
+
+                                                                    <td>{{ $generalForm->label }}</td>
+
+                                                                    <td>{{ str_replace('-', '/', explode(' ', $clientForm->updated_at)[0]) }}
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="{{ asset('files/general-forms/' . $generalForm->file) }}"
+                                                                            download class="icon" title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            @empty
+                                                            @endforelse
+                                                            {{-- <tr>
+                                                                    <td>1_IAS_Knowledgebase.docx</td>
+
+                                                                    <td>IAS KNOWLEDGE BASE</td>
+
+                                                                    <td>04/09/2024</td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>1_IAS_Knowledgebase.docx</td>
+
+                                                                    <td>IAS KNOWLEDGE BASE</td>
+
+                                                                    <td>04/09/2024</td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>1_IAS_Knowledgebase.docx</td>
+
+                                                                    <td>IAS KNOWLEDGE BASE</td>
+
+                                                                    <td>04/09/2024</td>
+
+                                                                    <td>
+                                                                        <a href="#" class="icon"
+                                                                            title="Download">
+                                                                            <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr> --}}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="pagination assign-pagination">
+                                                    <button class="prev">
+                                                        <i class="fa-solid fa-angle-left"></i>
+                                                    </button>
+
+                                                    <button class="page active-page">1</button>
+
+                                                    <button class="page">2</button>
+
+                                                    <button class="page">3</button>
+
+                                                    <button class="page">4</button>
+
+                                                    <button class="next">
+                                                        <i class="fa-solid fa-angle-right"></i>
+                                                    </button>
+                                                </div>
+                                            {{-- <x-entries-table2 :entriesy="$entriesy" :headersy="$headersy" />
+                                            <x-pagination /> --}}
                                         </div>
                                     </div>
                                 </div>

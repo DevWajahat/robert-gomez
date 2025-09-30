@@ -868,7 +868,7 @@
                                         <div class="faq-body mb-0" style="display: none">
                                             <div class="view-tab-content guideline-content">
 
-                                                {!! $guideline->content !!}
+                                                {!! $guideline?->content !!}
                                                 {{-- <p class="guide-para">
                                                     Lorem Ipsum is simply dummy text of the printing
                                                     and typesetting industry. Lorem Ipsum has been the
