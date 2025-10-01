@@ -27,18 +27,21 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
 
         Route::get('/', 'index')->name('index');
         Route::post('update', 'update')->name('update');
-        Route::post('change-password','updatePsw')->name('update.psw');
-        Route::post('update-profile','updatePfp')->name('update.pfp');
+        Route::post('change-password', 'updatePsw')->name('update.psw');
+        Route::post('update-profile', 'updatePfp')->name('update.pfp');
     });
 
 
 
+
+
+    Route::get('accept-reject/{id}', [AssignmentController::class, 'isAccept_view'])->name('reject');
+    Route::post('accept-reject/{id}', [AssignmentController::class, 'isAccept']);
+
+    Route::get('/ChangePhase/{id}', [AssignmentController::class, 'change_phase_view'])->middleware('AssignmentCheckAcceptance')->name('changephase');
     Route::post('assignment-status', [AssignmentController::class, 'updateStatus'])->name('assign.status');
 
-
-     Route::get('accept-reject/{id}',[AssignmentController::class,'isAccept_view'])->name('reject');
-     Route::post('accept-reject/{id}',[AssignmentController::class,'isAccept']);
-
+    Route::get('/Docs/{id}',[AssignmentController::class,'docs_view'])->middleware('AssignmentCheckAcceptance')->name('docs');
     // end main pages routes
 
     // start Auth pages routes
@@ -51,7 +54,7 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
     // Route::get('/View', function () {
     //     return view('screens.web.view');
     // })->name('view');
-    Route::get('/View/{id}', [AssignmentController::class,'view'])->name('view');
+    Route::get('/View/{id}', [AssignmentController::class, 'view'])->name('view');
 
 
 
@@ -59,17 +62,12 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
         return view('screens.web.reOpen');
     })->name('reopen');
 
-    Route::get('/ChangePhase', function () {
-        return view('screens.web.changePhase');
-    })->name('changephase');
 
     Route::get('/CompleteAssignment', function () {
         return view('screens.web.completeAssignment');
     })->name('completAssign');
 
-    Route::get('/Docs', function () {
-        return view('screens.web.docs');
-    })->name('docs');
+
 
     Route::get('/EMSUpload', function () {
         return view('screens.web.emsUpload');

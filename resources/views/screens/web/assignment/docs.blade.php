@@ -6,7 +6,8 @@
     <section class="doc-sec reject-sec">
         <div class="container-fluid">
             <div class="dashboard-content">
-                <x-inner-head />
+                {{-- @dd($assignment->id) --}}
+                <x-inner-head :assignment="$assignment->id" />
                 <div class="asign-head mb-0">
                     <p>Upload / Download</p>
                 </div>

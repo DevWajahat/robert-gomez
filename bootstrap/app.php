@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Middleware\AssignmentAccept;
 use App\Http\Middleware\CheckAdminLogin;
 use App\Http\Middleware\CheckAgentLogin;
+use App\Http\Middleware\PreventBackHistory;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -24,8 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'CheckAdmin' => CheckAdminLogin::class,
             'CheckAgent' => CheckAgentLogin::class,
-            'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
-
+            'prevent-back-history' => PreventBackHistory::class,
+            'AssignmentCheckAcceptance' =>  AssignmentAccept::class,
         ]);
 
         $middleware->redirectUsersTo(function (Request $request) {

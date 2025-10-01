@@ -126,10 +126,10 @@
         <a href="{{ route('messagePg') }}" class="link text-decoration-none">
             <li class="inner-list inner-list-1">Messages</li>
         </a>
-        <a href="{{ route('docs') }}" class="link text-decoration-none">
+        <a href="{{ route('docs',$assignment) }}" class="link text-decoration-none">
             <li class="inner-list inner-list-1">Upload Files</li>
         </a>
-        <a href="{{ route('changephase') }}" class="link text-decoration-none">
+        <a href="{{ route('changephase',$assignment) }}" class="link text-decoration-none">
             <li class="inner-list inner-list-1">Change Phase</li>
         </a>
         <a href="#" class="link text-decoration-none">
