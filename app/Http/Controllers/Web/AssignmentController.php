@@ -39,6 +39,27 @@ class AssignmentController extends Controller
 
         $guideline = Guideline::latest()->first();
 
-        return view('screens.web.view',get_defined_vars());
+        return view('screens.web.assignment.view',get_defined_vars());
     }
+
+    public function isAccept_view($id)
+    {
+        $assignment = Assignment::find($id);
+
+
+        return view('screens.web.assignment.reject',get_defined_vars());
+    }
+
+    public function isAccept(Assignment $id)
+    {
+
+        
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'Your  Assignment rejection status updated successfully.',
+            'route' => route('view',$id)
+        ]);
+    }
+
 }

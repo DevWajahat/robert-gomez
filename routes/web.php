@@ -34,6 +34,11 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
 
 
     Route::post('assignment-status', [AssignmentController::class, 'updateStatus'])->name('assign.status');
+
+
+     Route::get('accept-reject/{id}',[AssignmentController::class,'isAccept_view'])->name('reject');
+     Route::post('accept-reject/{id}',[AssignmentController::class,'isAccept']);
+
     // end main pages routes
 
     // start Auth pages routes
@@ -48,9 +53,7 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
     // })->name('view');
     Route::get('/View/{id}', [AssignmentController::class,'view'])->name('view');
 
-    Route::get('/Reject', function () {
-        return view('screens.web.reject');
-    })->name('reject');
+
 
     Route::get('/ReOpen', function () {
         return view('screens.web.reOpen');

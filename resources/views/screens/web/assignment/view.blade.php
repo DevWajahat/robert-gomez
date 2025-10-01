@@ -23,7 +23,7 @@
     <section>
         <div class="container-fluid">
             <div class="dashboard-content">
-                <x-inner-head />
+                <x-inner-head :assignment="$assignment->id" />
                 <div class="view-wrapper">
                     <div class="row boxes-rows">
                         <div class="col-lg-4">
@@ -60,7 +60,7 @@
                                     <div class="d-flex mb-3 gap-5">
                                         <p class="claim-para"><i class="fa-solid fa-check"></i> Accept Claim</p>
                                         <p class="claim-para"><i class="fa-solid fa-minus"></i> <a
-                                                href="{{ route('reject') }}" class="text-decoration-none">Reject Claim</a>
+                                                href="{{ route('reject',$assignment->id) }}" class="text-decoration-none">Reject Claim</a>
                                         </p>
                                     </div>
                                     <div class="d-flex">

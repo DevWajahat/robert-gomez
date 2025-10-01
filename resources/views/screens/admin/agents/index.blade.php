@@ -386,63 +386,63 @@
         //     });
         // });
 
-     $(document).ready(function() {
+        $(document).ready(function() {
 
-        var table = $("#companyAdmins").DataTable({
-            processing: true,
-            language: {
-                paginate: {
-                    previous: '<i class="fa-solid fa-angle-left"></i>',
-                    next: '<i class="fa-solid fa-angle-right"></i>',
+            var table = $("#companyAdmins").DataTable({
+                processing: true,
+                language: {
+                    paginate: {
+                        previous: '<i class="fa-solid fa-angle-left"></i>',
+                        next: '<i class="fa-solid fa-angle-right"></i>',
+                    },
                 },
-            },
-            columns: [{
-                    data: "First Name",
-                },
-                {
-                    data: "Last Name",
-                },
-                {
-                    data: "Role",
-                },
-                {
-                    data: "Email"
-                },
-                {
-                    data: "Phone",
-                },
-                {
-                    data: "Status",
-                },
-                {
-                    data: "Address",
-                },
-                {
-                    data: "Action",
-                },
-            ],
-        });
-
-
-        function setOriginalValues() {
-            $('.status').each(function() {
-                var $this = $(this);
-
-                if (typeof $this.data('original-value') === 'undefined') {
-                    $this.data('original-value', $this.val() || 'active');
-                }
+                columns: [{
+                        data: "First Name",
+                    },
+                    {
+                        data: "Last Name",
+                    },
+                    {
+                        data: "Role",
+                    },
+                    {
+                        data: "Email"
+                    },
+                    {
+                        data: "Phone",
+                    },
+                    {
+                        data: "Status",
+                    },
+                    {
+                        data: "Address",
+                    },
+                    {
+                        data: "Action",
+                    },
+                ],
             });
-        }
 
 
-        setOriginalValues();
+            function setOriginalValues() {
+                $('.status').each(function() {
+                    var $this = $(this);
+
+                    if (typeof $this.data('original-value') === 'undefined') {
+                        $this.data('original-value', $this.val() || 'active');
+                    }
+                });
+            }
 
 
-        table.on('draw.dt', setOriginalValues);
+            setOriginalValues();
+
+
+            table.on('draw.dt', setOriginalValues);
 
 
 
-    });
+        });
     </script>
     <script>
         $(document).ready(function() {
@@ -632,67 +632,67 @@
     </script>
     <script>
         $(document).ready(function() {
-        
 
 
-               $(document).on('change', '.status', function() {
-            var $dropdown = $(this);
-            var originalValue = $dropdown.data('original-value') || 'active'; // Fallback to 'active' if undefined
-            var userId = $dropdown.attr("id").split("-")[1];
-            var statusMessage = $dropdown.find(":selected").text() === 'active'
-                ? 'Are you sure you want to activate this user? They will regain access to the system.'
-                : 'Are you sure you want to deactivate this user? They will lose access to the system.';
+            $(document).on('change', '.status', function() {
+                var $dropdown = $(this);
+                var originalValue = $dropdown.data('original-value') ||
+                    'active'; // Fallback to 'active' if undefined
+                var userId = $dropdown.attr("id").split("-")[1];
+                var statusMessage = $dropdown.find(":selected").text() === 'active' ?
+                    'Are you sure you want to activate this user? They will regain access to the system.' :
+                    'Are you sure you want to deactivate this user? They will lose access to the system.';
 
-            Swal.fire({
-                title: 'Confirm Status Change',
-                text: statusMessage,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
-            }).then((result) => {
-                if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Confirm Status Change',
+                    text: statusMessage,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                    $dropdown.data('original-value', $dropdown.val());
+                        $dropdown.data('original-value', $dropdown.val());
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route('admin.users.update.status') }}',
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            status: $dropdown.val(),
-                            id: userId
-                        },
-                        success: function(response) {
-                            console.log(response);
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Status Updated Successfully.',
-                                showConfirmButton: false,
-                                timer: 1500,
-                            });
-                        },
-                        error: function(xhr) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('admin.users.update.status') }}',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                status: $dropdown.val(),
+                                id: userId
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Status Updated Successfully.',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                            },
+                            error: function(xhr) {
 
-                            $dropdown.val(originalValue);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Failed to update status.',
-                                showConfirmButton: false,
-                                timer: 1500,
-                            });
-                        }
-                    });
-                } else {
+                                $dropdown.val(originalValue);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Failed to update status.',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                            }
+                        });
+                    } else {
 
-                    $dropdown.val(originalValue);
-                }
+                        $dropdown.val(originalValue);
+                    }
+                });
             });
-        });
         });
     </script>
 @endpush

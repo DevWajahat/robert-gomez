@@ -213,14 +213,12 @@
 
                                         <div>
                                             <ul class="desc-ul">
-                                                <li class="mb-4">
-                                                    09/18/2024 5:00 am
-
+                                                <li class="mb-4">{{-- 09/18/2024 5:00 am --}}{{ \Carbon\Carbon::parse($assignment->appointment_date)->format('m/d/Y g:i a') }}
                                                     <a href="" class="text-danger text-decoration-none"
                                                         style="margin-left: 12px; font-weight: 700">Change</a>
                                                 </li>
 
-                                                <li class="mb-2">2 days, 16 hours, 13 mins</li>
+                                                <li class="mb-2">{{ ($d=$assignment->created_at->diff(now()))->days|$d->h|$d->i?join(', ',array_filter([$d->days?"$d->days days":0,$d->h?"$d->h hours":0,$d->i?"$d->i mins":0])):'just now' }}</li>
 
                                                 <li>05/18/2024 6:33 pm CDT</li>
                                             </ul>

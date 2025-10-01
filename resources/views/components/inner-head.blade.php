@@ -110,12 +110,14 @@
     </ul>
 </div> --}}
 
-
+@props([
+    'assignment'
+])
 
 
 <div class="inner-head-wrap2">
     <ul class="inner-head2">
-        <a href="{{ route('reject') }}" class="link text-decoration-none">
+        <a href="{{ route('reject',$assignment) }}" class="link text-decoration-none">
             <li class="inner-list inner-list-1">Accept / </br> Reject Assignments</li>
         </a>
         <a href="#" class="link text-decoration-none">
