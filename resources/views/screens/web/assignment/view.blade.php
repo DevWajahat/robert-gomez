@@ -60,7 +60,8 @@
                                     <div class="d-flex mb-3 gap-5">
                                         <p class="claim-para"><i class="fa-solid fa-check"></i> Accept Claim</p>
                                         <p class="claim-para"><i class="fa-solid fa-minus"></i> <a
-                                                href="{{ route('reject',$assignment->id) }}" class="text-decoration-none">Reject Claim</a>
+                                                href="{{ route('reject', $assignment->id) }}"
+                                                class="text-decoration-none">Reject Claim</a>
                                         </p>
                                     </div>
                                     <div class="d-flex">
@@ -167,337 +168,383 @@
                                     </button>
                                     <div class="faq-body mb-0">
                                         <div class="view-tab-content">
-                                            <form action="">
-                                                <div class="row" style="margin-bottom: 11px">
-                                                    <div class="col-6">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-4">
+
+                                            <div class="row" style="margin-bottom: 11px">
+                                                <div class="col-6">
+                                                    <div class="row align-items-center">
+                                                        <form action="" id="assignmentDetail">
+                                                            @csrf
+                                                            {{-- <div class="col-md-4">
                                                                 <label for="" class="custom-label">Duplicated VIN
                                                                     #</label>
                                                             </div>
                                                             <div class="col-md-8">
                                                                 <input type="text" name="" id=""
                                                                     class="custom-input form-control" placeholder="Select">
-                                                            </div>
-                                                        </div>
+                                                            </div> --}}
                                                     </div>
                                                 </div>
-                                                <div class="row" style="margin-bottom: 11px">
-                                                    <div class="col-6">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-4">
+                                            </div>
+                                            <div class="row" style="margin-bottom: 11px">
+                                                <div class="col-6">
+                                                    <div class="row align-items-center">
+                                                        {{-- <div class="col-md-4">
                                                                 <label for="" class="custom-label">Duplicated Claim
                                                                     #</label>
                                                             </div>
                                                             <div class="col-md-8">
                                                                 <input type="text" name="" id=""
                                                                     class="custom-input form-control">
-                                                            </div>
-                                                        </div>
+                                                            </div> --}}
                                                     </div>
                                                 </div>
-                                                <h5 class="assign-head">Insurance Information</h5>
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
+                                            </div>
+                                            <h5 class="assign-head">Insurance Information</h5>
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        {{-- <div class="col-md-4">
                                                                 <label for="" class="custom-label">File #</label>
                                                             </div>
                                                             <div class="col-md-8">
                                                                 <input type="text" name="" id=""
                                                                     class="custom-input form-control">
-                                                            </div>
+                                                            </div> --}}
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Company</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Company</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for=""
-                                                                    class="custom-label">Adjuster</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Deductible
-                                                                    Amount</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Claim
-                                                                    For</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Date First
-                                                                    Contacted</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" value="{{ $assignment?->company }}"
+                                                                name="company" id="company"
+                                                                class="custom-input form-control">
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Claim
-                                                                    Number</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Adjuster</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Adjuster
-                                                                    Phone</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="adjuster" id="adjuster"
+                                                                value="{{ $assignment?->adjuster }}"
+                                                                class="custom-input form-control">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Date of
-                                                                    Loss</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Deductible
+                                                                Amount</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Insured
-                                                                    Name</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="deductible_amount" id="deductibleAmount"
+                                                                value="{{ $assignment?->deductible_amount }}"
+                                                                class="custom-input form-control">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Policy
-                                                                    Number</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Claim
+                                                                For</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Type of
-                                                                    Loss</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="claim_for" id="claimFor"
+                                                                value="{{ $assignment?->claim_for }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Date First
+                                                                Contacted</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="date_first_contacted" id="DateFirstContacted"
+                                                                value="{{ $assignment?->date_first_contacted }}"
+                                                                class="custom-input form-control">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <h5 class="assign-head">Owner Information</h5>
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Business
-                                                                    Name</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Claim
+                                                                Number</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Contact
-                                                                    Name</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">City</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">State</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Client
-                                                                    Email</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Mobile
-                                                                    Phone</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="claim"
+                                                                value="{{ $assignment?->claim }}" id="claim"
+                                                                class="custom-input form-control">
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">First
-                                                                    Name</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Adjuster
+                                                                Phone</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Last
-                                                                    Name</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="adjuster_phone" id="adjusterPhone"
+                                                                value="{{ $assignment?->adjuster_phone }}"
+                                                                class="custom-input form-control">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Address</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Date of
+                                                                Loss</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Zip</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="date_of_loss" id="dateOfLoss"
+                                                                value="{{ $assignment?->date_of_loss }}"
+                                                                class="custom-input form-control">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Home
-                                                                    Phone</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Insured
+                                                                Name</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Work
-                                                                    Phone</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="insured_name" id="insuredName"
+                                                                value="{{ $assignment?->insured_name }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Policy
+                                                                Number</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="policy_number" id="policyNumber"
+                                                                value="{{ $assignment?->policy_number }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Type of
+                                                                Loss</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="loss_type" id="typeOfLoss"
+                                                                value="{{ $assignment?->loss_type }}"
+                                                                class="custom-input form-control">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <h5 class="assign-head">Location Information</h5>
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for=""
-                                                                    class="custom-label">Location</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                            </div>
+                                            <h5 class="assign-head">Owner Information</h5>
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Business
+                                                                Name</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Address</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="business_name" id="businessName"
+                                                                value="{{ $assignment?->business_name }}"
+                                                                class="custom-input form-control">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">City</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Contact
+                                                                Name</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner" id="owner"
+                                                                value="{{ $assignment?->owner }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">City</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_city" id="ownerCity"
+                                                                value="{{ $assignment?->owner_city }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">State</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_state" id="ownerState"
+                                                                value="{{ $assignment?->owner_state }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Client
+                                                                Email</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_email"
+                                                                value="{{ $assignment?->owner_email }}" id="ownerEmail"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Mobile
+                                                                Phone</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_mobile_phone" id=""
+                                                                value="{{ $assignment?->owner_mobile_phone }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">First
+                                                                Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_first_name"
+                                                                value="{{ $assignment?->owner_first_name }}"
+                                                                id="ownerFirstName" class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Last
+                                                                Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_last_name" id="ownerLastName"
+                                                                value="{{ $assignment?->owner_last_name }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Address</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_address" id="ownerAddress"
+                                                                value="{{ $assignment?->owner_address }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Zip</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_zip" id="ownerZip"
+                                                                value="{{ $assignment?->owner_zip }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Home
+                                                                Phone</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name=""
+                                                                value="{{ $assignment?->owner_phone }}" id=""
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Work
+                                                                Phone</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="owner_work_phone" id="ownerWorkPhone"
+                                                                value="{{ $assignment?->owner_work_phone }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h5 class="assign-head">Location Information</h5>
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Location</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="location" id="location"
+                                                                value="{{ $assignment?->location }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Address</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="location_address" id="locationAddress"
+                                                                value="{{ $assignment?->location_address }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">City</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="location_city" id="locationCity"
+                                                                value="{{ $assignment?->location_city }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        {{-- <div class="col-md-4">
                                                                 <label for="" class="custom-label">Location
                                                                     Phone</label>
                                                             </div>
                                                             <div class="col-md-8">
-                                                                <input type="text" name="" id=""
+                                                                <input type="text" name="" id="" value="{{ $assignment?->location_pho }}"
                                                                     class="custom-input form-control">
-                                                            </div>
-                                                        </div>
+                                                            </div> --}}
                                                     </div>
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
+                                                </div>
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        {{-- <div class="col-md-4">
                                                                 <label for="" class="custom-label">Location
                                                                     Name</label>
                                                             </div>
                                                             <div class="col-md-8">
-                                                                <input type="text" name="" id=""
+                                                                <input type="text" value="{{ $assignment->vehicle_location }}" name="" id=""
                                                                     class="custom-input form-control">
-                                                            </div>
+                                                            </div> --}}
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">State</label>
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="location_state" id="locationState"
+                                                                value="{{ $assignment?->location_state }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Zip</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="location_zip" id="locationZip"
+                                                                value="{{ $assignment?->location_zip }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    {{-- <div class="row">
                                                             <div class="col-md-4">
                                                                 <label for="" class="custom-label">State</label>
                                                             </div>
@@ -505,107 +552,102 @@
                                                                 <input type="text" name="" id=""
                                                                     class="custom-input form-control">
                                                             </div>
+                                                        </div> --}}
+                                                </div>
+                                            </div>
+                                            <h5 class="assign-head">Vehicle Information</h5>
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Year</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Zip</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_year" id="vehicleYear"
+                                                                value="{{ $assignment?->vehicle_year }}"
+                                                                class="custom-input form-control">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">State</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Make</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_make" id="vehicleMake"
+                                                                value="{{ $assignment?->vehicle_make }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">VIN #</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_vin" id="vehicleVin"
+                                                                value="{{ $assignment?->vehicle_vin }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">License
+                                                                Plate</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_license_plate" id=""
+                                                                value="{{ $assignment?->vehicle_license_plate }}"
+                                                                class="custom-input form-control">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <h5 class="assign-head">Vehicle Information</h5>
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Year</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                <div class="col-lg-6 col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Mileage</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Make</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">VIN #</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">License
-                                                                    Plate</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_mileage" id="vehicleMileage"
+                                                                value="{{ $assignment?->vehicle_mileage }}"
+                                                                class="custom-input form-control">
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6 col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Mileage</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Model</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Model</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_model" id="vehicleModel"
+                                                                value="{{ $assignment?->vehicle_model }}"
+                                                                class="custom-input form-control">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Color</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Color</label>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="" class="custom-label">Damage</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" name="" id=""
-                                                                    class="custom-input form-control">
-                                                            </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_color" id="vehicleColor"
+                                                                value="{{ $assignment?->vehicle_color }}"
+                                                                class="custom-input form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="" class="custom-label">Damage</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="vehicle_damage" id="vehicleDamage"
+                                                                value="{{ $assignment?->vehicle_damage }}"
+                                                                class="custom-input form-control">
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <button class="btn btn-primary">Submit</button>
+                                                </div>
+                                            </div>
                                             </form>
                                         </div>
                                     </div>
@@ -789,7 +831,7 @@
                                                             </tr>
                                                         @empty
                                                         @endforelse
-                                                     </tbody>
+                                                    </tbody>
                                                 </table>
                                             </div>
 
@@ -821,7 +863,7 @@
 
                         </div>
                     </div>
-                 </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1036,102 +1078,131 @@
 
         });
 
-  $(document).ready(function() {
-    // Function to initialize pagination for a given table and pagination container
-    function initPagination($table, $pagination) {
-        // Configuration
-        var rowsPerPage = 5; // Number of rows to display per page
-        var $rows = $table.find('tbody tr');
-        var totalRows = $rows.length;
-        var totalPages = Math.ceil(totalRows / rowsPerPage);
-        var currentPage = 1;
-        var noResultsMessage = '<tr class="no-results"><td colspan="4" style="text-align: center;">No results found</td></tr>';
+        $(document).ready(function() {
+            // Function to initialize pagination for a given table and pagination container
+            function initPagination($table, $pagination) {
+                // Configuration
+                var rowsPerPage = 5; // Number of rows to display per page
+                var $rows = $table.find('tbody tr');
+                var totalRows = $rows.length;
+                var totalPages = Math.ceil(totalRows / rowsPerPage);
+                var currentPage = 1;
+                var noResultsMessage =
+                    '<tr class="no-results"><td colspan="4" style="text-align: center;">No results found</td></tr>';
 
-        // Function to update pagination display
-        function updatePagination() {
-            // Hide all rows
-            $rows.hide();
+                // Function to update pagination display
+                function updatePagination() {
+                    // Hide all rows
+                    $rows.hide();
 
-            // Calculate start and end indices
-            var start = (currentPage - 1) * rowsPerPage;
-            var end = start + rowsPerPage;
+                    // Calculate start and end indices
+                    var start = (currentPage - 1) * rowsPerPage;
+                    var end = start + rowsPerPage;
 
-            // Show rows for current page
-            $rows.slice(start, end).show();
+                    // Show rows for current page
+                    $rows.slice(start, end).show();
 
-            // Update active page
-            $pagination.find('.page').removeClass('active-page');
-            $pagination.find('.page').eq(currentPage - 1).addClass('active-page');
+                    // Update active page
+                    $pagination.find('.page').removeClass('active-page');
+                    $pagination.find('.page').eq(currentPage - 1).addClass('active-page');
 
-            // Enable/disable prev/next buttons
-            $pagination.find('.prev').prop('disabled', currentPage === 1);
-            $pagination.find('.next').prop('disabled', currentPage === totalPages);
-        }
-
-        // Generate pagination buttons dynamically
-        function generatePaginationButtons() {
-            $pagination.find('.page').remove(); // Clear existing page buttons
-            for (var i = 1; i <= totalPages; i++) {
-                var $pageButton = $('<button class="page">' + i + '</button>');
-                if (i === currentPage) {
-                    $pageButton.addClass('active-page');
+                    // Enable/disable prev/next buttons
+                    $pagination.find('.prev').prop('disabled', currentPage === 1);
+                    $pagination.find('.next').prop('disabled', currentPage === totalPages);
                 }
-                $pageButton.insertBefore($pagination.find('.next'));
+
+                // Generate pagination buttons dynamically
+                function generatePaginationButtons() {
+                    $pagination.find('.page').remove(); // Clear existing page buttons
+                    for (var i = 1; i <= totalPages; i++) {
+                        var $pageButton = $('<button class="page">' + i + '</button>');
+                        if (i === currentPage) {
+                            $pageButton.addClass('active-page');
+                        }
+                        $pageButton.insertBefore($pagination.find('.next'));
+                    }
+                }
+
+                // Initial setup
+                if (totalRows > 0) {
+                    // Remove any existing no-results message
+                    $table.find('.no-results').remove();
+                    // Show pagination
+                    $pagination.show();
+                    generatePaginationButtons();
+                    updatePagination();
+                } else {
+                    // If no rows, append no-results message and hide pagination
+                    $table.find('.no-results').remove(); // Clear any existing message
+                    $table.find('tbody').append(noResultsMessage);
+                    $pagination.hide();
+                }
+
+                // Event handlers
+                // Click on page number
+                $pagination.on('click', '.page', function() {
+                    currentPage = parseInt($(this).text());
+                    updatePagination();
+                });
+
+                // Previous button
+                $pagination.on('click', '.prev', function() {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updatePagination();
+                    }
+                });
+
+                // Next button
+                $pagination.on('click', '.next', function() {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        updatePagination();
+                    }
+                });
             }
-        }
 
-        // Initial setup
-        if (totalRows > 0) {
-            // Remove any existing no-results message
-            $table.find('.no-results').remove();
-            // Show pagination
-            $pagination.show();
-            generatePaginationButtons();
-            updatePagination();
-        } else {
-            // If no rows, append no-results message and hide pagination
-            $table.find('.no-results').remove(); // Clear any existing message
-            $table.find('tbody').append(noResultsMessage);
-            $pagination.hide();
-        }
-
-        // Event handlers
-        // Click on page number
-        $pagination.on('click', '.page', function() {
-            currentPage = parseInt($(this).text());
-            updatePagination();
+            // Iterate over all tables and their corresponding pagination controls
+            $('.entries-table').each(function(index) {
+                var $table = $(this);
+                // Find the corresponding pagination (assumes pagination follows the table in DOM)
+                var $pagination = $('.pagination.assign-pagination').eq(index);
+                if ($table.length && $pagination.length) {
+                    initPagination($table, $pagination);
+                }
+            });
         });
 
-        // Previous button
-        $pagination.on('click', '.prev', function() {
-            if (currentPage > 1) {
-                currentPage--;
-                updatePagination();
-            }
-        });
+        $(document).ready(function() {
+            $('#assignmentDetail').on("submit", function(e) {
+                e.preventDefault()
 
-        // Next button
-        $pagination.on('click', '.next', function() {
-            if (currentPage < totalPages) {
-                currentPage++;
-                updatePagination();
-            }
-        });
-    }
+                const formElement = document.querySelector('#assignmentDetail');
+                var form = new FormData(formElement);
+                // form.append('_token', "{{ csrf_token() }}");
+                console.log(form)
 
-    // Iterate over all tables and their corresponding pagination controls
-    $('.entries-table').each(function(index) {
-        var $table = $(this);
-        // Find the corresponding pagination (assumes pagination follows the table in DOM)
-        var $pagination = $('.pagination.assign-pagination').eq(index);
-        if ($table.length && $pagination.length) {
-            initPagination($table, $pagination);
-        }
-    });
-});
+                $.ajax({
+                    type:'POST',
+                    url:"{{ route('assign.detail',$id) }}",
+                    data:form,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log(response)
+
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Form Updated Successfully.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        })
+                    }
+                })
+            })
+        })
     </script>
-
-
 @endpush
 
 

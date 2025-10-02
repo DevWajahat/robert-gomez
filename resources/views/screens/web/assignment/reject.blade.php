@@ -16,11 +16,11 @@
                             <div class="d-flex gap-5 radio-wrap">
                                 <div class="d-flex align-items-center">
                                     <input type="radio" id="factor" class="" value="0" name="accept"
-                                        checked="">
+                                        {{ $assignment?->is_accept == 0 ? 'checked' : '' }}>
                                     <label for="factor">No</label>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" id="factor2" class="" value="1" name="accept">
+                                    <input type="radio" id="factor2" class="" {{ $assignment?->is_accept == 1 ? 'checked' : '' }} value="1" name="accept">
                                     <label for="factor2">Yes</label>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="col-md-10 col-sm-12">
                             <textarea name="reason" class="custom-input mb-5" style="height: 220px; resize: none;" id="" cols="10"
-                                rows="10" placeholder="Lorem Ipsum"></textarea>
+                                rows="10" placeholder="Lorem Ipsum" {{ $assignment?->reason_rejection }}></textarea>
                         </div>
 
                     </div>

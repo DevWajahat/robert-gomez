@@ -34,28 +34,19 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
 
 
 
+Route::controller(AssignmentController::class)->group(function () {
 
-    Route::get('accept-reject/{id}', [AssignmentController::class, 'isAccept_view'])->name('reject');
-    Route::post('accept-reject/{id}', [AssignmentController::class, 'isAccept']);
+    Route::get('accept-reject/{id}', 'isAccept_view')->name('reject');
+    Route::post('accept-reject/{id}','isAccept');
+    Route::get('/ChangePhase/{id}','change_phase_view')->middleware('AssignmentCheckAcceptance')->name('changephase');
+    Route::post('assignment-status','updateStatus')->name('assign.status');
+    Route::get('/Docs/{id}','docs_view')->middleware('AssignmentCheckAcceptance')->name('docs');
+    Route::get('/View/{id}','view')->name('view');
+    Route::post('/assign-detail/post/{id}','assignDetail')->name('assign.detail');
+    Route::post('assign/upload-docs/{id}','upload_docs')->name('upload.docs');
 
-    Route::get('/ChangePhase/{id}', [AssignmentController::class, 'change_phase_view'])->middleware('AssignmentCheckAcceptance')->name('changephase');
-    Route::post('assignment-status', [AssignmentController::class, 'updateStatus'])->name('assign.status');
-
-    Route::get('/Docs/{id}',[AssignmentController::class,'docs_view'])->middleware('AssignmentCheckAcceptance')->name('docs');
-    // end main pages routes
-
-    // start Auth pages routes
-
-
-    // end Auth pages routes
-
-    // start inner pages routes
-
-    // Route::get('/View', function () {
-    //     return view('screens.web.view');
-    // })->name('view');
-    Route::get('/View/{id}', [AssignmentController::class, 'view'])->name('view');
-
+    Route::post('destroy','destroy')->name('docs.destroy');
+});
 
 
     Route::get('/ReOpen', function () {

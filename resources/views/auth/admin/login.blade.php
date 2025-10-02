@@ -46,7 +46,7 @@
                             <p>Forget <a href="{{ route('forgetpassword') }}">Password</a></p>
                         </div>
                         <div class="forget-wrap">
-                            <p> <a href="{{ route('forgetpassword') }}">Register</a></p>
+                            {{-- <p> <a href="{{ route('forgetpassword') }}">Register</a></p> --}}
                         </div>
                     </div>
                 </div>

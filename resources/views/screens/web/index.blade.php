@@ -33,7 +33,7 @@
                             <div class="other-desc-area hidden-class">
                                 <p><span>Owner: </span> {{ $assignment->owner }}</p>
                                 <p><span>Owner Phone:</span> {{ $assignment->owner_phone }}</p>
-                                <p><span>Owner Email:</span> {{ $assignment->email }}</p>
+                                <p><span>Owner Email:</span> {{ $assignment->owner_email }}</p>
                                 <p><span>Claim#:</span> {{ $assignment->claim }}</p>
                                 <p><span>Type of Claim:</span> {{ $assignment->claim_type }}</p>
                                 <p><span>Loss Type:</span> {{ $assignment->loss_type }}</p>
@@ -47,8 +47,8 @@
                                 <button>Quick Updates</button>
                                 @if ($assignment->status == 'pending')
                                     <button style="background:#d3c501 !important;">Pending</button>
-                                    <button class="btn btn-primary completeBtn"
-                                        data-id="{{ $assignment->id }}">Complete</button>
+                                    {{-- <button class="btn btn-primary completeBtn"
+                                        data-id="{{ $assignment->id }}">Complete</button> --}}
                                 @else
                                     <button style="background:#00A84C !important;">Completed</button>
                                 @endif
@@ -562,53 +562,53 @@
 
     <script>
         $(document).ready(function() {
-            $('.completeBtn').on('click', function() {
+            // $('.completeBtn').on('click', function() {
 
-                console.log($(this).attr('data-id'));
+            //     console.log($(this).attr('data-id'));
 
-                var assignmnet = $(this);
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: " Once assignment will be complete it will be hidden from here!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#0d6efd",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Completed"
-                }).then((result) => {
-                    if (result.isConfirmed) {
+            //     var assignmnet = $(this);
+            //     Swal.fire({
+            //         title: "Are you sure?",
+            //         text: " Once assignment will be complete it will be hidden from here!",
+            //         icon: "warning",
+            //         showCancelButton: true,
+            //         confirmButtonColor: "#0d6efd",
+            //         cancelButtonColor: "#d33",
+            //         confirmButtonText: "Completed"
+            //     }).then((result) => {
+            //         if (result.isConfirmed) {
 
 
-                        $.ajax({
-                            type: 'POST',
-                            url: '{{ route('assign.status') }}',
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                                "status": "completed",
-                                "assignment": $(this).attr('data-id')
-                            },
-                            success: function(response) {
-                                console.log(response);
+            //             $.ajax({
+            //                 type: 'POST',
+            //                 url: '{{ route('assign.status') }}',
+            //                 data: {
+            //                     "_token": "{{ csrf_token() }}",
+            //                     "status": "completed",
+            //                     "assignment": $(this).attr('data-id')
+            //                 },
+            //                 success: function(response) {
+            //                     console.log(response);
 
-                                Swal.fire({
-                                    title: "Completed",
-                                    text: response.message,
-                                    icon: "success"
-                                });
+            //                     Swal.fire({
+            //                         title: "Completed",
+            //                         text: response.message,
+            //                         icon: "success"
+            //                     });
 
-                                assignmnet.closest('.assign-card').hide();
-                                // window.location.reload()
-                            }
-                        })
-                    }
-                });
+            //                     assignmnet.closest('.assign-card').hide();
+            //                     // window.location.reload()
+            //                 }
+            //             })
+            //         }
+            //     });
 
-                // $.ajax({
-                //     type: 'GET',
-                //     url:''
-                // })
+            //     // $.ajax({
+            //     //     type: 'GET',
+            //     //     url:''
+            //     // })
 
-            })
+            // })
         });
     </script>
 @endpush

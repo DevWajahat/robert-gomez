@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\Assignment\DocsRequest;
 use App\Http\Requests\Web\Assignment\RejectRequest;
 use App\Models\Assignment;
+use App\Models\AssignmentDocument;
 use App\Models\ClientForm;
+use Illuminate\Support\Str;
 use App\Models\GeneralForm;
 use App\Models\Guideline;
 use Illuminate\Http\Request;
@@ -16,7 +19,7 @@ class AssignmentController extends Controller
     {
         $assignment = Assignment::find($request->assignment);
 
-        
+
         $assignment->update([
             'status' => $request->status,
         ]);
@@ -56,15 +59,22 @@ class AssignmentController extends Controller
 
         $reason = $request->reason == null ? null : $request->reason;
 
+        $user = $request->accept == 0 ? null : $assignment->user_id;
+
+        $route = $request->accept == 0 ? route('dashboard') : route('view',$id);
+
         $assignment->update([
             'is_accept' => $request->accept,
-            'reason_rejection' => $request->reason
+            'reason_rejection' => $request->reason,
+            'user_id' => $user,
+            'status' => 'pending'
         ]);
+
 
         return response()->json([
             'status' => 'true',
             'message' => 'Your  Assignment rejection status updated successfully.',
-            'route' => route('view', $id)
+            'route' => $route
         ]);
     }
 
@@ -80,5 +90,84 @@ class AssignmentController extends Controller
         $assignment = Assignment::find($id);
 
         return view('screens.web.assignment.docs', get_defined_vars());
+    }
+
+    public function upload_docs($id, DocsRequest $request)
+    {
+
+        $assignment = Assignment::find($id);
+
+
+        if ($request->has('files')) {
+            foreach ($request->file('files') as $file) {
+
+                $timestamp = time();
+                $randomString = Str::random(8);
+                $extension = $file->getClientOriginalExtension();
+                $fileName = "doc_{$timestamp}_{$randomString}.{$extension}";
+
+
+                $file->move(public_path('assignment-docs/'), $fileName);
+
+                $assignment->docs()->create([
+                    'file' => $fileName,
+                    'file_type' => $extension
+                ]);
+
+
+            }
+        }
+
+
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'file Uploaded successfully.',
+        ]);
+    }
+
+
+    public function destroy(Request $request)
+    {
+        // dd($request->id);
+
+        $doucment = AssignmentDocument::find($request->id);
+        // dd($doucment);
+        $doucment->delete();
+
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'document deleted successfully.'
+        ]);
+    }
+
+ public function assignDetail(Request $request, $id)
+    {
+        $assignment = Assignment::find($id);
+
+        if (!$assignment) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Assignment not found.'
+            ], 404);
+        }
+
+        $data = $request->except('_token');
+
+        try {
+
+            $assignment->update($data);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Form updated successfully.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to update form data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

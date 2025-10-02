@@ -181,7 +181,7 @@
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Address</th>
-                                        <th>Status</th>
+                                        {{-- <th>Status</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -194,13 +194,13 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->phone }}</td>
                                             <td>{{ $user->address }}</td>
-                                            <td> <select name="status" class="status" id="status-{{ $user->id }}">
+                                            {{-- <td> <select name="status" class="status" id="status-{{ $user->id }}">
                                                     <option value="active"
                                                         {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
                                                     <option value="inactive"
                                                         {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive
                                                     </option>
-                                                </select></td>
+                                                </select></td> --}}
                                             <td><button class="btn user-edit-btn" data-id="{{ $user->id }}"><i
                                                         class="fa-solid fa-pencil"></i></button>
                                             </td>
@@ -411,9 +411,9 @@
                     {
                         data: "Phone",
                     },
-                    {
-                        data: "Status",
-                    },
+                    //  {
+                    //    data: "Status",
+                    // },
                     {
                         data: "Address",
                     },
