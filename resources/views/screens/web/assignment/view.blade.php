@@ -237,7 +237,8 @@
                                                                 Amount</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="deductible_amount" id="deductibleAmount"
+                                                            <input type="text" name="deductible_amount"
+                                                                id="deductibleAmount"
                                                                 value="{{ $assignment?->deductible_amount }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -259,7 +260,8 @@
                                                                 Contacted</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="date_first_contacted" id="DateFirstContacted"
+                                                            <input type="text" name="date_first_contacted"
+                                                                id="DateFirstContacted"
                                                                 value="{{ $assignment?->date_first_contacted }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -283,7 +285,8 @@
                                                                 Phone</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="adjuster_phone" id="adjusterPhone"
+                                                            <input type="text" name="adjuster_phone"
+                                                                id="adjusterPhone"
                                                                 value="{{ $assignment?->adjuster_phone }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -396,7 +399,8 @@
                                                                 Phone</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="owner_mobile_phone" id=""
+                                                            <input type="text" name="owner_mobile_phone"
+                                                                id=""
                                                                 value="{{ $assignment?->owner_mobile_phone }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -420,7 +424,8 @@
                                                                 Name</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="owner_last_name" id="ownerLastName"
+                                                            <input type="text" name="owner_last_name"
+                                                                id="ownerLastName"
                                                                 value="{{ $assignment?->owner_last_name }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -462,7 +467,8 @@
                                                                 Phone</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="owner_work_phone" id="ownerWorkPhone"
+                                                            <input type="text" name="owner_work_phone"
+                                                                id="ownerWorkPhone"
                                                                 value="{{ $assignment?->owner_work_phone }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -487,7 +493,8 @@
                                                             <label for="" class="custom-label">Address</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="location_address" id="locationAddress"
+                                                            <input type="text" name="location_address"
+                                                                id="locationAddress"
                                                                 value="{{ $assignment?->location_address }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -529,7 +536,8 @@
                                                             <label for="" class="custom-label">State</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="location_state" id="locationState"
+                                                            <input type="text" name="location_state"
+                                                                id="locationState"
                                                                 value="{{ $assignment?->location_state }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -594,7 +602,8 @@
                                                                 Plate</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="vehicle_license_plate" id=""
+                                                            <input type="text" name="vehicle_license_plate"
+                                                                id=""
                                                                 value="{{ $assignment?->vehicle_license_plate }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -606,7 +615,8 @@
                                                             <label for="" class="custom-label">Mileage</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="vehicle_mileage" id="vehicleMileage"
+                                                            <input type="text" name="vehicle_mileage"
+                                                                id="vehicleMileage"
                                                                 value="{{ $assignment?->vehicle_mileage }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -636,7 +646,8 @@
                                                             <label for="" class="custom-label">Damage</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="vehicle_damage" id="vehicleDamage"
+                                                            <input type="text" name="vehicle_damage"
+                                                                id="vehicleDamage"
                                                                 value="{{ $assignment?->vehicle_damage }}"
                                                                 class="custom-input form-control">
                                                         </div>
@@ -727,7 +738,7 @@
                                                                 </td>
 
                                                                 <td>
-                                                                    <a href="{{ asset('files/client-forms/' . $clientForm->file) }}"
+                                                                    <a href="{{ route('client-forms.download',$clientForm->id) }}"
                                                                         download class="icon" title="Download">
                                                                         <i class="fa fa-download"></i>
                                                                     </a>
@@ -823,8 +834,8 @@
                                                                 <td>{{ str_replace('-', '/', explode(' ', $generalForm->updated_at)[0]) }}
                                                                 </td>
                                                                 <td>
-                                                                    <a href="{{ asset('files/general-forms/' . $generalForm->file) }}"
-                                                                        download class="icon" title="Download">
+                                                                    <a
+                                                                        href="{{ route('general-forms.download', $generalForm->id) }}">
                                                                         <i class="fa fa-download"></i>
                                                                     </a>
                                                                 </td>
@@ -1183,12 +1194,12 @@
                 console.log(form)
 
                 $.ajax({
-                    type:'POST',
-                    url:"{{ route('assign.detail',$id) }}",
-                    data:form,
+                    type: 'POST',
+                    url: "{{ route('assign.detail', $id) }}",
+                    data: form,
                     processData: false,
                     contentType: false,
-                    success: function (response) {
+                    success: function(response) {
                         console.log(response)
 
                         swal.fire({

@@ -22,40 +22,40 @@
                                     <option value="h3">Title 3</option>
                                 </select>
                                 <select class="selecion" data-cmd="fontSize">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
+                                    <option value="1">1rem</option>
+                                    <option value="2">2rem</option>
+                                    <option value="3">3rem</option>
+                                    <option value="4">4rem</option>
+                                    <option value="5">5rem</option>
+                                    <option value="6">6rem</option>
+                                    <option value="7">7rem</option>
                                 </select>
-                                <select class="selecion" data-cmd="fontName">
+                                {{-- <select class="selecion" data-cmd="fontName">
                                     <option value="Arial">Arial</option>
                                     <option value="Roboto">Roboto</option>
                                     <option value="serif">Serif</option>
                                     <option value="sans-serif">Sans-serif</option>
-                                </select>
+                                </select> --}}
                             </div>
                             <div class="category">
                                 <button class="selection-btn" data-cmd="bold"><i class="fas fa-bold"></i></button>
                                 <button class="selection-btn" data-cmd="italic"><i class="fas fa-italic"></i></button>
                                 <button class="selection-btn" data-cmd="underline"><i class="fas fa-underline"></i></button>
                             </div>
-                            <div class="category">
+                            {{-- <div class="category">
                                 <input class="selection-input" data-cmd="forecolor" type="color" value="#000000">
                                 <input class="selection-input" data-cmd="backcolor" type="color" value="#FFFFFF">
-                            </div>
+                            </div> --}}
                             <div class="category">
                                 <button class="selection-btn" data-cmd="justifyLeft"><i class="fas fa-align-left"></i></button>
                                 <button class="selection-btn" data-cmd="justifyCenter"><i class="fas fa-align-center"></i></button>
                                 <button class="selection-btn" data-cmd="justifyRight"><i class="fas fa-align-right"></i></button>
                                 <button class="selection-btn" data-cmd="justifyFull"><i class="fas fa-align-justify"></i></button>
                             </div>
-                            <div class="category">
+                            {{-- <div class="category">
                                 <button class="selection-btn" data-cmd="indent"><i class="fas fa-indent"></i></button>
                                 <button class="selection-btn" data-cmd="outdent"><i class="fas fa-outdent"></i></button>
-                            </div>
+                            </div> --}}
                             <div class="category">
                                 <button class="selection-btn" data-cmd="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                                 <button class="selection-btn" data-cmd="insertOrderedList"><i class="fas fa-list-ol"></i></button>

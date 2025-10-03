@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\WebAuthController;
 use App\Http\Controllers\Web\AccountingController;
 use App\Http\Controllers\Web\AssignmentController;
+use App\Http\Controllers\Web\DownloadController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\ResourcesController;
@@ -32,6 +33,8 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
     });
 
 
+Route::get('/general-forms/{id}/download', [DownloadController::class, 'general_forms'])->name('general-forms.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
+Route::get('/client-forms/{id}/download', [DownloadController::class, 'client_forms'])->name('client-forms.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
 
 
 Route::controller(AssignmentController::class)->group(function () {

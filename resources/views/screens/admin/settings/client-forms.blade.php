@@ -190,12 +190,16 @@
                                     <td>{{ $clientForm->file }}</td>
                                     <td>{{ $clientForm->label }}</td>
                                     <td>{{ str_replace('-', '/', explode(' ', $clientForm->updated_at)[0]) }}</td>
-                                    <td><a href="{{ asset('files/client-forms/' . $clientForm->file) }}" download> <i
-                                                class="fa fa-download"></i> </a></td>
+                                    <td>
+                                        <a href="{{ route('client-forms.download', $clientForm->id) }}" >
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                    </td>
                                     <td><button class="btn user-edit-btn" data-id="{{ $clientForm->id }}"><i
                                                 class="fa-solid fa-pencil"></i></button>
-                                            <button class="btn user-delete-btn" data-id="{{ $clientForm->id }}"><i class="fa-solid fa-trash"></i></button>
-                                            </td>
+                                        <button class="btn user-delete-btn" data-id="{{ $clientForm->id }}"><i
+                                                class="fa-solid fa-trash"></i></button>
+                                    </td>
 
                                     {{-- <td>sdfasasdf</td>
                                 <td>asdfasdf</td> --}}
@@ -249,7 +253,7 @@
             </div>
             <form class="modal-form" autocomplete="off" enctype="multipart/form-data" id="editClientForm">
                 @csrf
-                 <input type="hidden" id="editClientFormId" name="id">
+                <input type="hidden" id="editClientFormId" name="id">
                 <div class="form-row">
                     <div class="form-group">
                         <label class="text-light">Label</label>
@@ -414,7 +418,8 @@
                 $.LoadingOverlay("show");
 
                 $.ajax({
-                    url: '{{ route('admin.settings.client.forms.edit', ':id') }}'.replace(':id',id),
+                    url: '{{ route('admin.settings.client.forms.edit', ':id') }}'.replace(':id',
+                        id),
                     type: 'GET',
                     success: function(response) {
                         $.LoadingOverlay("hide");
@@ -454,10 +459,11 @@
                 $.LoadingOverlay("show");
 
                 let formData = new FormData(this);
-                const id =  $('#editClientFormId').val();
+                const id = $('#editClientFormId').val();
 
                 $.ajax({
-                    url: '{{ route("admin.settings.client.forms.update", ":id") }}'.replace(':id', id),
+                    url: '{{ route('admin.settings.client.forms.update', ':id') }}'.replace(':id',
+                        id),
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -468,7 +474,8 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',
-                                text: response.message || 'Client Form Updated Successfully.',
+                                text: response.message ||
+                                    'Client Form Updated Successfully.',
                                 showConfirmButton: true,
                                 timer: 2000
                             }).then(() => {
@@ -481,7 +488,8 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: response.message || 'Failed to update client form.',
+                                text: response.message ||
+                                    'Failed to update client form.',
                                 showConfirmButton: true
                             });
                         }
@@ -498,7 +506,8 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: xhr.responseJSON?.message || 'An error occurred while updating the form.',
+                                text: xhr.responseJSON?.message ||
+                                    'An error occurred while updating the form.',
                                 showConfirmButton: true
                             });
                         }
@@ -506,7 +515,7 @@
                 });
             });
 
-                // Delete Form
+            // Delete Form
             $(document).on('click', '.user-delete-btn', function() {
                 const id = $(this).data('id');
                 Swal.fire({
@@ -522,7 +531,7 @@
                         $.LoadingOverlay("show");
 
                         $.ajax({
-                            url: '{{ route("admin.settings.client.forms.destroy") }}',
+                            url: '{{ route('admin.settings.client.forms.destroy') }}',
                             type: 'POST',
                             data: {
                                 _token: "{{ csrf_token() }}",
@@ -534,7 +543,8 @@
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Deleted!',
-                                        text: response.message || 'Client Form Deleted Successfully.',
+                                        text: response.message ||
+                                            'Client Form Deleted Successfully.',
                                         showConfirmButton: true,
                                         timer: 2000
                                     }).then(() => {
@@ -544,7 +554,8 @@
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Error',
-                                        text: response.message || 'Failed to delete client form.',
+                                        text: response.message ||
+                                            'Failed to delete client form.',
                                         showConfirmButton: true
                                     });
                                 }
@@ -554,14 +565,15 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
-                                    text: xhr.responseJSON?.message || 'An error occurred while deleting the form.',
+                                    text: xhr.responseJSON?.message ||
+                                        'An error occurred while deleting the form.',
                                     showConfirmButton: true
                                 });
                             }
                         });
                     }
                 });
-            });  // Edit Form Submission
+            }); // Edit Form Submission
 
         })
     </script>

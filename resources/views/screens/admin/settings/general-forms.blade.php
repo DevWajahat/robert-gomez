@@ -188,12 +188,16 @@
                                     <td>{{ $generalForm->file }}</td>
                                     <td>{{ $generalForm->label }}</td>
                                     <td>{{ str_replace('-', '/', explode(' ', $generalForm->updated_at)[0]) }}</td>
-                                    <td><a href="{{ asset('files/general-forms/' . $generalForm->file) }}" download> <i
-                                                class="fa fa-download"></i> </a></td>
+                                    <td>
+                                        <a href="{{ route('general-forms.download', $generalForm->id) }}">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                    </td>
                                     <td><button class="btn general-form-edit-btn" data-id="{{ $generalForm->id }}"><i
                                                 class="fa-solid fa-pencil"></i></button>
-                                            <button class="btn general-form-delete-btn" data-id="{{ $generalForm->id }}"><i class="fa-solid fa-trash"></i></button>
-                                            </td>
+                                        <button class="btn general-form-delete-btn" data-id="{{ $generalForm->id }}"><i
+                                                class="fa-solid fa-trash"></i></button>
+                                    </td>
                                 </tr>
                             @empty
                             @endforelse
@@ -241,7 +245,7 @@
             </div>
             <form class="modal-form" autocomplete="off" enctype="multipart/form-data" id="editGeneralForm">
                 @csrf
-                 <input type="hidden" id="editGeneralFormId" name="id">
+                <input type="hidden" id="editGeneralFormId" name="id">
                 <div class="form-row">
                     <div class="form-group">
                         <label class="text-light">Label</label>
@@ -396,7 +400,8 @@
                 $.LoadingOverlay("show");
 
                 $.ajax({
-                    url: '{{ route('admin.settings.general.forms.edit', ':id') }}'.replace(':id',id),
+                    url: '{{ route('admin.settings.general.forms.edit', ':id') }}'.replace(':id',
+                        id),
                     type: 'GET',
                     success: function(response) {
                         $.LoadingOverlay("hide");
@@ -434,10 +439,11 @@
                 $.LoadingOverlay("show");
 
                 let formData = new FormData(this);
-                const id =  $('#editGeneralFormId').val();
+                const id = $('#editGeneralFormId').val();
 
                 $.ajax({
-                    url: '{{ route("admin.settings.general.forms.update", ":id") }}'.replace(':id', id),
+                    url: '{{ route('admin.settings.general.forms.update', ':id') }}'.replace(':id',
+                        id),
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -448,7 +454,8 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',
-                                text: response.message || 'General Form Updated Successfully.',
+                                text: response.message ||
+                                    'General Form Updated Successfully.',
                                 showConfirmButton: true,
                                 timer: 2000
                             }).then(() => {
@@ -460,7 +467,8 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: response.message || 'Failed to update general form.',
+                                text: response.message ||
+                                    'Failed to update general form.',
                                 showConfirmButton: true
                             });
                         }
@@ -477,7 +485,8 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: xhr.responseJSON?.message || 'An error occurred while updating the form.',
+                                text: xhr.responseJSON?.message ||
+                                    'An error occurred while updating the form.',
                                 showConfirmButton: true
                             });
                         }
@@ -501,7 +510,7 @@
                         $.LoadingOverlay("show");
 
                         $.ajax({
-                            url: '{{ route("admin.settings.general.forms.destroy") }}',
+                            url: '{{ route('admin.settings.general.forms.destroy') }}',
                             type: 'POST',
                             data: {
                                 _token: "{{ csrf_token() }}",
@@ -513,7 +522,8 @@
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Deleted!',
-                                        text: response.message || 'General Form Deleted Successfully.',
+                                        text: response.message ||
+                                            'General Form Deleted Successfully.',
                                         showConfirmButton: true,
                                         timer: 2000
                                     }).then(() => {
@@ -523,7 +533,8 @@
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Error',
-                                        text: response.message || 'Failed to delete general form.',
+                                        text: response.message ||
+                                            'Failed to delete general form.',
                                         showConfirmButton: true
                                     });
                                 }
@@ -533,7 +544,8 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
-                                    text: xhr.responseJSON?.message || 'An error occurred while deleting the form.',
+                                    text: xhr.responseJSON?.message ||
+                                        'An error occurred while deleting the form.',
                                     showConfirmButton: true
                                 });
                             }
