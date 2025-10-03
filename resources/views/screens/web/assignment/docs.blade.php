@@ -94,7 +94,7 @@
                                                         <p>Drag & drop files here or click to upload</p>
                                                         <div class="preview-multiple"
                                                             style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
-                                                        <input type="file" hidden id="file-inp" name="files"
+                                                        <input type="file" hidden id="file-inp" name="files" accept=".docx,.pdf,.png,.jpeg,.jfif"
                                                             class="custom-input form-control file-input" multiple />
                                                     </div>
                                             </div>
@@ -274,7 +274,7 @@
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    
+
                                     location.reload();
                                 }
                             });
@@ -297,6 +297,37 @@
         });
     </script>
 
+<script>
+    fileInput.addEventListener("change", (e) => handleFiles(e.target.files));
+
+function handleFiles(selectedFiles) {
+    for (let file of selectedFiles) {
+        filesToUpload.push(file);
+
+        const ext = file.name.split(".").pop().toLowerCase();
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            let iconSrc = "{{ asset('assets/web/images/no_image.png') }}";
+            if (["pdf"].includes(ext)) iconSrc = "{{ asset("assets/web/images/pdf-img.jpg") }}";
+            else if (["docx"].includes(ext)) iconSrc = "{{ asset("assets/web/images/word-2.webp") }}";
+            else if (["pptx"].includes(ext)) iconSrc = "{{ asset("assets/web/images/powerpoint.png") }}";
+            else if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) iconSrc = e.target.result;
+
+            const previewBox = document.createElement("div");
+            previewBox.style.textAlign = "center";
+            previewBox.style.width = "70px";
+            previewBox.innerHTML = `
+                <img src="${iconSrc}" style="width: 100%; border-radius: 5px;" />
+                <small style="font-size: 10px; word-break: break-word;">${file.name}</small>
+            `;
+            previewContainer.appendChild(previewBox);
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+</script>
     <script>
  $(document).ready(function() {
     function initTableFeatures($table, $pagination) {

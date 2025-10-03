@@ -1,85 +1,62 @@
 @extends('layouts.admin.app')
 @section('content')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" />
+    <style>
+        #summernote .note-editor.note-frame {
+            background-color: #ffffff; /* Light background */
+            color: #000000; /* Black text */
+            border: 1px solid #e0e0e0; /* Subtle border */
+        }
+        #summernote .note-toolbar {
+            background-color: #f8f9fa; /* Light toolbar background */
+            border-bottom: 1px solid #e0e0e0;
+        }
+        #summernote .note-editable {
+            background-color: #ffffff; /* Light editable area */
+            color: #000000; /* Black text */
+        }
+        #summernote .note-editable ul {
+            list-style-type: disc; /* Bullet points for unordered lists */
+            margin-left: 20px;
+        }
+        #summernote .note-editable ol {
+            list-style-type: decimal; /* Numbered lists */
+            margin-left: 20px;
+        }
+        #summernote .note-editable li {
+            margin-bottom: 5px; /* Spacing between list items */
+        }
+        #summernote .note-btn {
+            background-color: #f8f9fa; /* Light button background */
+            color: #000000; /* Black button text */
+            border: 1px solid #e0e0e0;
+        }
+        #summernote .note-btn:hover {
+            background-color: #e9ecef; /* Hover state */
+        }
+    </style>
     <div class="content-wrapper">
         <section class="content" style="min-height: 100vh;">
             <div class="container-fluid">
                 <div class="dashboard-content">
                     <x-settings-tab />
                 </div>
-                <div class="dashboard-content ">
-                    <div id="wysiwyg" class="mb-5">
-                        <div class="btns">
-                            <div class="category">
-                                <button class="selection-btn" data-cmd="undo"><i class="fas fa-undo"></i></button>
-                                <button class="selection-btn" data-cmd="redo"><i class="fas fa-redo"></i></button>
-                            </div>
-                            <div class="category">
-                                <select class="selecion" data-cmd="formatBlock">
-                                    <option value="p">Paragraph</option>
-                                    <option value="h1">Title 1</option>
-                                    <option value="h2">Title 2</option>
-                                    <option value="h3">Title 3</option>
-                                </select>
-                                <select class="selecion" data-cmd="fontSize">
-                                    <option value="1">1rem</option>
-                                    <option value="2">2rem</option>
-                                    <option value="3">3rem</option>
-                                    <option value="4">4rem</option>
-                                    <option value="5">5rem</option>
-                                    <option value="6">6rem</option>
-                                    <option value="7">7rem</option>
-                                </select>
-                                {{-- <select class="selecion" data-cmd="fontName">
-                                    <option value="Arial">Arial</option>
-                                    <option value="Roboto">Roboto</option>
-                                    <option value="serif">Serif</option>
-                                    <option value="sans-serif">Sans-serif</option>
-                                </select> --}}
-                            </div>
-                            <div class="category">
-                                <button class="selection-btn" data-cmd="bold"><i class="fas fa-bold"></i></button>
-                                <button class="selection-btn" data-cmd="italic"><i class="fas fa-italic"></i></button>
-                                <button class="selection-btn" data-cmd="underline"><i class="fas fa-underline"></i></button>
-                            </div>
-                            {{-- <div class="category">
-                                <input class="selection-input" data-cmd="forecolor" type="color" value="#000000">
-                                <input class="selection-input" data-cmd="backcolor" type="color" value="#FFFFFF">
-                            </div> --}}
-                            <div class="category">
-                                <button class="selection-btn" data-cmd="justifyLeft"><i class="fas fa-align-left"></i></button>
-                                <button class="selection-btn" data-cmd="justifyCenter"><i class="fas fa-align-center"></i></button>
-                                <button class="selection-btn" data-cmd="justifyRight"><i class="fas fa-align-right"></i></button>
-                                <button class="selection-btn" data-cmd="justifyFull"><i class="fas fa-align-justify"></i></button>
-                            </div>
-                            {{-- <div class="category">
-                                <button class="selection-btn" data-cmd="indent"><i class="fas fa-indent"></i></button>
-                                <button class="selection-btn" data-cmd="outdent"><i class="fas fa-outdent"></i></button>
-                            </div> --}}
-                            <div class="category">
-                                <button class="selection-btn" data-cmd="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                <button class="selection-btn" data-cmd="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                            </div>
-                            <div class="category">
-                                <button class="selection-btn" data-cmd="createlink" class="prompt"><i class="fas fa-link"></i></button>
-                                <button class="selection-btn" data-cmd="insertimage" class="prompt"><i class="fas fa-image"></i></button>
-                            </div>
-                        </div>
-                        <!-- Yeh contentEditable div hai -->
-                        <div id="editor" contentEditable="true">{!! $guideline == null ? '' : $guideline->content !!}</div>
-                    </div>
-                    <ul class="inner-head3 justify-content-end">
-                        <button id="saveBtn" class="link text-decoration-none">
-                            <li class="inner-list inner-list-1">Save</li>
-                        </button>
-                    </ul>
-                </div>
+
+                <div id="summernote">{!! $guideline->content !!}</div>
+
+                <button class="save-btn" id="saveBtn">Save</button>
             </div>
         </section>
     </div>
 @endsection
 
 @push('scripts')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script>
@@ -117,14 +94,35 @@
             });
         });
     </script>
-
-   <script>
-        $(document).ready(function () {
-            $('#saveBtn').on("click", function () {
-                var content = $('#editor').html();
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Write something......',
+            tabsize: 2,
+            height: 100,
+            codemirror: {
+                theme: 'default' // Light mode
+            },
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']], // Added font size
+                ['color', ['color']],
+                ['para', ['paragraph']],
+                ['height', ['height']],
+               
+                ['insert', ['link']], // Removed picture and video
+                ['view', ['fullscreen', 'codeview']],
+                ['help', ['help']]
+            ]
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#saveBtn').on("click", function() {
+                var content = $('#summernote').summernote('code'); // Use summernote('code') to get content
 
                 $.ajax({
-                    url: '{{ route("admin.settings.guidelines.store") }}',
+                    url: '{{ route('admin.settings.guidelines.store') }}',
                     type: 'POST',
                     data: {
                         content: content,
@@ -167,29 +165,6 @@
                         }
                     }
                 });
-            });
-
-            // Handle WYSIWYG buttons
-            $('.selection-btn').on('click', function() {
-                var cmd = $(this).data('cmd');
-                if ($(this).hasClass('prompt')) {
-                    var value = prompt('Enter the ' + cmd);
-                    document.execCommand(cmd, false, value);
-                } else {
-                    document.execCommand(cmd, false, null);
-                }
-            });
-
-            $('.selecion').on('change', function() {
-                var cmd = $(this).data('cmd');
-                var value = $(this).val();
-                document.execCommand(cmd, false, value);
-            });
-
-            $('.selection-input').on('change', function() {
-                var cmd = $(this).data('cmd');
-                var value = $(this).val();
-                document.execCommand(cmd, false, value);
             });
         });
     </script>

@@ -35,6 +35,7 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
 
 Route::get('/general-forms/{id}/download', [DownloadController::class, 'general_forms'])->name('general-forms.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
 Route::get('/client-forms/{id}/download', [DownloadController::class, 'client_forms'])->name('client-forms.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
+Route::get('/assign-docs/{id}/download', [DownloadController::class, 'assignment_docs'])->name('assignment-docs.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
 
 
 Route::controller(AssignmentController::class)->group(function () {

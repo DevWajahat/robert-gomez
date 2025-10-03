@@ -515,94 +515,94 @@ function handleFiles(selectedFiles) {
     }
 }
 
-btnSave.addEventListener("click", () => {
-    if (filesToUpload.length === 0) return;
+// btnSave.addEventListener("click", () => {
+//     if (filesToUpload.length === 0) return;
 
-    let filesPreviewHTML = "";
-    let totalSize = 0;
-    let fileDataArray = [];
-    let filesRead = 0;
+//     let filesPreviewHTML = "";
+//     let totalSize = 0;
+//     let fileDataArray = [];
+//     let filesRead = 0;
 
-    filesToUpload.forEach((file) => {
-        const ext = file.name.split(".").pop().toLowerCase();
-        const reader = new FileReader();
+//     filesToUpload.forEach((file) => {
+//         const ext = file.name.split(".").pop().toLowerCase();
+//         const reader = new FileReader();
 
-        reader.onload = (e) => {
-            let iconSrc = "assets/web/images/no_image.png";
-            const base64 = e.target.result;
+//         reader.onload = (e) => {
+//             let iconSrc = "assets/web/images/no_image.png";
+//             const base64 = e.target.result;
 
-            if (["pdf"].includes(ext)) iconSrc = "assets/web/images/pdf-img.jpg";
-            else if (["docx"].includes(ext)) iconSrc = "assets/web/images/word-2.webp";
-            else if (["pptx"].includes(ext)) iconSrc = "assets/web/images/powerpoint.png";
-            else if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) iconSrc = base64;
+//             if (["pdf"].includes(ext)) iconSrc = "assets/web/images/pdf-img.jpg";
+//             else if (["docx"].includes(ext)) iconSrc = "assets/web/images/word-2.webp";
+//             else if (["pptx"].includes(ext)) iconSrc = "assets/web/images/powerpoint.png";
+//             else if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) iconSrc = base64;
 
-            filesPreviewHTML += `
-                <div style="display:inline-block; text-align:center; margin-right:8px;">
-                    <img src="${iconSrc}" width="30">
-                </div>
-            `;
+//             filesPreviewHTML += `
+//                 <div style="display:inline-block; text-align:center; margin-right:8px;">
+//                     <img src="${iconSrc}" width="30">
+//                 </div>
+//             `;
 
-            totalSize += file.size;
-            fileDataArray.push({ name: file.name, data: base64, originalName: file.name });
-            filesRead++;
+//             totalSize += file.size;
+//             fileDataArray.push({ name: file.name, data: base64, originalName: file.name });
+//             filesRead++;
 
-            if (filesRead === filesToUpload.length) {
-                const size = (totalSize / 1000 / 1000).toFixed(2);
-                const sizeUnit = size.toString().startsWith("0.") ? "KB" : "MB";
+//             if (filesRead === filesToUpload.length) {
+//                 const size = (totalSize / 1000 / 1000).toFixed(2);
+//                 const sizeUnit = size.toString().startsWith("0.") ? "KB" : "MB";
 
-                const now = new Date();
-                const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
-                const hours = now.getHours().toString().padStart(2, "0");
-                const minutes = now.getMinutes().toString().padStart(2, "0");
-                const ampm = hours < 12 ? " AM " : " PM ";
-                const time = `${hours}:${minutes}${ampm}`;
-                const dataAttr = encodeURIComponent(JSON.stringify(fileDataArray));
+//                 const now = new Date();
+//                 const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+//                 const hours = now.getHours().toString().padStart(2, "0");
+//                 const minutes = now.getMinutes().toString().padStart(2, "0");
+//                 const ampm = hours < 12 ? " AM " : " PM ";
+//                 const time = `${hours}:${minutes}${ampm}`;
+//                 const dataAttr = encodeURIComponent(JSON.stringify(fileDataArray));
 
-                const row = `
-                    <tr>
-                        <td><input type="checkbox" class="slaveCheckbox"></td>
-                        <td>${date} ${time} CDT</td>
-                        <td>${filesPreviewHTML}</td>
-                        <td><span class="file-names-text">${fileDataArray.map(f => f.originalName).join(", ")}</span></td>
-                        <td>Lorem Ipsum Dummy</td>
-                        <td>${size} ${sizeUnit}</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn elipse-btn" data-bs-toggle="dropdown">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li class="drp-list">
-                                        <button class="dropdown-item download-all" data-files='${dataAttr}'>Download All</button>
-                                    </li>
-                                    <li class="drp-list">
-                                        <button class="dropdown-item edit-btn" data-files='${dataAttr}'>Edit</button>
-                                    </li>
-                                    <li class="drp-list">
-                                        <button class="dropdown-item delete-btn">Delete</button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+//                 const row = `
+//                     <tr>
+//                         <td><input type="checkbox" class="slaveCheckbox"></td>
+//                         <td>${date} ${time} CDT</td>
+//                         <td>${filesPreviewHTML}</td>
+//                         <td><span class="file-names-text">${fileDataArray.map(f => f.originalName).join(", ")}</span></td>
+//                         <td>Lorem Ipsum Dummy</td>
+//                         <td>${size} ${sizeUnit}</td>
+//                         <td>
+//                             <div class="dropdown">
+//                                 <button class="btn elipse-btn" data-bs-toggle="dropdown">
+//                                     <i class="fa-solid fa-ellipsis-vertical"></i>
+//                                 </button>
+//                                 <ul class="dropdown-menu">
+//                                     <li class="drp-list">
+//                                         <button class="dropdown-item download-all" data-files='${dataAttr}'>Download All</button>
+//                                     </li>
+//                                     <li class="drp-list">
+//                                         <button class="dropdown-item edit-btn" data-files='${dataAttr}'>Edit</button>
+//                                     </li>
+//                                     <li class="drp-list">
+//                                         <button class="dropdown-item delete-btn">Delete</button>
+//                                     </li>
+//                                 </ul>
+//                             </div>
+//                         </td>
+//                     </tr>
+//                 `;
 
-                tableBody.insertAdjacentHTML("beforeend", row);
-                dismissBtn.click();
-                fileInput.value = "";
-                filesToUpload = [];
-                previewContainer.innerHTML = "";
+//                 tableBody.insertAdjacentHTML("beforeend", row);
+//                 dismissBtn.click();
+//                 fileInput.value = "";
+//                 filesToUpload = [];
+//                 previewContainer.innerHTML = "";
 
-                deleteRow();
-                downloadAll();
-                addEditButtonListener();
-                checkRows();
-            }
-        };
+//                 deleteRow();
+//                 downloadAll();
+//                 addEditButtonListener();
+//                 checkRows();
+//             }
+//         };
 
-        reader.readAsDataURL(file);
-    });
-});
+//         reader.readAsDataURL(file);
+//     });
+// });
 
 function deleteRow() {
     const deleteBtns = document.querySelectorAll(".delete-btn");

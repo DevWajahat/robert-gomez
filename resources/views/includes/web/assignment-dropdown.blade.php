@@ -59,7 +59,7 @@ No Results Found
 
 const timeAgo = timestamp => {
     const d = Math.floor((new Date() - new Date(timestamp)) / (1000 * 60 * 60 * 24));
-    const h = Math.floor((new Date() - new Date(timestamp)) / (1000 * 60 * 60)) % 24;
+    const h = Math.floor((new Date() - new Date(timestampp)) / (1000 * 60 * 60)) % 24;
     return d ? `${d}d ${h ? h + 'h' : ''} ago` : h ? `${h}h ago` : 'Just now';
 };
 </script>

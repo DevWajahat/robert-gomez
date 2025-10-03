@@ -57214,6 +57214,26 @@ table.dataTable thead th {
     list-style: square !important;
     color: black;
 }
-#editor ol li{
+
+#editor ol li {
     list-style-type: numeric !important;
+}
+
+.note-editable.card-block {
+    height: 200px !important;
+}
+
+.save-btn {
+    padding: 15px 35px;
+    background: var(--blue1);
+    margin-bottom: 0;
+    border-radius: 10px;
+    color: #fff;
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: fit-content;
+    margin:0 auto;
 }
