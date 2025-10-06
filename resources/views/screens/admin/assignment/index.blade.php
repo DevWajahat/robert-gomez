@@ -199,6 +199,7 @@
                                         <p><span>Loss Type:</span> {{ $assignment->loss_type }}</p>
                                         <p><span>Vehicle Location:</span> {{ $assignment->vehicle_location }} </p>
                                         <p><span>Appointment:</span> {{ $assignment->appointment_date }}</p>
+                                        {{-- <p><span>Appointment:</span> {{ $assignment->appointment_date }}</p> --}}
                                     </div>
                                 </div>
                                 <div>

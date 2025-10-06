@@ -261,7 +261,7 @@
                                         <div class="faq-body mb-0" style="display: none">
                                             <div class="view-tab-content">
                                                 <form action="">
-                                                    <div class="row" style="margin-bottom: 11px">
+                                                    {{-- <div class="row" style="margin-bottom: 11px">
                                                         <div class="col-6">
                                                             <div class="row align-items-center">
                                                                 <div class="col-md-4">
@@ -278,9 +278,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
-                                                    <div class="row" style="margin-bottom: 11px">
+                                                    {{-- <div class="row" style="margin-bottom: 11px">
                                                         <div class="col-6">
                                                             <div class="row align-items-center">
                                                                 <div class="col-md-4">
@@ -296,13 +296,13 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <h5 class="assign-head">Insurance Information</h5>
 
                                                     <div class="row">
                                                         <div class="col-lg-6 col-md-12">
-                                                            <div class="row">
+                                                            {{-- <div class="row">
                                                                 <div class="col-md-4">
                                                                     <label for="" class="custom-label">
                                                                         File
@@ -314,16 +314,16 @@
                                                                     <input type="text" name="" id=""
                                                                         class="custom-input form-control"></input>
                                                                 </div>
-                                                            </div>
+                                                            </div> --}}
+
 
                                                             <div class="row">
                                                                 <div class="col-md-4">
                                                                     <label for=""
                                                                         class="custom-label">Company</label>
                                                                 </div>
-
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                <input type="text" name="" value="{{ $assignmentDetail?->company }}" id=""
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -335,7 +335,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" value="{{ $assignmentDetail?->adjuster }}" id=""
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -349,7 +349,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->deductible_amount }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -363,7 +363,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id=""  value="{{ $assignmentDetail?->claim_for }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -377,7 +377,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id=""  value="{{ $assignmentDetail?->date_first_contacted }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -393,7 +393,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id=""  value="{{ $assignmentDetail?->claim }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -407,7 +407,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->adjuster_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -421,7 +421,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->date_of_loss }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -435,7 +435,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->insured_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -449,7 +449,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->policy_number }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -463,7 +463,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->loss_type }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -483,7 +483,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->business_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -497,7 +497,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -509,7 +509,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_city }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -521,7 +521,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_state }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -535,7 +535,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignment?->owner_email }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -549,7 +549,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_mobile_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -565,7 +565,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_first_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -579,7 +579,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_last_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -591,7 +591,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_address }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -602,7 +602,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignment?->owner_zip }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -616,7 +616,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -630,7 +630,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_work_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -648,7 +648,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -660,7 +660,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_address }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -672,12 +672,12 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_city }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="row">
+                                                            {{-- <div class="row">
                                                                 <div class="col-md-4">
                                                                     <label for="" class="custom-label">
                                                                         Location
@@ -686,14 +686,14 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
 
                                                         <div class="col-lg-6 col-md-12">
-                                                            <div class="row">
+                                                            {{-- <div class="row">
                                                                 <div class="col-md-4">
                                                                     <label for="" class="custom-label">
                                                                         Location
@@ -705,7 +705,7 @@
                                                                     <input type="text" name="" id=""
                                                                         class="custom-input form-control"></input>
                                                                 </div>
-                                                            </div>
+                                                            </div> --}}
 
                                                             <div class="row">
                                                                 <div class="col-md-4">
@@ -714,7 +714,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_state }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -725,22 +725,22 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignment?->location_zip }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="row">
+                                                            {{-- <div class="row">
                                                                 <div class="col-md-4">
                                                                     <label for=""
                                                                         class="custom-label">State</label>
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_state }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
                                                     </div>
 
@@ -755,7 +755,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_year }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -767,7 +767,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_make }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -779,7 +779,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_vin }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -793,7 +793,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_license_plate }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -807,7 +807,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_mileage }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -819,7 +819,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_model }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -831,7 +831,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_color }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -843,7 +843,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""
+                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_damage }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>

@@ -11,9 +11,6 @@ use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\ResourcesController;
 use Illuminate\Support\Facades\Route;
 
-// main pages routes
-
-
 
 Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
 
@@ -33,24 +30,24 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
     });
 
 
-Route::get('/general-forms/{id}/download', [DownloadController::class, 'general_forms'])->name('general-forms.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
-Route::get('/client-forms/{id}/download', [DownloadController::class, 'client_forms'])->name('client-forms.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
-Route::get('/assign-docs/{id}/download', [DownloadController::class, 'assignment_docs'])->name('assignment-docs.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
+    Route::get('/general-forms/{id}/download', [DownloadController::class, 'general_forms'])->name('general-forms.download')->withoutMiddleware(['auth', 'CheckAdmin', 'CheckAgent', 'prevent-back-history']);
+    Route::get('/client-forms/{id}/download', [DownloadController::class, 'client_forms'])->name('client-forms.download')->withoutMiddleware(['auth', 'CheckAdmin', 'CheckAgent', 'prevent-back-history']);
+    Route::get('/assign-docs/{id}/download', [DownloadController::class, 'assignment_docs'])->name('assignment-docs.download')->withoutMiddleware(['auth', 'CheckAdmin', 'CheckAgent', 'prevent-back-history']);
+    // Route::post('/assign-docs/{id}/download', [DownloadController::class, 'assignment_docs'])->name('assignment-docs.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
 
+    Route::controller(AssignmentController::class)->group(function () {
 
-Route::controller(AssignmentController::class)->group(function () {
+        Route::get('accept-reject/{id}', 'isAccept_view')->name('reject');
+        Route::post('accept-reject/{id}', 'isAccept');
+        Route::get('/ChangePhase/{id}', 'change_phase_view')->name('changephase');
+        Route::post('assignment-status', 'updateStatus')->name('assign.status');
+        Route::get('/Docs/{id}', 'docs_view')->name('docs');
+        Route::get('/View/{id}', 'view')->name('view');
+        Route::post('/assign-detail/post/{id}', 'assignDetail')->name('assign.detail');
+        Route::post('assign/upload-docs/{id}', 'upload_docs')->name('upload.docs');
 
-    Route::get('accept-reject/{id}', 'isAccept_view')->name('reject');
-    Route::post('accept-reject/{id}','isAccept');
-    Route::get('/ChangePhase/{id}','change_phase_view')->middleware('AssignmentCheckAcceptance')->name('changephase');
-    Route::post('assignment-status','updateStatus')->name('assign.status');
-    Route::get('/Docs/{id}','docs_view')->middleware('AssignmentCheckAcceptance')->name('docs');
-    Route::get('/View/{id}','view')->name('view');
-    Route::post('/assign-detail/post/{id}','assignDetail')->name('assign.detail');
-    Route::post('assign/upload-docs/{id}','upload_docs')->name('upload.docs');
-
-    Route::post('destroy','destroy')->name('docs.destroy');
-});
+        Route::post('destroy', 'destroy')->name('docs.destroy');
+    });
 
 
     Route::get('/ReOpen', function () {
@@ -150,8 +147,7 @@ Route::middleware('guest')->group(function () {
 
 
     Route::get('admin/login', [AdminAuthController::class, 'login_view'])->name('admin.login');
-    // Route::get('admin/register', [AdminAuthController::class, 'register_view'])->name('admin.register');
-    // Route::post('admin/register', [AdminAuthController::class, 'register']);
+
     Route::post('admin/login', [AdminAuthController::class, 'login']);
 });
 

@@ -23,7 +23,7 @@ class SettingsController extends Controller
 
         $guideline = Guideline::latest()->first();
 
-        return view('screens.admin.settings.guidelines',get_defined_vars());
+        return view('screens.admin.settings.guidelines', get_defined_vars());
     }
     // public function generalForms()
     // {
@@ -34,7 +34,7 @@ class SettingsController extends Controller
 
         $clientForms = ClientForm::all();
 
-        return view('screens.admin.settings.client-forms',get_defined_vars());
+        return view('screens.admin.settings.client-forms', get_defined_vars());
     }
     public function storeClientForm(StoreRequest $request)
     {
@@ -77,8 +77,7 @@ class SettingsController extends Controller
             $fileName = time() . '.' . $request->file->getClientOriginalExtension();
 
             $request->file->move(public_path('files/client-forms/'), $fileName);
-        }
-        else{
+        } else {
             $fileName = $clientForm->file;
         }
 
@@ -94,7 +93,8 @@ class SettingsController extends Controller
         ]);
     }
 
-    public function destroyClientForm(Request $request){
+    public function destroyClientForm(Request $request)
+    {
 
         $clientForm = ClientForm::find($request->id);
 
@@ -177,7 +177,7 @@ class SettingsController extends Controller
         ]);
     }
 
-        public function guidelinesStore(Request $request)
+    public function guidelinesStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',

@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use App\Models\GeneralForm;
 use App\Models\Guideline;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AssignmentController extends Controller
 {
@@ -61,7 +62,7 @@ class AssignmentController extends Controller
 
         $user = $request->accept == 0 ? null : $assignment->user_id;
 
-        $route = $request->accept == 0 ? route('dashboard') : route('view',$id);
+        $route = $request->accept == 0 ? route('dashboard') : route('view', $id);
 
         $assignment->update([
             'is_accept' => $request->accept,
@@ -113,8 +114,6 @@ class AssignmentController extends Controller
                     'file' => $fileName,
                     'file_type' => $extension
                 ]);
-
-
             }
         }
 
@@ -127,22 +126,36 @@ class AssignmentController extends Controller
     }
 
 
-    public function destroy(Request $request)
+   public function destroy(Request $request)
     {
-        // dd($request->id);
+        try {
+            $ids = $request->input('ids', [$request->input('id')]);
+            $ids = array_filter($ids, fn($id) => !is_null($id));
 
-        $doucment = AssignmentDocument::find($request->id);
-        // dd($doucment);
-        $doucment->delete();
+            if (empty($ids)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No IDs provided for deletion.'
+                ], 400);
+            }
 
+            DB::transaction(function () use ($ids) {
+                AssignmentDocument::whereIn('id', $ids)->delete();
+            });
 
-        return response()->json([
-            'status' => 'true',
-            'message' => 'document deleted successfully.'
-        ]);
+            return response()->json([
+                'status' => true,
+                'message' => count($ids) > 1 ? 'Documents deleted successfully.' : 'Document deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to delete document(s). Please try again.'
+            ], 500);
+        }
     }
 
- public function assignDetail(Request $request, $id)
+    public function assignDetail(Request $request, $id)
     {
         $assignment = Assignment::find($id);
 

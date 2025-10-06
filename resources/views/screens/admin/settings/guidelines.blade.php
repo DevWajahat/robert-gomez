@@ -34,6 +34,21 @@
         #summernote .note-btn:hover {
             background-color: #e9ecef; /* Hover state */
         }
+        .word-count {
+            margin-top: 10px;
+            font-size: 16px; /* Increased font size */
+            color: #333; /* Darker text color */
+            font-weight: bold; /* Added boldness */
+            background-color: #f0f0f0; /* Light background */
+            padding: 5px 10px; /* Added padding */
+            border-radius: 5px; /* Rounded corners */
+            display: inline-block; /* Ensure it stays inline */
+        }
+        .word-count.error {
+            color: #dc3545; /* Red color for error state */
+            background-color: #ffebee; /* Light red background for error */
+            font-weight: bold;
+        }
     </style>
     <div class="content-wrapper">
         <section class="content" style="min-height: 100vh;">
@@ -43,7 +58,7 @@
                 </div>
 
                 <div id="summernote">{!! $guideline->content !!}</div>
-
+                <div class="word-count" id="wordCount">Characters: 0 / 5000</div>
                 <button class="save-btn" id="saveBtn">Save</button>
             </div>
         </section>
@@ -55,7 +70,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -95,31 +109,71 @@
         });
     </script>
     <script>
-        $('#summernote').summernote({
-            placeholder: 'Write something......',
-            tabsize: 2,
-            height: 100,
-            codemirror: {
-                theme: 'default' // Light mode
-            },
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']], // Added font size
-                ['color', ['color']],
-                ['para', ['paragraph']],
-                ['height', ['height']],
-               
-                ['insert', ['link']], // Removed picture and video
-                ['view', ['fullscreen', 'codeview']],
-                ['help', ['help']]
-            ]
+        $(function() {
+            const maxChars = 5000;
+            let lastValidContent = '';
+
+            function updateWordCount() {
+                const content = $('#summernote').summernote('code');
+                const charCount = content.replace(/<[^>]*>/g, '').length; // Strip HTML tags for counting
+                const wordCountDisplay = $('#wordCount');
+                wordCountDisplay.text(`Characters: ${charCount} / ${maxChars}`);
+                
+                if (charCount > maxChars) {
+                    wordCountDisplay.addClass('error');
+                    $('#summernote').summernote('code', lastValidContent); // Revert to last valid content
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Character Limit Exceeded',
+                        text: `You have reached the maximum limit of ${maxChars} characters.`,
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    wordCountDisplay.removeClass('error');
+                    lastValidContent = content; // Update last valid content
+                }
+            }
+
+            $('#summernote').summernote({
+                placeholder: 'Write something......',
+                tabsize: 2,
+                height: 100,
+                codemirror: {
+                    theme: 'default' // Light mode
+                },
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['paragraph']],
+                    ['height', ['height']],
+                    ['insert', ['link']],
+                    ['view', ['fullscreen', 'codeview']],
+                    ['help', ['help']]
+                ],
+                callbacks: {
+                    onInit: function() {
+                        updateWordCount(); // Initial word count
+                    },
+                    onKeyup: function() {
+                        updateWordCount();
+                    },
+                    onPaste: function(e) {
+                        // Handle paste events to prevent exceeding limit
+                        setTimeout(updateWordCount, 100);
+                    },
+                    onChange: function() {
+                        updateWordCount();
+                    }
+                }
+            });
         });
     </script>
     <script>
         $(document).ready(function() {
             $('#saveBtn').on("click", function() {
-                var content = $('#summernote').summernote('code'); // Use summernote('code') to get content
+                var content = $('#summernote').summernote('code');
 
                 $.ajax({
                     url: '{{ route('admin.settings.guidelines.store') }}',

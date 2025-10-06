@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('assignment_logs', function (Blueprint $table) {
             $table->id();
+            // $table->foreignId('assignment_id')->constrained('assignmen');
             $table->timestamps();
         });
     }

@@ -20,7 +20,7 @@
                                     <label for="factor">No</label>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" id="factor2" class="" {{ $assignment?->is_accept == 1 ? 'checked' : '' }} value="1" name="accept">
+                                    <input type="radio" id="factor2" class="" {{ $assignment?->is_accept  == 1 || $assignment?->is_accept == null ? 'checked' : '' }} value="1" name="accept">
                                     <label for="factor2">Yes</label>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="col-md-10 col-sm-12">
                             <textarea name="reason" class="custom-input mb-5" style="height: 220px; resize: none;" id="" cols="10"
-                                rows="10" placeholder="Lorem Ipsum" {{ $assignment?->reason_rejection }}></textarea>
+                                rows="10" placeholder="Your Reason here..." {{ $assignment?->reason_rejection }}></textarea>
                         </div>
 
                     </div>
@@ -139,17 +139,14 @@
                                 timer: 1500,
                             }).then(() => {
                                 window.location.href = response.route;
-                                // window.location.reload();
                             });
 
 
-                            // setTimeout(function() {
-                            // }, 2000);
                         }
                     },
                     error: function(xhr) {
                           $.LoadingOverlay("hide");
-                        // Handle server-side validation errors
+
                         if (xhr.status === 422) {
                             let errors = xhr.responseJSON.errors;
                             $.each(errors, function(key, messages) {
@@ -164,7 +161,7 @@
                                 }
                             });
                         } else {
-                            // Handle other errors
+
                             form.prepend(
                                 '<div class="alert alert-danger">An error occurred. Please try again.</div>'
                                 );

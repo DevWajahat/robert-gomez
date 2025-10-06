@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class AssignmentLog extends Model
 {
-    //
+    protected $guarded = [];
 }

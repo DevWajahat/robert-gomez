@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'CheckAdmin' => CheckAdminLogin::class,
             'CheckAgent' => CheckAgentLogin::class,
             'prevent-back-history' => PreventBackHistory::class,
-            'AssignmentCheckAcceptance' =>  AssignmentAccept::class,
+            // 'AssignmentCheckAcceptance' =>  AssignmentAccept::class,
         ]);
 
         $middleware->redirectUsersTo(function (Request $request) {
