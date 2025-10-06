@@ -9,8 +9,19 @@ class AssignmentDocument extends Model
 {
     protected $guarded = [];
 
-    public function assignment() :BelongsTo
+    public function assignment(): BelongsTo
     {
         return $this->belongsTo(Assignment::class);
+    }
+    public function getFile()
+    {
+        $relativePath = 'assignment-docs/' . $this->file;
+
+        if (!empty($this->file) && file_exists(public_path($relativePath))) {
+
+            return public_path('assignment-docs/'.$this->file);
+        } else {
+            return "";
+        }
     }
 }

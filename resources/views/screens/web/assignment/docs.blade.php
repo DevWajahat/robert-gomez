@@ -15,7 +15,7 @@
                         <div class="search-left">
                             <button>Upload EMS</button>
                             <button data-bs-toggle="modal" data-bs-target="#exampleModal3">+ Add Files</button>
-                            <button id="downloadAll">Download All</button>
+                            <button id="downloadAll" >Download All</button>
 
                             <button id="deleteSelected">Delete Selected</button>
                         </div>
@@ -491,5 +491,36 @@
             });
 
         });
+
+        $(document).ready(function() {
+    
+    const downloadRoute = "{{ route('download.all.zip',$assignment->id) }}";
+
+    $('#downloadAll').on('click', function() {
+        swal.fire({
+            title: 'Download Confirmation',
+            text: "Are you sure you want to download all assignment documents as a zip file? This might take a moment.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Download!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If the user clicks "Yes, Download!", redirect to the Laravel route
+                window.location.href = downloadRoute;
+
+                // Optional: Show a "download started" message immediately
+                swal.fire({
+                    title: 'Download Started! 🚀',
+                    text: 'Your zip file is being prepared and will start downloading shortly.',
+                    icon: 'success',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+});
     </script>
 @endpush

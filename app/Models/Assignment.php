@@ -18,4 +18,6 @@ class Assignment extends Model
     public function docs() : HasMany{
         return $this->hasMany(AssignmentDocument::class);
     }
+
+    
 }
