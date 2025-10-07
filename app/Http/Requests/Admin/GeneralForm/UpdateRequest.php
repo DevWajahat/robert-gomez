@@ -21,9 +21,16 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-       return [
+        return [
             'label' => 'required|string|max:255',
-            'file' => 'nullable|mimes:docx,pdf' // file is nullable for update
+            'file' => ['nullable', 'mimes:docx,pdf', 'max:512000']
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'file.max' => 'file Size must not be max than 500mb'
         ];
     }
 }

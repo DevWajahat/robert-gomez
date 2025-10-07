@@ -450,70 +450,70 @@ $(document).ready(function () {
 // }
 
 
-// ✅ Fixed Version: File Upload - Add Modal Shows Names, Table Edits Name Without Breaking Images
+// // ✅ Fixed Version: File Upload - Add Modal Shows Names, Table Edits Name Without Breaking Images
 
-const btnSave = document.querySelector(".save-upload");
-const tableBody = document.querySelector(".table-row-2");
-const dismissBtn = document.querySelector(".dismiss-modal");
-const fileInput = document.querySelector(".file-input");
-const dropZone = document.getElementById("drop-zone");
-const previewContainer = document.querySelector(".preview-multiple");
+// const btnSave = document.querySelector(".save-upload");
+// const tableBody = document.querySelector(".table-row-2");
+// const dismissBtn = document.querySelector(".dismiss-modal");
+// const fileInput = document.querySelector(".file-input");
+// const dropZone = document.getElementById("drop-zone");
+// const previewContainer = document.querySelector(".preview-multiple");
 
-let filesToUpload = [];
-let editTargetButton = null;
+// let filesToUpload = [];
+// let editTargetButton = null;
 
-// Reset modal when opened
-const exampleModal = document.getElementById("exampleModal3");
-exampleModal.addEventListener("show.bs.modal", () => {
-    fileInput.value = "";
-    filesToUpload = [];
-    previewContainer.innerHTML = "";
-});
+// // Reset modal when opened
+// const exampleModal = document.getElementById("exampleModal3");
+// exampleModal.addEventListener("show.bs.modal", () => {
+//     fileInput.value = "";
+//     filesToUpload = [];
+//     previewContainer.innerHTML = "";
+// });
 
-// Drag & drop handlers
-dropZone.addEventListener("click", () => fileInput.click());
-dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.classList.add("dragover");
-});
-dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("dragover");
-});
-dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.classList.remove("dragover");
-    handleFiles(e.dataTransfer.files);
-});
+// // Drag & drop handlers
+// dropZone.addEventListener("click", () => fileInput.click());
+// dropZone.addEventListener("dragover", (e) => {
+//     e.preventDefault();
+//     dropZone.classList.add("dragover");
+// });
+// dropZone.addEventListener("dragleave", () => {
+//     dropZone.classList.remove("dragover");
+// });
+// dropZone.addEventListener("drop", (e) => {
+//     e.preventDefault();
+//     dropZone.classList.remove("dragover");
+//     handleFiles(e.dataTransfer.files);
+// });
 
-fileInput.addEventListener("change", (e) => handleFiles(e.target.files));
+// fileInput.addEventListener("change", (e) => handleFiles(e.target.files));
 
-function handleFiles(selectedFiles) {
-    for (let file of selectedFiles) {
-        filesToUpload.push(file);
+// function handleFiles(selectedFiles) {
+//     for (let file of selectedFiles) {
+//         filesToUpload.push(file);
 
-        const ext = file.name.split(".").pop().toLowerCase();
-        const reader = new FileReader();
+//         const ext = file.name.split(".").pop().toLowerCase();
+//         const reader = new FileReader();
 
-        reader.onload = (e) => {
-            let iconSrc = "assets/web/images/no_image.png";
-            if (["pdf"].includes(ext)) iconSrc = "assets/web/images/pdf-img.jpg";
-            else if (["docx"].includes(ext)) iconSrc = "assets/web/images/word-2.webp";
-            else if (["pptx"].includes(ext)) iconSrc = "assets/web/images/powerpoint.png";
-            else if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) iconSrc = e.target.result;
+//         reader.onload = (e) => {
+//             let iconSrc = "assets/web/images/no_image.png";
+//             if (["pdf"].includes(ext)) iconSrc = "assets/web/images/pdf-img.jpg";
+//             else if (["docx"].includes(ext)) iconSrc = "assets/web/images/word-2.webp";
+//             else if (["pptx"].includes(ext)) iconSrc = "assets/web/images/powerpoint.png";
+//             else if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) iconSrc = e.target.result;
 
-            const previewBox = document.createElement("div");
-            previewBox.style.textAlign = "center";
-            previewBox.style.width = "70px";
-            previewBox.innerHTML = `
-                <img src="${iconSrc}" style="width: 100%; border-radius: 5px;" />
-                <small style="font-size: 10px; word-break: break-word;">${file.name}</small>
-            `;
-            previewContainer.appendChild(previewBox);
-        };
+//             const previewBox = document.createElement("div");
+//             previewBox.style.textAlign = "center";
+//             previewBox.style.width = "70px";
+//             previewBox.innerHTML = `
+//                 <img src="${iconSrc}" style="width: 100%; border-radius: 5px;" />
+//                 <small style="font-size: 10px; word-break: break-word;">${file.name}</small>
+//             `;
+//             previewContainer.appendChild(previewBox);
+//         };
 
-        reader.readAsDataURL(file);
-    }
-}
+//         reader.readAsDataURL(file);
+//     }
+// }
 
 // btnSave.addEventListener("click", () => {
 //     if (filesToUpload.length === 0) return;

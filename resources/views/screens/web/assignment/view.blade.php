@@ -509,8 +509,8 @@
                                                             <label for="" class="custom-label">Location</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="location" id="location"
-                                                                value="{{ $assignment?->location }}"
+                                                            <input type="text" name="vehicle_location" id="vehiclelocation"
+                                                                value="{{ $assignment?->vehicle_location }}"
                                                                 class="custom-input form-control">
                                                         </div>
                                                     </div>
@@ -772,7 +772,7 @@
 
                                                             </tr>
                                                         @empty
-                                                            <div>No Files Found</div>
+                                                            {{-- <div>No Files Found</div> --}}
                                                         @endforelse
 
 
@@ -1116,10 +1116,10 @@
         });
 
         $(document).ready(function() {
-            // Function to initialize pagination for a given table and pagination container
+
             function initPagination($table, $pagination) {
-                // Configuration
-                var rowsPerPage = 5; // Number of rows to display per page
+
+                var rowsPerPage = 5;
                 var $rows = $table.find('tbody tr');
                 var totalRows = $rows.length;
                 var totalPages = Math.ceil(totalRows / rowsPerPage);
@@ -1127,7 +1127,7 @@
                 var noResultsMessage =
                     '<tr class="no-results"><td colspan="4" style="text-align: center;">No results found</td></tr>';
 
-                // Function to update pagination display
+                // Function to update pagination displayp
                 function updatePagination() {
                     // Hide all rows
                     $rows.hide();

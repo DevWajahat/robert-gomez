@@ -21,9 +21,16 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-         return [
+        return [
             'label' => 'required|string|max:255',
-            'file' => 'required|mimes:docx,pdf' // Same validation rules
+            'file' => ['required', 'mimes:docx,pdf', 'max:512000'] // Same validation rules
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'file.max' => 'file Size must not be max than 500mb'
         ];
     }
 }

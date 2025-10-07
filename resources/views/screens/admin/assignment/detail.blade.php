@@ -343,7 +343,7 @@
                                                                 </div>
                                                                 <div class="col-md-8">
                                                                     <input type="text" name=""
-                                                                        value="{{ $assignmentDetail?->company }}"
+                                                                        value="{{ $assignment->company }}"
                                                                         id=""
                                                                         class="custom-input form-control"></input>
                                                                 </div>
@@ -420,7 +420,7 @@
 
                                                                 <div class="col-md-8">
                                                                     <input type="text" name="" id=""
-                                                                        value="{{ $assignmentDetail?->claim }}"
+                                                                        value="{{ $assignment->claim }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -495,7 +495,7 @@
 
                                                                 <div class="col-md-8">
                                                                     <input type="text" name="" id=""
-                                                                        value="{{ $assignmentDetail?->loss_type }}"
+                                                                        value="{{ $assignment->loss_type }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -531,7 +531,7 @@
 
                                                                 <div class="col-md-8">
                                                                     <input type="text" name="" id=""
-                                                                        value="{{ $assignmentDetail?->owner }}"
+                                                                        value="{{ $assignment->owner }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -659,7 +659,7 @@
 
                                                                 <div class="col-md-8">
                                                                     <input type="text" name="" id=""
-                                                                        value="{{ $assignmentDetail?->owner_phone }}"
+                                                                        value="{{ $assignment->owner_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -693,7 +693,7 @@
 
                                                                 <div class="col-md-8">
                                                                     <input type="text" name="" id=""
-                                                                        value="{{ $assignmentDetail?->location }}"
+                                                                        value="{{ $assignment?->vehicle_location }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>

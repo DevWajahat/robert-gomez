@@ -229,14 +229,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="text-light">Label</label>
-                        <input type="text" name="label" id="addLabel">
+                        <input type="text" name="label" id="addLabel" >
                         <span class="text-danger error-msg" id="add_label-error"></span>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label class="text-light">File</label>
-                        <input type="file" accept=".docx,.pdf" name="file" id="addFile" style="opacity: 100%">
+                        <input type="file" accept=".docx,.pdf" name="file" id="addFile" style="opacity: 100%;color:#fff">
                         <span class="text-danger error-msg" id="add_file-error"></span>
                     </div>
                 </div>
@@ -267,7 +267,7 @@
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label class="text-light">File</label>
-                        <input type="file" accept=".docx,.pdf" name="file" id="editFile" style="opacity: 100%">
+                        <input type="file" accept=".docx,.pdf" name="file" id="editFile" style="opacity: 100%;color:#fff;">
                         <span class="text-danger error-msg" id="edit_file-error"></span>
                     </div>
                 </div>

@@ -3,53 +3,104 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" />
     <style>
         #summernote .note-editor.note-frame {
-            background-color: #ffffff; /* Light background */
-            color: #000000; /* Black text */
-            border: 1px solid #e0e0e0; /* Subtle border */
+            background-color: #ffffff;
+            /* Light background */
+            color: #000000;
+            /* Black text */
+            border: 1px solid #e0e0e0;
+            /* Subtle border */
         }
+
         #summernote .note-toolbar {
-            background-color: #f8f9fa; /* Light toolbar background */
+            background-color: #f8f9fa;
+            /* Light toolbar background */
             border-bottom: 1px solid #e0e0e0;
         }
+
         #summernote .note-editable {
-            background-color: #ffffff; /* Light editable area */
-            color: #000000; /* Black text */
+            background-color: #ffffff;
+            /* Light editable area */
+            color: #000000;
+            /* Black text */
         }
+
+        /* Custom CSS to force light mode on the editor content area */
+        body.dark-mode .note-editable {
+            background-color: #ffffff !important;
+            /* White background */
+            color: #000000 !important;
+            /* Black text */
+        }
+
+        /* You might also want to fix the toolbar and other elements */
+        body.dark-mode .note-toolbar,
+        body.dark-mode .note-statusbar,
+        body.dark-mode .note-editor {
+            background-color: #f8f9fa !important;
+            /* Light gray for toolbar */
+            color: #000000 !important;
+            /* Black text */
+            border-color: #ced4da !important;
+            /* Light border */
+        }
+
         #summernote .note-editable ul {
-            list-style-type: disc; /* Bullet points for unordered lists */
+            list-style-type: disc;
+            /* Bullet points for unordered lists */
             margin-left: 20px;
         }
+
         #summernote .note-editable ol {
-            list-style-type: decimal; /* Numbered lists */
+            list-style-type: decimal;
+            /* Numbered lists */
             margin-left: 20px;
         }
+
         #summernote .note-editable li {
-            margin-bottom: 5px; /* Spacing between list items */
+            margin-bottom: 5px;
+            /* Spacing between list items */
         }
+
         #summernote .note-btn {
-            background-color: #f8f9fa; /* Light button background */
-            color: #000000; /* Black button text */
+            background-color: #f8f9fa;
+            /* Light button background */
+            color: #000000;
+            /* Black button text */
             border: 1px solid #e0e0e0;
         }
+
         #summernote .note-btn:hover {
-            background-color: #e9ecef; /* Hover state */
+            background-color: #e9ecef;
+            /* Hover state */
         }
+
         .word-count {
             margin-top: 10px;
-            font-size: 16px; /* Increased font size */
-            color: #333; /* Darker text color */
-            font-weight: bold; /* Added boldness */
-            background-color: #f0f0f0; /* Light background */
-            padding: 5px 10px; /* Added padding */
-            border-radius: 5px; /* Rounded corners */
-            display: inline-block; /* Ensure it stays inline */
+            font-size: 16px;
+            /* Increased font size */
+            color: #333;
+            /* Darker text color */
+            font-weight: bold;
+            /* Added boldness */
+            background-color: #f0f0f0;
+            /* Light background */
+            padding: 5px 10px;
+            /* Added padding */
+            border-radius: 5px;
+            /* Rounded corners */
+            display: inline-block;
+            /* Ensure it stays inline */
         }
+
         .word-count.error {
-            color: #dc3545; /* Red color for error state */
-            background-color: #ffebee; /* Light red background for error */
+            color: #dc3545;
+            /* Red color for error state */
+            background-color: #ffebee;
+            /* Light red background for error */
             font-weight: bold;
         }
     </style>
+
     <div class="content-wrapper">
         <section class="content" style="min-height: 100vh;">
             <div class="container-fluid">
@@ -118,7 +169,7 @@
                 const charCount = content.replace(/<[^>]*>/g, '').length; // Strip HTML tags for counting
                 const wordCountDisplay = $('#wordCount');
                 wordCountDisplay.text(`Characters: ${charCount} / ${maxChars}`);
-                
+
                 if (charCount > maxChars) {
                     wordCountDisplay.addClass('error');
                     $('#summernote').summernote('code', lastValidContent); // Revert to last valid content
