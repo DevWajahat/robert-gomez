@@ -39,6 +39,7 @@ class AssignmentController extends Controller
             'appointment_date' => $request->appointment,
         ]);
 
+
         return response()->json([
             'status' => 'true',
             'message' => 'assignment added successfully'
@@ -54,6 +55,11 @@ class AssignmentController extends Controller
             'status' => 'pending'
         ]);
 
+         $assignment->assignment_logs()->create([
+            'user_id' => $assignment->user_id
+        ]);
+
+
         return response()->json([
             'status' => true,
             'message' => 'assign agent successfully.',
@@ -65,6 +71,7 @@ class AssignmentController extends Controller
     public function edit($id) {
 
     }
+
 
     public function update($id) {}
 

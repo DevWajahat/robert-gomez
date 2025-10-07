@@ -19,5 +19,8 @@ class Assignment extends Model
         return $this->hasMany(AssignmentDocument::class);
     }
 
-    
+    public function assignment_logs(): HasMany{
+        return $this->hasMany(AssignmentLog::class);
+    }
+
 }

@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assignment_logs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('assignment_id')->constrained('assignments');
-            $table->foreignId('user_id')->constrained('users');
-            $table->timestamps();
+        Schema::table('assignment_logs', function (Blueprint $table) {
+            $table->string('is_accept')->nullable();
+            $table->string('reason_rejection')->nullable();
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assignment_logs');
+        Schema::table('assignment_logs', function (Blueprint $table) {
+            //
+        });
     }
 };

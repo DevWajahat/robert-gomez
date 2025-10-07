@@ -17,6 +17,7 @@
                                     <li class="inner-list inner-list-1">Print</li>
                                 </a>
 
+
                                 <a href="#" class="link text-decoration-none">
                                     <li class="inner-list inner-list-1">Edit</li>
                                 </a>
@@ -195,34 +196,52 @@
                             </div>
 
                             <div class="col-lg-4">
-                                <div class="payment-info" style="height: auto !important">
+                                <div class="payment-info" style="height: auto !important;">
                                     <div class="info-head">
                                         <h3>Timeline</h3>
                                     </div>
-
-                                    <div class="info-desc d-flex">
-                                        <div>
-                                            <ul class="head-ul">
-                                                <li class="mb-4">Appointment Date:</li>
-
-                                                <li class="mb-2">Time Open</li>
-
-                                                <li>Date Created</li>
-                                            </ul>
+                                    <div class="info-desc d-flex flex-wrap" style="gap:10px">
+                                        <div class="d-flex justify-content-center gap-3 align-items-center">
+                                            <div>
+                                                <ul class="head-ul">
+                                                    <li class="mb-4">Appointment Date:</li>
+                                                    <li class="mb-2">Time Open</li>
+                                                    <li>Date Created</li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <ul class="desc-ul">
+                                                    <li class="mb-4">
+                                                        {{ \Carbon\Carbon::parse($assignment->appointment_date)->format('m/d/Y g:i a') }}
+                                                        {{-- <a href=""
+                                                        class="text-danger text-decoration-none"
+                                                        style="margin-left: 12px; font-weight:700;">Change</a> --}}
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        {{ \Carbon\Carbon::parse($assignment->created_at)->diffForHumans(now(), ['parts' => 3, 'short' => false, 'syntax' => \Carbon\Carbon::DIFF_ABSOLUTE]) }}
+                                                        ago</li>
+                                                    <li>{{ \Carbon\Carbon::parse($assignment->created_at)->setTimezone('America/Chicago')->format('m/d/Y g:i a \C\D\T') }}
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-
-                                        <div>
-                                            <ul class="desc-ul">
-                                                <li class="mb-4">{{-- 09/18/2024 5:00 am --}}{{ \Carbon\Carbon::parse($assignment->appointment_date)->format('m/d/Y g:i a') }}
-                                                    <a href="" class="text-danger text-decoration-none"
-                                                        style="margin-left: 12px; font-weight: 700">Change</a>
-                                                </li>
-
-                                                <li class="mb-2">{{ ($d=$assignment->created_at->diff(now()))->days|$d->h|$d->i?join(', ',array_filter([$d->days?"$d->days days":0,$d->h?"$d->h hours":0,$d->i?"$d->i mins":0])):'just now' }}</li>
-
-                                                <li>05/18/2024 6:33 pm CDT</li>
-                                            </ul>
-                                        </div>
+                                        <table class="table text-center timeline-table">
+                                            @forelse ($assignment->assignment_logs as $log)
+                                                <tr>
+                                                    <th scope="row">{{ $log->user->first_name }}</th>
+                                                    <td>{{ $log->created_at }}</td>
+                                                    <td>
+                                                        {{ $log->is_accept == null || $log->is_accept == 1 ? 'Assigned' : '' }}
+                                                        @if ($log->is_accept !== null && $log->is_accept != 1)
+                                                            <button class="rejection-reason" style="background:none;border:none"
+                                                                data-id="{{ $log->id }}" data-rejection-reason="{{ $log->reason_rejection }}">Rejected <i
+                                                                    class="fa-solid fa-eye"></i></button>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                            @endforelse
+                                        </table>
                                     </div>
                                 </div>
 
@@ -323,7 +342,9 @@
                                                                         class="custom-label">Company</label>
                                                                 </div>
                                                                 <div class="col-md-8">
-                                                                <input type="text" name="" value="{{ $assignmentDetail?->company }}" id=""
+                                                                    <input type="text" name=""
+                                                                        value="{{ $assignmentDetail?->company }}"
+                                                                        id=""
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -335,7 +356,9 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" value="{{ $assignmentDetail?->adjuster }}" id=""
+                                                                    <input type="text" name=""
+                                                                        value="{{ $assignmentDetail?->adjuster }}"
+                                                                        id=""
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -349,7 +372,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->deductible_amount }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->deductible_amount }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -363,7 +387,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""  value="{{ $assignmentDetail?->claim_for }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->claim_for }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -377,7 +402,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""  value="{{ $assignmentDetail?->date_first_contacted }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->date_first_contacted }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -393,7 +419,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id=""  value="{{ $assignmentDetail?->claim }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->claim }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -407,7 +434,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->adjuster_phone }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->adjuster_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -421,7 +449,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->date_of_loss }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->date_of_loss }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -435,7 +464,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->insured_name }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->insured_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -449,7 +479,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->policy_number }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->policy_number }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -463,7 +494,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->loss_type }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->loss_type }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -483,7 +515,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->business_name }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->business_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -497,7 +530,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -509,7 +543,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_city }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_city }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -521,7 +556,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_state }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_state }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -535,7 +571,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignment?->owner_email }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignment?->owner_email }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -549,7 +586,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_mobile_phone }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_mobile_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -565,7 +603,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_first_name }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_first_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -579,7 +618,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_last_name }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_last_name }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -591,7 +631,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_address }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_address }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -602,7 +643,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignment?->owner_zip }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignment?->owner_zip }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -616,7 +658,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_phone }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -630,7 +673,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->owner_work_phone }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->owner_work_phone }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -648,7 +692,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->location }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -660,7 +705,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_address }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->location_address }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -672,7 +718,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_city }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->location_city }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -714,7 +761,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->location_state }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->location_state }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -725,7 +773,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignment?->location_zip }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignment?->location_zip }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -755,7 +804,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_year }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_year }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -767,7 +817,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_make }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_make }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -779,7 +830,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_vin }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_vin }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -793,7 +845,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_license_plate }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_license_plate }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -807,7 +860,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_mileage }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_mileage }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -819,7 +873,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_model }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_model }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -831,7 +886,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_color }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_color }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -843,7 +899,8 @@
                                                                 </div>
 
                                                                 <div class="col-md-8">
-                                                                    <input type="text" name="" id="" value="{{ $assignmentDetail?->vehicle_damage }}"
+                                                                    <input type="text" name="" id=""
+                                                                        value="{{ $assignmentDetail?->vehicle_damage }}"
                                                                         class="custom-input form-control"></input>
                                                                 </div>
                                                             </div>
@@ -1126,7 +1183,8 @@
 
                                                                     <td>{{ $clientForm->label }}</td>
 
-                                                                    <td>{{ str_replace('-', '/', explode(' ', $clientForm->updated_at)[0]) }}</td>
+                                                                    <td>{{ str_replace('-', '/', explode(' ', $clientForm->updated_at)[0]) }}
+                                                                    </td>
 
                                                                     <td>
                                                                         <a href="{{ asset('files/client-forms/' . $clientForm->file) }}"
@@ -1398,106 +1456,129 @@
         </section>
     </div>
 
+    <style>
+        .timeline-table,
+        .timeline-table td,
+        .timeline-table tr,
+        .timeline-table th {
+            border: none !important;
+        }
+    </style>
     <!-- Main Footer -->
 @endsection
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $('.rejection-reason').on('click', function() {
+                var rejectionReason = $(this).attr('data-rejection-reason');
+                console.log(rejectionReason)
+                Swal.fire({
+                    title: 'Rejection Reason',
+                    text: rejectionReason ,
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
             $('.guideline-content p,.guideline-content span').addClass('guide-para');
         });
 
-         $(document).ready(function() {
-    // Function to initialize pagination for a given table and pagination container
-    function initPagination($table, $pagination) {
-        // Configuration
-        var rowsPerPage = 5; // Number of rows to display per page
-        var $rows = $table.find('tbody tr');
-        var totalRows = $rows.length;
-        var totalPages = Math.ceil(totalRows / rowsPerPage);
-        var currentPage = 1;
-        var noResultsMessage = '<tr class="no-results"><td colspan="4" style="text-align: center;">No results found</td></tr>';
+        $(document).ready(function() {
+            // Function to initialize pagination for a given table and pagination container
+            function initPagination($table, $pagination) {
+                // Configuration
+                var rowsPerPage = 5; // Number of rows to display per page
+                var $rows = $table.find('tbody tr');
+                var totalRows = $rows.length;
+                var totalPages = Math.ceil(totalRows / rowsPerPage);
+                var currentPage = 1;
+                var noResultsMessage =
+                    '<tr class="no-results"><td colspan="4" style="text-align: center;">No results found</td></tr>';
 
-        // Function to update pagination display
-        function updatePagination() {
-            // Hide all rows
-            $rows.hide();
+                // Function to update pagination display
+                function updatePagination() {
+                    // Hide all rows
+                    $rows.hide();
 
-            // Calculate start and end indices
-            var start = (currentPage - 1) * rowsPerPage;
-            var end = start + rowsPerPage;
+                    // Calculate start and end indices
+                    var start = (currentPage - 1) * rowsPerPage;
+                    var end = start + rowsPerPage;
 
-            // Show rows for current page
-            $rows.slice(start, end).show();
+                    // Show rows for current page
+                    $rows.slice(start, end).show();
 
-            // Update active page
-            $pagination.find('.page').removeClass('active-page');
-            $pagination.find('.page').eq(currentPage - 1).addClass('active-page');
+                    // Update active page
+                    $pagination.find('.page').removeClass('active-page');
+                    $pagination.find('.page').eq(currentPage - 1).addClass('active-page');
 
-            // Enable/disable prev/next buttons
-            $pagination.find('.prev').prop('disabled', currentPage === 1);
-            $pagination.find('.next').prop('disabled', currentPage === totalPages);
-        }
-
-        // Generate pagination buttons dynamically
-        function generatePaginationButtons() {
-            $pagination.find('.page').remove(); // Clear existing page buttons
-            for (var i = 1; i <= totalPages; i++) {
-                var $pageButton = $('<button class="page">' + i + '</button>');
-                if (i === currentPage) {
-                    $pageButton.addClass('active-page');
+                    // Enable/disable prev/next buttons
+                    $pagination.find('.prev').prop('disabled', currentPage === 1);
+                    $pagination.find('.next').prop('disabled', currentPage === totalPages);
                 }
-                $pageButton.insertBefore($pagination.find('.next'));
+
+                // Generate pagination buttons dynamically
+                function generatePaginationButtons() {
+                    $pagination.find('.page').remove(); // Clear existing page buttons
+                    for (var i = 1; i <= totalPages; i++) {
+                        var $pageButton = $('<button class="page">' + i + '</button>');
+                        if (i === currentPage) {
+                            $pageButton.addClass('active-page');
+                        }
+                        $pageButton.insertBefore($pagination.find('.next'));
+                    }
+                }
+
+                // Initial setup
+                if (totalRows > 0) {
+                    // Remove any existing no-results message
+                    $table.find('.no-results').remove();
+                    // Show pagination
+                    $pagination.show();
+                    generatePaginationButtons();
+                    updatePagination();
+                } else {
+                    // If no rows, append no-results message and hide pagination
+                    $table.find('.no-results').remove(); // Clear any existing message
+                    $table.find('tbody').append(noResultsMessage);
+                    $pagination.hide();
+                }
+
+                // Event handlers
+                // Click on page number
+                $pagination.on('click', '.page', function() {
+                    currentPage = parseInt($(this).text());
+                    updatePagination();
+                });
+
+                // Previous button
+                $pagination.on('click', '.prev', function() {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updatePagination();
+                    }
+                });
+
+                // Next button
+                $pagination.on('click', '.next', function() {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        updatePagination();
+                    }
+                });
             }
-        }
 
-        // Initial setup
-        if (totalRows > 0) {
-            // Remove any existing no-results message
-            $table.find('.no-results').remove();
-            // Show pagination
-            $pagination.show();
-            generatePaginationButtons();
-            updatePagination();
-        } else {
-            // If no rows, append no-results message and hide pagination
-            $table.find('.no-results').remove(); // Clear any existing message
-            $table.find('tbody').append(noResultsMessage);
-            $pagination.hide();
-        }
-
-        // Event handlers
-        // Click on page number
-        $pagination.on('click', '.page', function() {
-            currentPage = parseInt($(this).text());
-            updatePagination();
+            // Iterate over all tables and their corresponding pagination controls
+            $('.entries-table').each(function(index) {
+                var $table = $(this);
+                // Find the corresponding pagination (assumes pagination follows the table in DOM)
+                var $pagination = $('.pagination.assign-pagination').eq(index);
+                if ($table.length && $pagination.length) {
+                    initPagination($table, $pagination);
+                }
+            });
         });
-
-        // Previous button
-        $pagination.on('click', '.prev', function() {
-            if (currentPage > 1) {
-                currentPage--;
-                updatePagination();
-            }
-        });
-
-        // Next button
-        $pagination.on('click', '.next', function() {
-            if (currentPage < totalPages) {
-                currentPage++;
-                updatePagination();
-            }
-        });
-    }
-
-    // Iterate over all tables and their corresponding pagination controls
-    $('.entries-table').each(function(index) {
-        var $table = $(this);
-        // Find the corresponding pagination (assumes pagination follows the table in DOM)
-        var $pagination = $('.pagination.assign-pagination').eq(index);
-        if ($table.length && $pagination.length) {
-            initPagination($table, $pagination);
-        }
-    });
-});
     </script>
 @endpush

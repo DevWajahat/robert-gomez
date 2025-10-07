@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
          return $this->hasMany(Assignment::class);
     }
+
+    public function assignment_logs():HasMany
+    {
+        return $this->hasMany(AssignmentLog::class);
+    }
 }

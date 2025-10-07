@@ -7,6 +7,7 @@ use App\Http\Requests\Web\Assignment\DocsRequest;
 use App\Http\Requests\Web\Assignment\RejectRequest;
 use App\Models\Assignment;
 use App\Models\AssignmentDocument;
+use App\Models\AssignmentLog;
 use App\Models\ClientForm;
 use Illuminate\Support\Str;
 use App\Models\GeneralForm;
@@ -43,6 +44,8 @@ class AssignmentController extends Controller
 
         $guideline = Guideline::latest()->first();
 
+        // $assignment= AssignmentLog::where('')
+
         return view('screens.web.assignment.view', get_defined_vars());
     }
 
@@ -60,9 +63,17 @@ class AssignmentController extends Controller
 
         $reason = $request->reason == null ? null : $request->reason;
 
+
+
         $user = $request->accept == 0 ? null : $assignment->user_id;
 
         $route = $request->accept == 0 ? route('dashboard') : route('view', $id);
+
+        $assignment->assignment_logs()->create([
+            'is_accept' => $request->accept,
+            'reason_rejection' => $request->reason,
+            'user_id' => $assignment->user_id,
+        ]);
 
         $assignment->update([
             'is_accept' => $request->accept,
@@ -70,6 +81,7 @@ class AssignmentController extends Controller
             'user_id' => $user,
             'status' => 'pending'
         ]);
+
 
 
         return response()->json([

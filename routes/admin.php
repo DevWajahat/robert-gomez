@@ -18,6 +18,7 @@ Route::prefix('assignments')->controller(AssignmentController::class)->name('ass
     Route::get('task-assigned', 'task')->name('task');  // Single view
     Route::get('complete', 'completeAssign')->name('complete');  // Single view
     Route::get('detail/{id}', 'detail')->name('detail');
+  
     Route::post('search', 'searchAssign')->name('search');
 });
 

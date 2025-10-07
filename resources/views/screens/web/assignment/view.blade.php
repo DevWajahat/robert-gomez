@@ -124,23 +124,49 @@
                                 <div class="info-head">
                                     <h3>Timeline</h3>
                                 </div>
-                                <div class="info-desc d-flex">
-                                    <div>
-                                        <ul class="head-ul">
-                                            <li class="mb-4">Appointment Date:</li>
-                                            <li class="mb-2">Time Open</li>
-                                            <li>Date Created</li>
-                                        </ul>
+                                <div class="info-desc d-flex flex-wrap" style="gap:10px">
+                                    <div class="d-flex justify-content-center gap-3 align-items-center">
+                                        <div>
+                                            <ul class="head-ul">
+                                                <li class="mb-4">Appointment Date:</li>
+                                                <li class="mb-2">Time Open</li>
+                                                <li>Date Created</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <ul class="desc-ul">
+                                                <li class="mb-4">
+                                                    {{ \Carbon\Carbon::parse($assignment->appointment_date)->format('m/d/Y g:i a') }}
+                                                    {{-- <a href=""
+                                                        class="text-danger text-decoration-none"
+                                                        style="margin-left: 12px; font-weight:700;">Change</a> --}}
+                                                </li>
+                                                <li class="mb-2">
+                                                    {{ \Carbon\Carbon::parse($assignment->created_at)->diffForHumans(now(), ['parts' => 3, 'short' => false, 'syntax' => \Carbon\Carbon::DIFF_ABSOLUTE]) }}
+                                                    ago</li>
+                                                <li>{{ \Carbon\Carbon::parse($assignment->created_at)->setTimezone('America/Chicago')->format('m/d/Y g:i a \C\D\T') }}
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <ul class="desc-ul">
-                                            <li class="mb-4">09/18/2024 5:00 am <a href=""
-                                                    class="text-danger text-decoration-none"
-                                                    style="margin-left: 12px; font-weight:700;">Change</a></li>
-                                            <li class="mb-2">2 days, 16 hours, 13 mins</li>
-                                            <li>05/18/2024 6:33 pm CDT</li>
-                                        </ul>
-                                    </div>
+                                    <table class="table text-center timeline-table">
+                                        @forelse ($assignment->assignment_logs as $log)
+                                            <tr>
+                                                <th scope="row">{{ $log->user->first_name }}</th>
+                                                <td>{{ $log->created_at }}</td>
+                                                <td>
+                                                    {{ $log->is_accept == null || $log->is_accept == 1 ? 'Assigned' : '' }}
+                                                    @if ($log->is_accept !== null && $log->is_accept != 1)
+                                                        <button class="rejection-reason" style="background:none;border:none"
+                                                            data-id="{{ $log->id }}"
+                                                            data-rejection-reason="{{ $log->reason_rejection }}">Rejected <i
+                                                                class="fa-solid fa-eye"></i></button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
+                                    </table>
                                 </div>
                             </div>
                             <div class="pay-instruction">
@@ -738,7 +764,7 @@
                                                                 </td>
 
                                                                 <td>
-                                                                    <a href="{{ route('client-forms.download',$clientForm->id) }}"
+                                                                    <a href="{{ route('client-forms.download', $clientForm->id) }}"
                                                                         download class="icon" title="Download">
                                                                         <i class="fa fa-download"></i>
                                                                     </a>
@@ -1214,6 +1240,20 @@
             })
         })
     </script>
+        <script>
+        $(document).ready(function() {
+            $('.rejection-reason').on('click', function() {
+                var rejectionReason = $(this).attr('data-rejection-reason');
+                console.log(rejectionReason)
+                Swal.fire({
+                    title: 'Rejection Reason',
+                    text: rejectionReason ,
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    </script>
 @endpush
 
 
@@ -1236,3 +1276,11 @@
         }
     }
 </script> --}}
+<style>
+    .timeline-table,
+    .timeline-table td,
+    .timeline-table tr,
+    .timeline-table th {
+        border: none !important;
+    }
+</style>
