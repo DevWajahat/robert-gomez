@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Assignment\Payment\StoreRequest as PaymentStoreRequest;
 use App\Http\Requests\Admin\Assignment\StoreRequest;
 use App\Imports\AssignmentsImport;
 use App\Models\Assignment;
+use App\Models\AssignmentPayment;
 use App\Models\ClientForm;
 use App\Models\GeneralForm;
 use App\Models\Guideline;
@@ -55,7 +57,7 @@ class AssignmentController extends Controller
             'status' => 'pending'
         ]);
 
-         $assignment->assignment_logs()->create([
+        $assignment->assignment_logs()->create([
             'user_id' => $assignment->user_id
         ]);
 
@@ -68,9 +70,7 @@ class AssignmentController extends Controller
         ]);
     }
 
-    public function edit($id) {
-
-    }
+    public function edit($id) {}
 
 
     public function update($id) {}
@@ -264,7 +264,7 @@ class AssignmentController extends Controller
     {
         $assignment = Assignment::find($id);
 
-        $assignmentDetail = Assignment::where('id',$id)->where('status','completed')->first();
+        $assignmentDetail = Assignment::where('id', $id)->where('status', 'completed')->first();
 
 
 
@@ -274,8 +274,84 @@ class AssignmentController extends Controller
 
         $guideline = Guideline::latest()->first();
 
-        return view('screens.admin.assignment.detail',get_defined_vars());
+        return view('screens.admin.assignment.detail', get_defined_vars());
     }
 
+    public function paymentDetailStore(PaymentStoreRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $assignment = Assignment::find($request->assignment_id);
 
+        $recordsToCreate = array_map(function ($billingType, $miles, $price) {
+            return [
+                'billing_type' => $billingType,
+                'miles' => $miles,
+                'price' => $price,
+            ];
+        }, $validated['billing_type'], $validated['miles'], $validated['price']);
+
+        $recordsToCreate = array_filter($recordsToCreate, function ($record) {
+            return !empty($record['billing_type']) || !empty($record['miles']) || !empty($record['price']);
+        });
+
+        DB::beginTransaction();
+
+        try {
+            if (!empty($recordsToCreate)) {
+                $assignment->assignment_payments()->createMany($recordsToCreate);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'true',
+                'message' => 'Payment Details Updated Successfully.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'false',
+                'message' => 'Failed to process payment details.'
+            ], 500);
+        }
+    }
+
+    public function assignmentPaymentEdit($id)
+    {
+
+        $payment = AssignmentPayment::find($id);
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'payment fetched successfully',
+            'assignment' => $payment
+        ]);
+    }
+
+    public function assignmentPaymentUpdate($id, Request $request)
+    {
+
+        $payment = AssignmentPayment::find($id);
+
+        // dd($request->all());
+        $payment->update([
+            'billing_type' => $request->billing_type,
+            'price' => $request->price,
+            'miles' => $request->miles
+        ]);
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'payment Updated Successfully.'
+        ]);
+    }
+
+    public function assignmentPaymentDestroy(Request $request)
+    {
+        $payment = AssignmentPayment::findOrFail($request->id);
+        $payment->delete();
+
+        return response()->json(['success' => true, 'message' => 'Payment deleted successfully']);
+    }
 }

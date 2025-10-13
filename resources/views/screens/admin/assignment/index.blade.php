@@ -167,7 +167,7 @@
                 @endif
                 <div class="board-area">
                     @forelse ($assignments as $assignment)
-                        <div class="assign-card" data-url="{{ route('admin.assign.detail',$assignment->id) }}">
+                        <div class="assign-card" data-url="{{ route('admin.assign.detail', $assignment->id) }}">
                             <div class="card-id-wrapper">
                                 <h3>{{ $assignment->id }}</h3>
                                 <div class="toggler-btn-wrapper">
@@ -317,9 +317,7 @@
         </div>
     </div>
 
-    <!-- Add assignment modal -->
-    <!-- Search Modal -->
-    <!-- Search Modal -->
+
     <div id="searchModal" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -388,14 +386,14 @@
         <script>
             $(document).ready(function() {
 
-                 window.addEventListener( "pageshow", function ( event ) {
-                  var historyTraversal = event.persisted ||
-                                         ( typeof window.performance != "undefined" &&
-                                              window.performance.navigation.type === 2 );
-                  if ( historyTraversal ) {
-                    // Handle page restore.
-                    window.location.reload();
-                  }
+                window.addEventListener("pageshow", function(event) {
+                    var historyTraversal = event.persisted ||
+                        (typeof window.performance != "undefined" &&
+                            window.performance.navigation.type === 2);
+                    if (historyTraversal) {
+                        // Handle page restore.
+                        window.location.reload();
+                    }
                 });
 
                 $('.toggler-btn').on('click', function() {
@@ -642,10 +640,8 @@
                                 showConfirmButton: false,
                                 timer: 1000
                             }).then(() => {
-
                                 window.location
                                     .reload();
-
                             });
                         },
                         error: function(xhr) {
@@ -1040,7 +1036,7 @@
                     })
                 })
 
-                                $(document).on('click', '.assign-card', function() {
+                $(document).on('click', '.assign-card', function() {
                     var $card = $(this);
                     var isExpanded = $card.find('.other-desc-area').hasClass('smooth-toggle');
 

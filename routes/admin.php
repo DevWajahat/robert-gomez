@@ -18,8 +18,13 @@ Route::prefix('assignments')->controller(AssignmentController::class)->name('ass
     Route::get('task-assigned', 'task')->name('task');  // Single view
     Route::get('complete', 'completeAssign')->name('complete');  // Single view
     Route::get('detail/{id}', 'detail')->name('detail');
-  
+
     Route::post('search', 'searchAssign')->name('search');
+
+    Route::post('assignment-payment/store', 'paymentDetailStore')->name('payment.store');
+    Route::get('assignment-payment/edit/{id}', 'assignmentPaymentEdit')->name('payment.edit');
+    Route::post('assignment-payment/update/{id}', 'assignmentPaymentUpdate')->name('payment.update');
+    Route::post('assignment-payment/destroy', 'assignmentPaymentDestroy')->name('payment.destroy');
 });
 
 Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
@@ -27,7 +32,7 @@ Route::prefix('users')->controller(UserController::class)->name('users.')->group
     Route::post('store', 'store')->name('store');
     Route::get('edit/{id}', 'edit')->name('edit');
     Route::post('update/{id}', 'update')->name('update');
-    Route::post('update-status','updateStatus')->name('update.status');
+    Route::post('update-status', 'updateStatus')->name('update.status');
 });
 
 Route::prefix('settings')->controller(SettingsController::class)->name('settings.')->group(function () {

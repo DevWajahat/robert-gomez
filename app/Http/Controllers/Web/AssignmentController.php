@@ -44,6 +44,7 @@ class AssignmentController extends Controller
 
         $guideline = Guideline::latest()->first();
 
+        
         // $assignment= AssignmentLog::where('')
 
         return view('screens.web.assignment.view', get_defined_vars());
@@ -194,5 +195,20 @@ class AssignmentController extends Controller
                 'message' => 'Failed to update form data: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function paymentInfo($id,Request $request)
+    {
+
+        $assignment = Assignment::find($id);
+
+        $assignment->update([
+            'payment_info' => $request->paymentInfo
+        ]);
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'payment info send successfully.'
+        ]);
     }
 }

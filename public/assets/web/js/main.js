@@ -716,3 +716,383 @@ saveEditFiles.addEventListener("click", () => {
 
     bootstrap.Modal.getInstance(document.getElementById("editFileModal")).hide();
 });
+
+
+// 
+
+// const btnSave = document.querySelector(".save-upload");
+// const tableBody = document.querySelector(".table-row-2");
+// const dismissBtn = document.querySelector(".dismiss-modal");
+// const fileInput = document.querySelector(".file-input");
+// const dropZone = document.getElementById("drop-zone");
+// const previewContainer = document.querySelector(".preview-multiple");
+// const cropMainBtn = document.getElementById("cropMainBtn");
+// const addTextMainBtn = document.getElementById("addTextMainBtn");
+// const drawMainBtn = document.getElementById("drawMainBtn");
+ 
+// let selectedFile = null;
+// let currentImageSrc = null;
+// let editingRow = null;
+ 
+// const exampleModal = document.getElementById("exampleModal3");
+// exampleModal.addEventListener("show.bs.modal", () => {
+//   fileInput.value = "";
+//   selectedFile = null;
+//   previewContainer.innerHTML = "";
+// });
+ 
+// dropZone.addEventListener("click", () => fileInput.click());
+// dropZone.addEventListener("dragover", (e) => {
+//   e.preventDefault();
+//   dropZone.classList.add("dragover");
+// });
+// dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+// dropZone.addEventListener("drop", (e) => {
+//   e.preventDefault();
+//   dropZone.classList.remove("dragover");
+//   handleFile(e.dataTransfer.files[0]);
+// });
+// fileInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
+ 
+// function handleFile(file) {
+//   if (!file) return;
+//   const ext = file.name.split(".").pop().toLowerCase();
+//   if (!["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) {
+//     alert("Only image files are allowed!");
+//     return;
+//   }
+//   const reader = new FileReader();
+//   reader.onload = (e) => {
+//     currentImageSrc = e.target.result;
+//     selectedFile = file;
+//     renderPreview();
+//   };
+//   reader.readAsDataURL(file);
+// }
+ 
+// function renderPreview() {
+//   previewContainer.innerHTML = `
+//     <div class="preview-item text-center">
+//       <img src="${currentImageSrc}" style="width:120px;border-radius:5px;display:block;margin:auto;">
+//     </div>
+//   `;
+// }
+ 
+// cropMainBtn.addEventListener("click", () => openCropModal());
+// function openCropModal() {
+//   if (!currentImageSrc) return alert("Please upload or select an image first!");
+//   const modal = document.createElement("div");
+//   modal.classList.add("crop-modal");
+//   modal.innerHTML = `
+//     <div class="crop-wrapper" style="position:fixed;top:0;left:0;width:100%;height:100%;
+//     background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:9999;">
+//       <div style="background:#fff;padding:20px;border-radius:10px;text-align:center;">
+//         <img id="crop-image" src="${currentImageSrc}" style="max-width:400px;max-height:400px;">
+//         <br>
+//         <button id="cropSave" class="btn btn-primary mt-2">Save Crop</button>
+//         <button id="cropCancel" class="btn btn-secondary mt-2">Cancel</button>
+//       </div>
+//     </div>
+//   `;
+//   document.body.appendChild(modal);
+ 
+//   const image = modal.querySelector("#crop-image");
+//   const cropper = new Cropper(image, { aspectRatio: NaN });
+ 
+//   modal.querySelector("#cropSave").addEventListener("click", () => {
+//     const canvas = cropper.getCroppedCanvas();
+//     currentImageSrc = canvas.toDataURL("image/png");
+//     renderPreview();
+ 
+//     if (editingRow) updateEditedImage();
+ 
+//     document.body.removeChild(modal);
+//   });
+ 
+//   modal.querySelector("#cropCancel").addEventListener("click", () => document.body.removeChild(modal));
+// }
+ 
+// addTextMainBtn.addEventListener("click", () => openTextModal());
+// function openTextModal() {
+//   if (!currentImageSrc) return alert("Please upload or select an image first!");
+//   const mainModal = document.getElementById("exampleModal3");
+ 
+//   if (!editingRow) mainModal.style.display = "none";
+ 
+//   const modal = document.createElement("div");
+//   modal.classList.add("text-modal");
+//   modal.innerHTML = `
+//     <div style="position:fixed;top:0;left:0;width:100%;height:100%;
+//     background:rgba(0,0,0,0.8);display:flex;align-items:center;
+//     justify-content:center;z-index:9999;">
+//       <div style="background:#fff;padding:20px;border-radius:10px;text-align:center;max-width:500px;">
+//         <canvas id="textCanvas" width="400" height="400" style="border:1px solid #ccc;cursor:move;"></canvas><br>
+//         <input type="text" id="textInput" placeholder="Enter text" class="form-control mt-2">
+//         <div class="d-flex gap-2 mt-2">
+//           <input type="color" id="textColor" value="#000000" class="form-control" style="height: 38px;">
+//           <input type="number" id="textSize" value="24" min="10" max="100" class="form-control">
+//         </div>
+//         <button id="textAdd" class="btn btn-primary mt-3">Add Text</button>
+//         <button id="textSave" class="btn btn-success mt-3">Save</button>
+//         <button id="textCancel" class="btn btn-secondary mt-3">Cancel</button>
+//       </div>
+//     </div>
+//   `;
+//   document.body.appendChild(modal);
+ 
+//   const canvas = modal.querySelector("#textCanvas");
+//   const ctx = canvas.getContext("2d");
+//   const img = new Image();
+//   img.src = currentImageSrc;
+//   img.onload = () => ctx.drawImage(img, 0, 0, 400, 400);
+ 
+//   let text = "";
+//   let color = "#000";
+//   let size = 24;
+//   let posX = 50;
+//   let posY = 50;
+//   let dragging = false;
+//   let offsetX = 0;
+//   let offsetY = 0;
+ 
+//   function redraw() {
+//     ctx.clearRect(0, 0, 400, 400);
+//     ctx.drawImage(img, 0, 0, 400, 400);
+//     if (text) {
+//       ctx.font = `${size}px Arial`;
+//       ctx.fillStyle = color;
+//       ctx.fillText(text, posX, posY);
+//     }
+//   }
+ 
+//   modal.querySelector("#textAdd").addEventListener("click", () => {
+//     text = modal.querySelector("#textInput").value;
+//     color = modal.querySelector("#textColor").value;
+//     size = parseInt(modal.querySelector("#textSize").value);
+//     if (!text) return alert("Enter text!");
+//     redraw();
+//   });
+ 
+//   canvas.addEventListener("mousedown", (e) => {
+//     if (!text) return;
+//     const rect = canvas.getBoundingClientRect();
+//     const mouseX = e.clientX - rect.left;
+//     const mouseY = e.clientY - rect.top;
+//     const textWidth = ctx.measureText(text).width;
+//     const textHeight = size;
+//     if (
+//       mouseX >= posX &&
+//       mouseX <= posX + textWidth &&
+//       mouseY <= posY &&
+//       mouseY >= posY - textHeight
+//     ) {
+//       dragging = true;
+//       offsetX = mouseX - posX;
+//       offsetY = mouseY - posY;
+//     }
+//   });
+ 
+//   canvas.addEventListener("mousemove", (e) => {
+//     if (!dragging) return;
+//     const rect = canvas.getBoundingClientRect();
+//     posX = e.clientX - rect.left - offsetX;
+//     posY = e.clientY - rect.top - offsetY;
+//     redraw();
+//   });
+ 
+//   canvas.addEventListener("mouseup", () => (dragging = false));
+//   canvas.addEventListener("mouseleave", () => (dragging = false));
+ 
+//   modal.querySelector("#textSave").addEventListener("click", () => {
+//     currentImageSrc = canvas.toDataURL("image/png");
+//     renderPreview();
+ 
+//     if (editingRow) updateEditedImage();
+ 
+//     document.body.removeChild(modal);
+ 
+//     if (!editingRow) mainModal.style.display = "block";
+//   });
+ 
+//   modal.querySelector("#textCancel").addEventListener("click", () => {
+//     document.body.removeChild(modal);
+//     if (!editingRow) mainModal.style.display = "block";
+//   });
+// }
+ 
+// drawMainBtn.addEventListener("click", () => openDrawModal());
+// function openDrawModal() {
+//   if (!currentImageSrc) return alert("Please upload or select an image first!");
+//   const modal = document.createElement("div");
+//   modal.classList.add("draw-modal");
+//   modal.innerHTML = `
+//     <div style="position:fixed;top:0;left:0;width:100%;height:100%;
+//     background:rgba(0,0,0,0.8);display:flex;align-items:center;
+//     justify-content:center;z-index:9999;">
+//       <div style="background:#fff;padding:20px;border-radius:10px;text-align:center;">
+//       <canvas id="drawCanvas" width="400" height="400" style="border:1px solid #ccc;cursor:crosshair;"></canvas><br>
+//       <input type="color" id="drawColor" value="#000000" class="form-control mb-2" style="height: 38px;">
+//         <button id="drawSave" class="btn btn-success mt-2">Save</button>
+//         <button id="drawCancel" class="btn btn-secondary mt-2">Cancel</button>
+//       </div>
+//     </div>
+//   `;
+//   document.body.appendChild(modal);
+ 
+//   const canvas = modal.querySelector("#drawCanvas");
+//   const ctx = canvas.getContext("2d");
+//   const img = new Image();
+//   img.src = currentImageSrc;
+//   img.onload = () => ctx.drawImage(img, 0, 0, 400, 400);
+ 
+//   let drawing = false;
+//   canvas.addEventListener("mousedown", () => (drawing = true));
+//   canvas.addEventListener("mouseup", () => {
+//     drawing = false;
+//     ctx.beginPath();
+//   });
+//   canvas.addEventListener("mousemove", (e) => {
+//     if (!drawing) return;
+//     const rect = canvas.getBoundingClientRect();
+//     ctx.strokeStyle = modal.querySelector("#drawColor").value;
+//     ctx.lineWidth = 3;
+//     ctx.lineCap = "round";
+//     ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+//     ctx.stroke();
+//     ctx.beginPath();
+//     ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+//   });
+ 
+//   modal.querySelector("#drawSave").addEventListener("click", () => {
+//     currentImageSrc = canvas.toDataURL("image/png");
+//     renderPreview();
+ 
+//     if (editingRow) updateEditedImage();
+ 
+//     document.body.removeChild(modal);
+//   });
+ 
+//   modal.querySelector("#drawCancel").addEventListener("click", () => document.body.removeChild(modal));
+// }
+ 
+// function updateEditedImage() {
+//   const imgTag = editingRow.querySelector("img");
+//   imgTag.src = currentImageSrc;
+//   imgTag.setAttribute("data-src", currentImageSrc);
+ 
+//   const downloadBtn = editingRow.querySelector(".download-single");
+//   downloadBtn.setAttribute("data-file", encodeURIComponent(currentImageSrc));
+// }
+ 
+// btnSave.addEventListener("click", () => {
+//   if (!selectedFile || !currentImageSrc) return alert("Please upload and edit an image first!");
+//   const size = (selectedFile.size / 1000 / 1000).toFixed(2);
+//   const sizeUnit = size.startsWith("0.") ? "KB" : "MB";
+//   const now = new Date();
+//   const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+//   const time = now.toLocaleTimeString();
+ 
+//   const row = `
+//     <tr>
+//       <td><input type="checkbox" class="slaveCheckbox"></td>
+//       <td>${date} ${time}</td>
+//       <td><img src="${currentImageSrc}" width="30" data-src="${currentImageSrc}"></td>
+//       <td>${selectedFile.name}</td>
+//       <td>Image Upload</td>
+//       <td>${size} ${sizeUnit}</td>
+//       <td>
+//         <div class="dropdown">
+//           <button class="btn elipse-btn" data-bs-toggle="dropdown">
+//             <i class="fa-solid fa-ellipsis-vertical"></i>
+//           </button>
+//           <ul class="dropdown-menu">
+//             <li><button class="dropdown-item edit-btn">Edit</button></li>
+//             <li><button class="dropdown-item download-single" data-file='${encodeURIComponent(currentImageSrc)}' data-name='${selectedFile.name}'>Download</button></li>
+//             <li><button class="dropdown-item delete-btn">Delete</button></li>
+//           </ul>
+//         </div>
+//       </td>
+//     </tr>
+//   `;
+ 
+//   tableBody.insertAdjacentHTML("beforeend", row);
+//   dismissBtn.click();
+//   fileInput.value = "";
+//   selectedFile = null;
+//   currentImageSrc = null;
+//   previewContainer.innerHTML = "";
+ 
+//   deleteRow();
+//   downloadSingle();
+//   editRow();
+// });
+ 
+// function deleteRow() {
+//   document.querySelectorAll(".delete-btn").forEach((btn) =>
+//     btn.addEventListener("click", () => btn.closest("tr").remove())
+//   );
+// }
+ 
+// function downloadSingle() {
+//   document.querySelectorAll(".download-single").forEach((btn) =>
+//     btn.addEventListener("click", () => {
+//       const fileData = decodeURIComponent(btn.getAttribute("data-file"));
+//       const fileName = btn.getAttribute("data-name");
+//       const a = document.createElement("a");
+//       a.href = fileData;
+//       a.download = fileName;
+//       a.click();
+//     })
+//   );
+// }
+ 
+// function editRow() {
+//   document.querySelectorAll(".edit-btn").forEach((btn) => {
+//     btn.addEventListener("click", () => {
+//       editingRow = btn.closest("tr");
+//       const imgTag = editingRow.querySelector("img");
+//       currentImageSrc = imgTag.getAttribute("data-src");
+ 
+//       const editModal = document.createElement("div");
+//       editModal.classList.add("edit-main-modal");
+//       editModal.innerHTML = `
+//         <div style="position:fixed;top:0;left:0;width:100%;height:100%;
+//         background:rgba(0,0,0,0.8);display:flex;align-items:center;
+//         justify-content:center;z-index:10000;">
+//           <div style="background:#fff;padding:20px;border-radius:10px;text-align:center;max-width:500px;">
+//             <h5>Edit Image</h5>
+//             <img src="${currentImageSrc}" id="editPreviewImg" style="max-width:300px;border-radius:10px;display:block;margin:10px auto;">
+//             <div class="d-flex justify-content-center gap-2 mt-3">
+//               <button class="btn btn-primary" id="editCrop">Crop</button>
+//               <button class="btn btn-warning" id="editText">Add Text</button>
+//               <button class="btn btn-success" id="editDraw">Draw</button>
+//             </div>
+//             <button class="btn btn-secondary mt-3" id="editClose">Close</button>
+//           </div>
+//         </div>
+//       `;
+//       document.body.appendChild(editModal);
+ 
+//       editModal.querySelector("#editCrop").addEventListener("click", () => {
+//         document.body.removeChild(editModal);
+//         openCropModal();
+//       });
+ 
+//       editModal.querySelector("#editText").addEventListener("click", () => {
+//         document.body.removeChild(editModal);
+//         openTextModal();
+//       });
+ 
+//       editModal.querySelector("#editDraw").addEventListener("click", () => {
+//         document.body.removeChild(editModal);
+//         openDrawModal();
+//       });
+ 
+//       editModal.querySelector("#editClose").addEventListener("click", () => {
+//         document.body.removeChild(editModal);
+//         editingRow = null;
+//       });
+ 
+//     });
+//   });
+// }

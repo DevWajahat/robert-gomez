@@ -15,12 +15,18 @@ class Assignment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function docs() : HasMany{
+    public function docs(): HasMany
+    {
         return $this->hasMany(AssignmentDocument::class);
     }
 
-    public function assignment_logs(): HasMany{
+    public function assignment_logs(): HasMany
+    {
         return $this->hasMany(AssignmentLog::class);
     }
 
+    public function assignment_payments(): HasMany
+    {
+        return $this->hasMany(AssignmentPayment::class);
+    }
 }

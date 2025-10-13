@@ -1,24 +1,24 @@
-@if(is_string($assignments) && $assignments === 'No Results Found')
-<div class="container">No Results found</div>
+@if (is_string($assignments) && $assignments === 'No Results Found')
+    <div class="container">No Results found</div>
 @else
-
-   @forelse ($assignments as $assignment )
-        <div class="assign-card" data-url="{{ route('admin.assign.detail',$assignment->id) }}">
+    @forelse ($assignments as $assignment)
+        <div class="assign-card" data-url="{{ route('admin.assign.detail', $assignment->id) }}">
             <div class="card-id-wrapper">
                 <h3>{{ $assignment->id }}</h3>
                 <div class="toggler-btn-wrapper">
-                    <select name="agent" data-id="{{ $assignment->id }}" data-user-id=""
-                        class="selectpicker agent">
+                    <select name="agent" data-id="{{ $assignment->id }}" data-user-id="" class="selectpicker agent">
                         <option value="" selected disabled>Select agent </option>
                         @forelse ($users as $user)
-                            <option value="{{ $user->id }}" {{ $assignment->user_id == $user->id ? 'selected' : '' }} >
+                            <option value="{{ $user->id }}"
+                                {{ $assignment->user_id == $user->id ? 'selected' : '' }}>
                                 {{ $user->first_name . ' ' . $user->last_name }}</option>
                         @empty
                         @endforelse
 
                     </select>
                     <button type="button" class="eye-btn hidden-class"><i class="fa-solid fa-eye"></i> 3</button>
-                    <button type="button" class="toggler-btn"><i class="fa-solid fa-caret-down rotate-icon"></i></button>
+                    <button type="button" class="toggler-btn"><i
+                            class="fa-solid fa-caret-down rotate-icon"></i></button>
                 </div>
             </div>
             <div class="insurance-wrapper">
@@ -36,8 +36,21 @@
                     </div>
                 </div>
                 <div>
-                    <!-- Time is formatted once and stored as static text -->
-                   <p class="text-end m-0" data-created-at="{{ $assignment->created_at->timestamp }}"></p>
+                    @php
+                        $d = $assignment->created_at->diff(now());
+                        $parts = [];    
+                        if ($d->d > 0) {
+                            $parts[] = "{$d->d} days";
+                        }
+                        if ($d->h > 0) {
+                            $parts[] = "{$d->h} hours";
+                        }
+                        if ($d->i > 0) {
+                            $parts[] = "{$d->i} mins";
+                        }
+                    @endphp
+
+                    <p class="text-end m-0">{{ $parts ? join(', ', $parts) : 'just now' }} </p>
                     <div class="pending-btn-wrapper hidden-class">
                         <button>Quick Updates</button>
                         @if ($assignment->status == 'pending')
@@ -51,18 +64,15 @@
         </div>
 
     @empty
-No Results Found
+        No Results Found
     @endforelse
 
-<script>
-
-
-const timeAgo = timestamp => {
-    const d = Math.floor((new Date() - new Date(timestamp)) / (1000 * 60 * 60 * 24));
-    const h = Math.floor((new Date() - new Date(timestampp)) / (1000 * 60 * 60)) % 24;
-    return d ? `${d}d ${h ? h + 'h' : ''} ago` : h ? `${h}h ago` : 'Just now';
-};
-</script>
+    <script>
+        const timeAgo = timestamp => {
+            const d = Math.floor((new Date() - new Date(timestamp)) / (1000 * 60 * 60 * 24));
+            const h = Math.floor((new Date() - new Date(timestampp)) / (1000 * 60 * 60)) % 24;
+            return d ? `${d}d ${h ? h + 'h' : ''} ago` : h ? `${h}h ago` : 'Just now';
+        };
+    </script>
 
 @endif
-

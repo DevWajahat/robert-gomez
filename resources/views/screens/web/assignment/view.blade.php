@@ -2,14 +2,7 @@
 @section('content')
     @php
         $headers = ['File Name', 'Label', 'Date', 'Download'];
-        // $entries = $clientForms->map(function ($clientForm) {
-        //     return [
-        //         $clientForm->file ?? 'N/A',
-        //         $clientForm->label ?? 'N/A',
-        //         $clientForm->created_at ? $clientForm->created_at->format('d/m/Y') : 'N/A',
-        //         ''
-        //     ];
-        // })->toArray();
+      
 
         $headersy = ['File Name', 'Label', 'Date', 'Download'];
         $entriesy = [
@@ -82,11 +75,23 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Billing Type</th>
-                                                <th scope="col" colspan="2">Appraisal Standard</th>
+                                                <th scope="col" >Miles</th>
+                                                <th scope="col" colspan="2">Price</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @forelse($assignment->assignment_payments as $payment)
                                             <tr>
+                                                <th scope="row">{{ $payment->billing_type }}</th>
+                                                <td>{{ $payment->miles }}</td>
+                                                <td>${{ $payment->price }}</td>
+                                            </tr>
+
+                                            @empty
+
+                                            <tr colspan="3">No Results found</tr>
+                                            @endforelse
+                                            {{-- <tr>
                                                 <th scope="row">Base Rate</th>
                                                 <td>+</td>
                                                 <td>$0.00</td>
@@ -105,12 +110,7 @@
                                                 <th scope="row">Base Rate</th>
                                                 <td>+</td>
                                                 <td>$0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Base Rate</th>
-                                                <td>+</td>
-                                                <td>$0.00</td>
-                                            </tr>
+                                            </tr> --}}
                                         </tbody>
                                     </table>
                                     {{-- <h4>Billing Terms and Notes</h4> --}}
@@ -983,18 +983,22 @@
                     <table class="table text-start">
                         <thead>
                             <tr>
-                                <th></th>
+                                <th>Billing Type</th>
                                 <th>Miles</th>
                                 <th>Payment</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($assignment->assignment_payments as $payment)
                             <tr>
-                                <td>Base Fee</td>
-                                <td></td>
-                                <td>$ 0.00</td>
+                                <td>{{ $payment->billing_type }}</td>
+                                <td>{{ $payment->miles }}</td>
+                                <td>${{ $payment->price }}</td>
                             </tr>
-                            <tr>
+                            @empty
+                            <tr colspan="3">No Results Found</tr>
+                            @endforelse
+                            {{-- <tr>
                                 <td>MI Roundtrip</td>
                                 <td>0000</td>
                                 <td>$ 0.00</td>
@@ -1013,22 +1017,19 @@
                                 <td>Total Appraisal Payment</td>
                                 <td>00.00</td>
                                 <td>$ 0.00</td>
-                            </tr>
+                            </tr> --}}
                         </tbody>
                     </table>
                     <p class="sub-head">Mileage Request Info:</p>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="padding:0px;">
                     <div>
-                        <p class="sub-head m-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                            printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-                            only five centuries, but also the leap into electronic typesetting, remaining essentially
-                            unchanged.</p>
+                        <textarea name="" id="payment_info" cols="0" rows="7" style="width:100%; height:100%" required>{{ $assignment?->payment_info }}</textarea>
+                    
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center info-desc gap-3">
-                    <button type="button" class="pay-btn text-center bg-primary" data-bs-dismiss="modal">Submit
+                    <button type="button" class="pay-btn text-center bg-primary " id="paymentRequest" data-bs-dismiss="modal">Submit
                         Request</button>
                     <button type="button" class="pay-btn text-center" data-bs-dismiss="modal">Cancel</button>
                 </div>
@@ -1109,6 +1110,34 @@
     });
 </script>
 @push('scripts')
+<script>
+    $(document).ready(function () {
+        $('#paymentRequest').on('click', function () {
+            
+            $('#payment_info').val()
+            $.ajax({
+                type:'POST',
+                url:'{{ route('payment.info',$assignment->id) }}',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    paymentInfo: $('#payment_info').val()
+                },
+                success:function (response){
+                    console.log(response)
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Payment request send Successfully.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                }
+            })
+        })
+    })
+</script>
     <script>
         $(document).ready(function() {
             $('.guideline-content p,.guideline-content span').addClass('guide-para');

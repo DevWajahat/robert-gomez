@@ -34,7 +34,6 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
     Route::get('/client-forms/{id}/download', [DownloadController::class, 'client_forms'])->name('client-forms.download')->withoutMiddleware(['auth', 'CheckAdmin', 'CheckAgent', 'prevent-back-history']);
     Route::get('/assign-docs/{id}/download', [DownloadController::class, 'assignment_docs'])->name('assignment-docs.download')->withoutMiddleware(['auth', 'CheckAdmin', 'CheckAgent', 'prevent-back-history']);
     Route::get('/download-all/docs/{id}', [DownloadController::class, 'all_assignment_docs'])->name('download.all.zip')->withoutMiddleware(['auth', 'CheckAdmin', 'CheckAgent', 'prevent-back-history']);
-    // Route::post('/assign-docs/{id}/download', [DownloadController::class, 'assignment_docs'])->name('assignment-docs.download')->withoutMiddleware(['auth','CheckAdmin','CheckAgent','prevent-back-history']);
 
     Route::controller(AssignmentController::class)->group(function () {
 
@@ -46,6 +45,7 @@ Route::middleware(['prevent-back-history', 'CheckAgent'])->group(function () {
         Route::get('/View/{id}', 'view')->name('view');
         Route::post('/assign-detail/post/{id}', 'assignDetail')->name('assign.detail');
         Route::post('assign/upload-docs/{id}', 'upload_docs')->name('upload.docs');
+        Route::post('assign/payment-info/{id}', 'paymentInfo')->name('payment.info');
 
         Route::post('destroy', 'destroy')->name('docs.destroy');
     });
