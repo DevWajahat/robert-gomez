@@ -22,14 +22,8 @@ class DocsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'files.*' => 'required|mimes:pdf,docx,png,jpeg,jpg,jfif|max:500000'
+            'file' => 'required|image'
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'files.*.max' => 'Each file must not exceed 500MB in size.'
-        ];
-    }
 }

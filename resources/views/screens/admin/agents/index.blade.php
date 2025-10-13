@@ -533,7 +533,7 @@
                         $.LoadingOverlay("hide");
                         if (response.status === 'true') {
                             var user = response.publicuser;
-                            // Debug: Log the role value to verify
+                          
                             console.log('Fetched role:', user.role);
                             $('#editUserId').val(user.id);
                             $('#editFirstName').val(user.first_name);

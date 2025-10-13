@@ -101,7 +101,6 @@ class AssignmentController extends Controller
             $successCount = $import->getSuccessCount();
             $errors = $import->getErrors();
 
-            // Check for empty CSV (no rows processed, no errors)
             if ($successCount === 0 && empty($errors)) {
                 DB::rollBack();
                 $errorMessage = 'The uploaded CSV file is empty. Please upload a file with valid data.';
@@ -115,8 +114,6 @@ class AssignmentController extends Controller
 
                 return back()->with('error', $errorMessage);
             }
-
-            // Check for zero successful imports with errors (all rows failed) - ROLLBACK
             if ($successCount === 0 && !empty($errors)) {
                 DB::rollBack();
                 $errorCsvPath = $this->generateErrorCsv($errors);
@@ -138,34 +135,32 @@ class AssignmentController extends Controller
                 ]);
             }
 
-            // At this point, we have at least one successful import
-            // COMMIT the transaction for partial or full success
+
             DB::commit();
 
-            // Check for partial success (some rows failed) - SHOW AS WARNING
+
             if (!empty($errors)) {
                 $errorCsvPath = $this->generateErrorCsv($errors);
                 $message = "Imported {$successCount} assignments successfully, but " . count($errors) . " rows had errors. Download the error CSV for details";
 
                 if ($request->ajax() || $request->wantsJson()) {
                     return response()->json([
-                        'success' => false, // Changed to false for warning style
+                        'success' => false,
                         'message' => $message,
                         'error_csv' => $errorCsvPath,
                         'success_count' => $successCount,
                         'error_count' => count($errors),
-                        'type' => 'warning', // Add type indicator for frontend
+                        'type' => 'warning',
                     ], 206);
                 }
 
                 return back()->with([
-                    'warning' => $message, // Use 'warning' instead of 'success'
+                    'warning' => $message,
                     'error_csv' => $errorCsvPath,
                     'success_count' => $successCount,
                 ]);
             }
 
-            // Full success (all rows imported, no errors)
             $message = "Imported {$successCount} assignments successfully!";
 
             if ($request->ajax() || $request->wantsJson()) {
@@ -237,7 +232,7 @@ class AssignmentController extends Controller
 
     public function searchAssign(Request $request)
     {
-        // dd($request->all(),$request->search_query);
+
 
         $searchQuery = $request->search_query;
 
@@ -334,7 +329,6 @@ class AssignmentController extends Controller
 
         $payment = AssignmentPayment::find($id);
 
-        // dd($request->all());
         $payment->update([
             'billing_type' => $request->billing_type,
             'price' => $request->price,

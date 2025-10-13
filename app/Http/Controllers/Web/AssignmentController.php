@@ -44,7 +44,7 @@ class AssignmentController extends Controller
 
         $guideline = Guideline::latest()->first();
 
-        
+
         // $assignment= AssignmentLog::where('')
 
         return view('screens.web.assignment.view', get_defined_vars());
@@ -109,25 +109,53 @@ class AssignmentController extends Controller
     public function upload_docs($id, DocsRequest $request)
     {
 
+
+        // dd($request->all());
         $assignment = Assignment::find($id);
 
 
-        if ($request->has('files')) {
-            foreach ($request->file('files') as $file) {
+        if ($request->has('file')) {
 
-                $timestamp = time();
-                $randomString = Str::random(8);
-                $extension = $file->getClientOriginalExtension();
-                $fileName = "doc_{$timestamp}_{$randomString}.{$extension}";
+            $timestamp = time();
+            $randomString = Str::random(8);
+            $extension = $request->file->getClientOriginalExtension();
+            $fileName = "doc_{$timestamp}_{$randomString}.{$extension}";
 
 
-                $file->move(public_path('assignment-docs/'), $fileName);
+            $request->file->move(public_path('assignment-docs/'), $fileName);
 
-                $assignment->docs()->create([
-                    'file' => $fileName,
-                    'file_type' => $extension
-                ]);
-            }
+            $assignment->docs()->create([
+                'file' => $fileName,
+                'file_type' => $extension
+            ]);
+        }
+
+
+
+        return response()->json([
+            'status' => 'true',
+            'message' => 'file Uploaded successfully.',
+        ]);
+    }
+    public function update_docs($id, DocsRequest $request)
+    {
+
+        $document = AssignmentDocument::find($id);
+        // dd($document);
+
+        if ($request->has('file')) {
+
+            $timestamp = time();
+            $randomString = Str::random(8);
+            $extension = $request->file->getClientOriginalExtension();
+            $fileName = "doc_{$timestamp}_{$randomString}.{$extension}";
+
+            $request->file->move(public_path('assignment-docs/'), $fileName);
+
+            $document->update([
+                'file' => $fileName,
+                'file_type' => $extension
+            ]);
         }
 
 
@@ -139,7 +167,7 @@ class AssignmentController extends Controller
     }
 
 
-   public function destroy(Request $request)
+    public function destroy(Request $request)
     {
         try {
             $ids = $request->input('ids', [$request->input('id')]);
@@ -197,7 +225,7 @@ class AssignmentController extends Controller
         }
     }
 
-    public function paymentInfo($id,Request $request)
+    public function paymentInfo($id, Request $request)
     {
 
         $assignment = Assignment::find($id);
